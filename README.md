@@ -165,15 +165,14 @@
 
 - resources
   - id
-  - type(organization, thing, article)
   - image_url
   - name
-  - description
+  - body(markdown)
   - attributes
 - resource_attributes
   - id
   - resource_id
-  - key(category, lat, lng, start_date, start_time, end_date, end_time...)
+  - key(type, category, lat, lng, start_date, start_time, end_date, end_time...)
   - value
 - webpage_meta_attributes
   - id
@@ -244,15 +243,49 @@
     - 挿し木
     - 実生
 
-- Webサイトとして
-  - トップ
-  - ナビゲーション
-    - 観葉植物の紹介
-    - 道具の紹介
-    - 観葉植物の選び方
-    - 基礎知識と手入れ
-    - 楽しみ方、飾り方
-    - よりよい知識
+## Pages
+
+- `/` トップ
+  - 観葉植物を探す(横スクロールリスト)
+  - 観葉植物の選び方(カード)
+  - 基礎知識と手入れ(カード)
+  - 道具を探す(横スクロールリスト)
+  - 楽しみ方、飾り方(横スクロールリスト)
+  - よりよい知識(横スクロールリスト)
+- `/plants` 観葉植物とは
+  - 観葉植物とは
+  - 効果
+  - 原生地
+  - 科目
+  - 観葉植物一覧
+  - `/plants/:name` 各観葉植物
+    - 基本情報(名前 / 科名 / 原生地)
+    - 育て方(置き場所 / 水やり / 肥料 / 病害虫対策)
+    - 特徴(耐陰性 / 耐寒性 / その他)
+    - カレンダー
+    - 仕立てと増やし方
+- `/regions` 原生地マップ
+  - 原生地マップ
+  - `/regions/:name` 原生地の特徴とそこの植物たち
+- `/families` 科目一覧
+  - 科目とその特徴
+  - `/families/:name` 科目とその植物たち
+- `/tools` 道具の紹介(ジョウロとかの括り、個別具体の製品はproductsにて)
+  - 基本道具と便利道具
+  - 道具一覧
+  - `/tools/:name` 各道具
+    - 基本情報(名前 / 道具カテゴリ)
+    - 使用目的
+    - 説明
+    - 製品一覧
+- `/products` 製品一覧
+  - 全製品一覧
+  - `/products/:name`
+    - 基本情報(名前 / tool)
+    - 使用
+    - 説明
+- `/notes` 記事一覧
+  - `/notes/:id` 個別記事
 
 ## organization
 人や組織。thingの生成元になりうる。
