@@ -313,3 +313,12 @@ category: abstruct / plant / product
     - 実世界に存在しうるか
     - イベントなどは難しいが、基本的にarticle
     - 日付まで決まり、実世界でorganizationやthingと接点を持つならthingにstart/endを持つ
+
+### Photos
+
+keywords: 観葉植物 / ornamental foliage plant / indoor green / indoor plants
+- [Beautiful Free Images & Pictures | Unsplash](https://unsplash.com/)
+- [Free Stock Photos: High-Res Images for Websites & Commercial Use](https://burst.shopify.com/)
+- [Gratisography - Free High-Resolution Photos](http://gratisography.com/)
+- [フリー素材、無料画像の横断検索サイトNo.1【タダピク】](https://www.tadapic.com/)
+- [魅力的なフリー画像 - Pixabay](https://pixabay.com/ja/)
