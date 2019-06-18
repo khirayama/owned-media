@@ -262,27 +262,13 @@
   - `/plants/:key` 各観葉植物
     - 基本情報(名前 / 科名 / 原生地)
     - 育て方(置き場所 / 水やり / 肥料 / 病害虫対策)
-    - 特徴(耐陰性 / 耐寒性 / その他)
+    - 特徴(置き場所 / 耐陰性 / 耐寒性 / その他)
     - カレンダー
     - 仕立てと増やし方
-- `/regions` 原生地マップ
-  - 原生地マップ
-  - `/regions/:key` 原生地の特徴とそこの植物たち
-- `/families` 科目一覧
-  - 科目とその特徴
-  - `/families/:key` 科目とその植物たち
-- `/tools` 道具の紹介(ジョウロとかの括り、個別具体の製品はproductsにて)
-  - 基本道具と便利道具
-  - 道具一覧
-  - `/tools/:key` 各道具
-    - 基本情報(名前 / 道具カテゴリ)
-    - 使用目的
-    - 説明
-    - 製品一覧
 - `/products` 製品一覧
   - 全製品一覧
   - `/products/:key`
-    - 基本情報(名前 / tool)
+    - 名前
     - 使用
     - 説明
 - `/notes` 記事一覧
@@ -332,11 +318,19 @@
     - ex: 知識マップ
       - 知識マップ
       - スケジュール(縦軸が季節、横軸はやること)
-- `/labels` ラベル一覧(横断関連付)
+- `/labels` ラベル一覧(横断関連付、数値表現などは並び順などを考慮するとattributesにいれたい)
   - `/labels/:id` 個別ラベル
     - 説明
     - 関連リソース一覧表示
-    - (plants / regions / families / tools / products / notes / contents)
+      - ex: 観葉植物
+        - ex: 科目(科目とその特徴)
+        - ex: 原生地(原生地の特徴)
+        - ex: 明るい窓辺
+        - ex: 明るい室内
+        - ex: 明るい日陰
+      - ex: 製品
+        - ex: 道具(ジョウロなどの括り)
+        - ex: メーカー
       - ex: 選び方
       - ex: 育て方
         - ex: 水やり
@@ -356,6 +350,34 @@
         - ex: 取り木
         - ex: 挿し木
         - ex: 実生
+
+## Schema
+
+- resources
+  - id
+  - type
+  - name
+  - image_url
+  - body_url
+- resource_attributes
+  - id
+  - resource_id
+  - key
+  - value
+- relations
+  - id
+  - resource1_id
+  - resource2_id
+- pages
+  - id
+  - title
+  - description
+  - image
+  - keywords
+  - resource_id
+
+- resource.type: plants / products / note / labels
+- plant.attribute: shade_tolerance(number), cold_tolerance(number)
 
 ## organization
 人や組織。thingの生成元になりうる。
