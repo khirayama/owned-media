@@ -161,35 +161,6 @@
       - 害虫駆除
       - 病気対応
 
-## モデリング
-
-- resources
-  - id
-- resource_contents
-  - id
-  - resource_id
-  - locale
-  - image_url
-  - name
-  - body(markdown)
-- resource_attributes
-  - id
-  - resource_id
-  - key(type, category, lat, lng, start_date, start_time, end_date, end_time...)
-  - value
-- webpage_meta_attributes
-  - id
-  - resource_id
-  - locale
-  - title
-  - description
-  - keywords
-  - image
-- relations
-  - id
-  - resource1_id
-  - resource2_id
-
 - 知識マップ(article)
 - 選ぶ(article)
 - 育てる(article)
@@ -316,14 +287,18 @@
         - ex: 挿し木
         - ex: 実生
 
-## Schema
+## モデリング / Modeling
 
 - resources
   - id
   - type
+- resource_contents
+  - id
+  - resource_id
+  - locale
   - name
   - image_url
-  - body_url
+  - body_path
 - resource_attributes
   - id
   - resource_id
@@ -335,11 +310,12 @@
   - resource2_id
 - pages
   - id
+  - resource_id
+  - locale
   - title
   - description
   - image
   - keywords
-  - resource_id
 
 - resource.type: plants / products / note / labels
 - plant.attribute: shade_tolerance(number), cold_tolerance(number)
