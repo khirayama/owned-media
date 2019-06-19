@@ -314,7 +314,7 @@
   - locale
   - title
   - description
-  - image
+  - image_url
   - keywords
 
 - resource.type: plants / products / note / labels
