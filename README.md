@@ -204,45 +204,6 @@
     - ミニクリエーションF(thing/product)
       - 坂源(organization/group)
 
-- 上記以外の記事
-  - [x] 観葉植物とは
-    - [x] 観葉植物の効果
-  - [x] 選び方、決め方
-    - [x] 育てる場所、置き場所
-    - [x] 上手な選び方
-    - [x] 定番観葉植物
-  - [x] 手入れ
-    - [x] 日々の手入れ
-      - [x] 水やり
-      - [x] 病害虫対策
-      - [x] 肥料
-      - [x] トラブル
-    - [x] 四季の手入れ
-  - [x] 飾り方
-    - [x] 寄せ植え
-    - [x] 水苔
-    - [x] 水耕栽培
-    - [x] テラリウム
-    - [x] 苔玉
-  - [x] ツール & グッズ
-    - [x] ジョウロ
-    - [x] ハサミ
-    - [x] 霧吹き
-    - [x] スコップ
-    - [x] あるとよい
-      - [x] 手袋
-      - [x]トレー
-      - [x] 保存用品
-  - [x] 土について
-    - [x] 土の種類
-  - [x] 鉢について
-    - [x] ポットとポットカバー
-  - [x] 増やし方
-    - [x] 株分け
-    - [x] 取り木
-    - [x] 挿し木
-    - [x] 実生
-
 ## Pages
 
 - `/` トップ
@@ -323,8 +284,8 @@
     - 説明
     - 関連リソース一覧表示
       - ex: 観葉植物
-        - ex: 科目(科目とその特徴)
-        - ex: 原生地(原生地の特徴)
+        - ex: 個別科目(科目とその特徴)
+        - ex: 個別原生地(原生地の特徴)
         - ex: 明るい窓辺
         - ex: 明るい室内
         - ex: 明るい日陰
@@ -378,33 +339,6 @@
 
 - resource.type: plants / products / note / labels
 - plant.attribute: shade_tolerance(number), cold_tolerance(number)
-
-## organization
-人や組織。thingの生成元になりうる。
-category: group / person
-
-## thing
-固有のインスタンスが生成できるもの、もしくはインスタンス。
-場所やイベントなど現実世界に存在する可能なもの。
-category: abstruct / plant / product
-
-### article
-上記以外。無形物であることが多い。webにおいてはpage単位となることが多い。
-運用: ページとして独立するものを1 resourceとする。categoryは基本的に持たない
-
-- exからそれぞれのページを想像してみる。
-- organization / thing / articleの判別方法
-  - まず人や組織の場合、organizationとする
-    - 「意思」を持ち、変化を作れるか。
-    - 店舗と組織が混同しないことに注意する
-    - 店舗はthingであり、lat/lngを持つ実物が存在するものである
-  - 実店舗に並びうる場合、thingと考える
-    - モンステラは店頭に並ぶのでthing
-    - しかし、「サトイモ科」は店頭には並ばないので、article
-  - それ以外は基本的にarticle
-    - 実世界に存在しうるか
-    - イベントなどは難しいが、基本的にarticle
-    - 日付まで決まり、実世界でorganizationやthingと接点を持つならthingにstart/endを持つ
 
 ### Photos
 
