@@ -165,10 +165,13 @@
 
 - resources
   - id
+- resource_contents
+  - id
+  - resource_id
+  - locale
   - image_url
   - name
   - body(markdown)
-  - attributes
 - resource_attributes
   - id
   - resource_id
@@ -177,6 +180,7 @@
 - webpage_meta_attributes
   - id
   - resource_id
+  - locale
   - title
   - description
   - keywords
