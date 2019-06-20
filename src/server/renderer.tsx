@@ -1,15 +1,16 @@
 import express from 'express';
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter, matchPath } from 'react-router-dom';
 import * as styled from 'styled-components';
 import ReactHelmet from 'react-helmet';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
 
 import { reducer } from 'client/reducers';
 import { renderFullPage } from 'server/renderFullPage';
-import { Routes } from 'client/presentations/routes/Routes';
+import { Routes, routes } from 'client/presentations/routes/Routes';
 import { ResetStyle } from 'client/presentations/styles/ResetStyle';
 import { GlobalStyle } from 'client/presentations/styles/GlobalStyle';
 import { Intl } from 'client/containers/Intl';
@@ -30,39 +31,60 @@ const assets = (() => {
 
 export function get(req: express.Request, res: express.Response) {
   const context = {};
-  const store = createStore(reducer);
-  const preloadedState = store.getState();
-  const sheet = new styled.ServerStyleSheet();
-  const locale = preloadedState.ui.locale;
-  const body = ReactDOMServer.renderToString(
-    sheet.collectStyles(
-      <StaticRouter location={req.url} context={context}>
-        <ResetStyle />
-        <GlobalStyle />
-        <Provider store={store}>
-          <Intl>
-            <Routes />
-          </Intl>
-        </Provider>
-      </StaticRouter>,
-    ),
-  );
-  const helmetContent = ReactHelmet.renderStatic();
-  const meta = `
-      ${helmetContent.meta.toString()}
-      ${helmetContent.title.toString()}
-      ${helmetContent.link.toString()}
-    `.trim();
-  const style = sheet.getStyleTags();
+  const store = createStore(reducer, applyMiddleware(reduxThunk));
 
-  res.send(
-    renderFullPage({
+  let initializer = null;
+  let params = null;
+  for (let i = 0; i < routes.length; i += 1) {
+    const route = routes[i];
+    const match = matchPath(req.url, route);
+    if (match) {
+      initializer = route.initializer;
+      params = match.params;
+      break;
+    }
+  }
+
+  const generateParams = () => {
+    const preloadedState = store.getState();
+    const sheet = new styled.ServerStyleSheet();
+    const locale = preloadedState.ui.locale;
+    const body = ReactDOMServer.renderToString(
+      sheet.collectStyles(
+        <StaticRouter location={req.url} context={context}>
+          <ResetStyle />
+          <GlobalStyle />
+          <Provider store={store}>
+            <Intl>
+              <Routes />
+            </Intl>
+          </Provider>
+        </StaticRouter>,
+      ),
+    );
+    const helmetContent = ReactHelmet.renderStatic();
+    const meta = `
+        ${helmetContent.meta.toString()}
+        ${helmetContent.title.toString()}
+        ${helmetContent.link.toString()}
+      `.trim();
+    const style = sheet.getStyleTags();
+
+    return {
       locale,
       meta,
       assets,
       body,
       style,
       preloadedState: JSON.stringify(preloadedState),
-    }),
-  );
+    };
+  };
+
+  if (initializer) {
+    (store.dispatch(initializer(params)) as any).then(() => {
+      res.send(renderFullPage(generateParams()));
+    });
+  } else {
+    res.send(renderFullPage(generateParams()));
+  }
 }
