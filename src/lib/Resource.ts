@@ -11,16 +11,20 @@ Resource.init();
 Resource.defaultLocale = 'ja';
 
 Resource.find();
-
+Resource.find(null, { locale: 'en' });
 const relatedEnResources = Resource.find({
-  locale: 'en',
   id: Resource.relation(['1']),
+}, {
+  locale: 'en',
 });
-
 const relatedJaResources = Resource.find({
   id: Resource.relation(['4']),
 });
-
+const relatedEnResources = Resource.find({
+  id: Resource.relation(['1']),
+}, {
+  limit: 10,
+});
 */
 
 const ROOT_PATH = path.join(__dirname, '..', '..');
@@ -178,26 +182,29 @@ export class Resource {
     return resources;
   }
 
-  public static find(conditions?: any) {
-    const locale: string =
-      conditions && conditions.locale ? conditions.locale || this.defaultLocale : this.defaultLocale;
-
-    if (!conditions) {
-      return this.resources.map((r: ResourceType) => this.build(r, locale));
-    }
-
+  public static find(conditions?: any, options?: any) {
     let tmp = this.resources;
 
-    // id, type
-    const targetKeys = ['id', 'type'];
-    for (let targetKey of targetKeys) {
-      if (conditions[targetKey]) {
-        if (typeof conditions[targetKey] === 'string') {
-          tmp = tmp.filter((t: ResourceType) => t[targetKey] === conditions[targetKey]);
-        } else if (Array.isArray(conditions[targetKey])) {
-          tmp = tmp.filter((t: ResourceType) => conditions[targetKey].indexOf(t[targetKey]) !== -1);
+    if (conditions) {
+      const targetKeys = ['id', 'type'];
+      for (let targetKey of targetKeys) {
+        if (conditions[targetKey]) {
+          if (typeof conditions[targetKey] === 'string') {
+            tmp = tmp.filter((t: ResourceType) => t[targetKey] === conditions[targetKey]);
+          } else if (Array.isArray(conditions[targetKey])) {
+            tmp = tmp.filter((t: ResourceType) => conditions[targetKey].indexOf(t[targetKey]) !== -1);
+          }
         }
       }
+    }
+
+    // options
+    const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
+    const limit: number | null = options && options.limit ? options.limit : null;
+    const offset: number = options && options.offset ? options.offset : 0;
+
+    if (limit) {
+      tmp = tmp.slice(offset, limit);
     }
 
     return tmp.map((t: ResourceType) => this.build(t, locale));
