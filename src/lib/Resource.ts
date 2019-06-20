@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import * as fs from 'fs';
 import * as path from 'path';
+
 import csvParse from 'csv-parse/lib/sync';
+import marked from 'marked';
 
 /*
 
@@ -129,12 +131,14 @@ export class Resource {
                 };
               }
             } else if (key === 'body_path') {
-              // TODO: Read body path content
+              const markdown = fs.readFileSync(path.join(DATA_PATH, '..', path.join(resourceContentRow[key])), 'utf8');
+              const html = marked(markdown);
+
               if (resource.body) {
-                resource.body[resourceContentRow.locale] = resourceContentRow[key];
+                resource.body[resourceContentRow.locale] = html;
               } else {
                 resource.body = {
-                  [resourceContentRow.locale]: resourceContentRow[key],
+                  [resourceContentRow.locale]: html,
                 };
               }
             }
