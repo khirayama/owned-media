@@ -7,6 +7,15 @@ import marked from 'marked';
 
 /*
 
+- defaultLocale
+- init
+- find
+  - conditions
+  - options
+    - locale
+    - offset
+    - limit
+
 import { Resource } from 'lib/Resource';
 
 Resource.init();
