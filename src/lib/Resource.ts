@@ -74,9 +74,6 @@ export class Resource {
 
   private static resources: ResourceType[] = [];
 
-  // constructor() {
-  // }
-
   public static init() {
     this.load();
     this.resources = this.buildResource(
@@ -85,7 +82,6 @@ export class Resource {
       this.resourceAttributeRows,
       this.pageRows,
     );
-    // console.log(this.resources);
   }
 
   private static load() {
