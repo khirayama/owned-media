@@ -292,6 +292,7 @@
 - resources
   - id
   - type
+  - key
 - resource_contents
   - id
   - resource_id
