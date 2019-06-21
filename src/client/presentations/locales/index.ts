@@ -10,8 +10,8 @@ export const en = {
   'Home.Description': 'This is Home page!',
   'About.Title': 'Hi, About!',
   'About.Description': 'This is About page!',
-  'Users.Title': 'Hi, Users!',
-  'Users.Description': 'This is Users page!',
+  'Resources.Title': 'Resources',
+  'Resources.Description': 'Resources Page',
   'Counter.Label': 'Counted by {name}: ',
 };
 
@@ -20,8 +20,8 @@ export const ja = {
   'Home.Description': 'ここはホームページです。',
   'About.Title': 'やぁ、アバウト',
   'About.Description': 'ここはアバウトページです',
-  'Users.Title': 'やぁ、ユーザーズ',
-  'Users.Description': 'ここはユーザーズページです',
+  'Resources.Title': 'リソース',
+  'Resources.Description': 'リソース一覧ページ',
   'Counter.Label': '{name}さんのカウント数: ',
 };
 

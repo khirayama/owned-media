@@ -3,24 +3,10 @@ import { Route, Switch } from 'react-router-dom';
 
 import { Home } from 'client/presentations/pages/Home';
 import { About } from 'client/presentations/pages/About';
-import { Users } from 'client/presentations/pages/Users';
+import { Resources } from 'client/presentations/pages/Resources';
 import { fetchResources, fetchResource } from 'client/usecases';
 
 import { Counter } from 'client/containers/Counter';
-
-function Resources() {
-  return (
-    <div>
-      <h2>Resources</h2>
-      <ul>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-      </ul>
-    </div>
-  );
-}
 
 function Resource() {
   return (
@@ -42,12 +28,6 @@ export const routes = [
     exact: true,
     path: '/about',
     component: About,
-    initializer: null,
-  },
-  {
-    exact: true,
-    path: '/users',
-    component: Users,
     initializer: null,
   },
   {
