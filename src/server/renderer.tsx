@@ -29,8 +29,43 @@ const assets = (() => {
   return entryPoints;
 })();
 
-export function get(req: express.Request, res: express.Response) {
+const generateParams = (url: string, store: any) => {
   const context = {};
+  const preloadedState = store.getState();
+  const sheet = new styled.ServerStyleSheet();
+  const locale = preloadedState.ui.locale;
+  const body = ReactDOMServer.renderToString(
+    sheet.collectStyles(
+      <StaticRouter location={url} context={context}>
+        <ResetStyle />
+        <GlobalStyle />
+        <Provider store={store}>
+          <Intl>
+            <Routes />
+          </Intl>
+        </Provider>
+      </StaticRouter>,
+    ),
+  );
+  const helmetContent = ReactHelmet.renderStatic();
+  const meta = `
+      ${helmetContent.meta.toString()}
+      ${helmetContent.title.toString()}
+      ${helmetContent.link.toString()}
+    `.trim();
+  const style = sheet.getStyleTags();
+
+  return {
+    locale,
+    meta,
+    assets,
+    body,
+    style,
+    preloadedState: JSON.stringify(preloadedState),
+  };
+};
+
+export function get(req: express.Request, res: express.Response) {
   const store = createStore(reducer, applyMiddleware(reduxThunk));
 
   let initializer = null;
@@ -45,46 +80,11 @@ export function get(req: express.Request, res: express.Response) {
     }
   }
 
-  const generateParams = () => {
-    const preloadedState = store.getState();
-    const sheet = new styled.ServerStyleSheet();
-    const locale = preloadedState.ui.locale;
-    const body = ReactDOMServer.renderToString(
-      sheet.collectStyles(
-        <StaticRouter location={req.url} context={context}>
-          <ResetStyle />
-          <GlobalStyle />
-          <Provider store={store}>
-            <Intl>
-              <Routes />
-            </Intl>
-          </Provider>
-        </StaticRouter>,
-      ),
-    );
-    const helmetContent = ReactHelmet.renderStatic();
-    const meta = `
-        ${helmetContent.meta.toString()}
-        ${helmetContent.title.toString()}
-        ${helmetContent.link.toString()}
-      `.trim();
-    const style = sheet.getStyleTags();
-
-    return {
-      locale,
-      meta,
-      assets,
-      body,
-      style,
-      preloadedState: JSON.stringify(preloadedState),
-    };
-  };
-
   if (initializer) {
     (store.dispatch(initializer(params)) as any).then(() => {
-      res.send(renderFullPage(generateParams()));
+      res.send(renderFullPage(generateParams(req.url, store)));
     });
   } else {
-    res.send(renderFullPage(generateParams()));
+    res.send(renderFullPage(generateParams(req.url, store)));
   }
 }
