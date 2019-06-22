@@ -30,6 +30,7 @@ export const routes = [
     component: About,
     initializer: null,
   },
+  // For adming
   {
     exact: true,
     path: '/resources',
