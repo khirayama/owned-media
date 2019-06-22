@@ -1,5 +1,5 @@
-id,resource_id,locale,title,description,image_url,keywords
-1,1,ja,,基礎知識説明,/assets/images/sample_ja.jpg,"キーワード1,キーワード2"
-3,2,ja,,日々の手入れ説明,/assets/images/sample_ja.jpg,"キーワード1,キーワード2"
-5,3,ja,,ジョウロの説明,/assets/images/sample_ja.jpg,"キーワード1,キーワード2"
-7,4,ja,,水やりの説明,/assets/images/sample_ja.jpg,"キーワード1,キーワード2"
+id,resource_id,locale,title,description,image_url,keywords,create_at,updated_at
+1,1,ja,,基礎知識説明,/assets/images/sample_ja.jpg,"キーワード1,キーワード2",,
+3,2,ja,,日々の手入れ説明,/assets/images/sample_ja.jpg,"キーワード1,キーワード2",,
+5,3,ja,,ジョウロの説明,/assets/images/sample_ja.jpg,"キーワード1,キーワード2",,
+7,4,ja,,水やりの説明,/assets/images/sample_ja.jpg,"キーワード1,キーワード2",,

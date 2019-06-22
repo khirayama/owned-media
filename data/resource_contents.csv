@@ -1,6 +1,6 @@
-id,resource_id,locale,name,image_url,body_path
-1,1,ja,基礎知識,/assets/images/sample_ja.jpg,/resources/1/resource_contents/1.md
-2,2,ja,育て方 - 日々の手入れ,/assets/images/sample_ja.jpg,/resources/2/resource_contents/2.md
-3,3,ja,ジョウロ,/assets/images/sample_ja.jpg,/resources/3/resource_contents/3.md
-4,4,ja,水やり,/assets/images/sample_ja.jpg,/resources/4/resource_contents/4.md
-5,4,en,Watering,/assets/images/sample_en.jpg,/resources/4/resource_contents/5.md
+id,resource_id,locale,name,image_url,body_path,created_at,updated_at
+1,1,ja,基礎知識,/assets/images/sample_ja.jpg,/resources/1/resource_contents/1.md,,
+2,2,ja,育て方 - 日々の手入れ,/assets/images/sample_ja.jpg,/resources/2/resource_contents/2.md,,
+3,3,ja,ジョウロ,/assets/images/sample_ja.jpg,/resources/3/resource_contents/3.md,,
+4,4,ja,水やり,/assets/images/sample_ja.jpg,/resources/4/resource_contents/4.md,,
+5,4,en,Watering,/assets/images/sample_en.jpg,/resources/4/resource_contents/5.md,,
