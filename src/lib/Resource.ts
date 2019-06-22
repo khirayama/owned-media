@@ -211,6 +211,8 @@ export class Resource {
     const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
     const limit: number | null = options && options.limit ? options.limit : null;
     const offset: number = options && options.offset ? options.offset : 0;
+    // created_at / -created_at
+    // const sort: number = options && options.sort ? options.sort : 'created_at';
 
     if (limit) {
       tmp = tmp.slice(offset, limit);
