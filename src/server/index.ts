@@ -2,7 +2,11 @@
 import cluster from 'cluster';
 import * as os from 'os';
 
+import { Resource } from 'lib/Resource';
 import { runServer } from 'server/runServer';
+
+Resource.init();
+Resource.defaultLocale = 'ja';
 
 const isProd = process.env.NODE_ENV === 'production';
 
