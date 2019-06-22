@@ -251,4 +251,74 @@ export class Resource {
       attributes: resource.attributes,
     };
   }
+
+  public static create(resource: any) {
+    const now = new Date();
+    const lastResourceRow = this.resourceRows[this.resourceRows.length - 1];
+    const resourceId = lastResourceRow ? String(Number(lastResourceRow.id) + 1) : 0;
+
+    // For resources
+    const resourceType = resource.type;
+    this.resourceRows.push({
+      id: resourceId,
+      type: resourceType,
+      created_at: now.toString(),
+      updated_at: now.toString(),
+    });
+    // For resource_contents
+    const lastResourceContentRow = this.resourceContentRows[this.resourceContentRows.length - 1];
+    const resourceContentId = lastResourceContentRow ? String(Number(lastResourceContentRow.id) + 1) : 0;
+    const resourceLocale = resource.locale;
+    const resourceName = resource.name;
+    const resourceImageUrl = resource.imageUrl;
+    const resourceBodyPath = ''; // TODO: Touch markdown and pass body_path
+    this.resourceContentRows.push({
+      id: resourceContentId,
+      resource_id: resourceId,
+      locale: resourceLocale,
+      name: resourceName,
+      image_url: resourceImageUrl,
+      body_path: resourceBodyPath,
+      created_at: now.toString(),
+      updated_at: now.toString(),
+    });
+    // For resource_attributes
+    for (let key of Object.keys(resource.attributes)) {
+      const lastResourceAttributeRow = this.resourceAttributeRows[this.resourceAttributeRows.length - 1];
+      const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : 0;
+      this.resourceAttributeRows.push({
+        id: resourceAttributeId,
+        resource_id: resourceId,
+        key,
+        value: resource.attributes[key],
+        created_at: now.toString(),
+        updated_at: now.toString(),
+      });
+    }
+    // For page
+    const lastPageRow = this.pageRows[this.pageRows.length - 1];
+    const pageId = lastPageRow ? String(Number(lastPageRow.id) + 1) : 0;
+    const pageTitle = resource.page.title;
+    const pageDescription = resource.page.description;
+    const pageImageUrl = resource.page.image_url;
+    const pageKeywords = resource.page.keywords;
+    this.pageRows.push({
+      id: pageId,
+      resource_id: resourceId,
+      locale: resourceLocale,
+      title: pageTitle,
+      description: pageDescription,
+      image_url: pageImageUrl,
+      keywords: pageKeywords,
+      created_at: now.toString(),
+      updated_at: now.toString(),
+    });
+
+    this.resources = this.buildResource(
+      this.resourceRows,
+      this.resourceContentRows,
+      this.resourceAttributeRows,
+      this.pageRows,
+    );
+  }
 }
