@@ -25,7 +25,20 @@ export function fetchResources(req: express.Request, res: express.Response) {
 }
 
 export function createResource(req: express.Request, res: express.Response) {
-  res.json({ a: 2 });
+  const resource = req.body.resource;
+  const relationIds = req.body.relationIds;
+  const now = new Date();
+
+  if (!resource.type || !resource.locale || !resource.name) {
+    return;
+  }
+  Resource.create(resource);
+
+  res.json({
+    now,
+    resource,
+    relationIds,
+  });
 }
 
 export function fetchResource(req: express.Request, res: express.Response) {
