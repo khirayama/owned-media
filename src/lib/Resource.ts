@@ -68,6 +68,8 @@ type ResourceType = {
     };
   };
   attributes: any;
+  created_at: string;
+  updated_at: string;
 };
 
 export class Resource {
@@ -129,7 +131,7 @@ export class Resource {
       for (const resourceContentRow of resourceContentRows) {
         if (resourceContentRow.resource_id === resourceRow.id) {
           for (let key of Object.keys(resourceContentRow)) {
-            const whiteList = ['id', 'resource_id', 'locale', 'body_path'];
+            const whiteList = ['id', 'resource_id', 'locale', 'body_path', 'created_at', 'updated_at'];
 
             if (whiteList.indexOf(key) === -1) {
               if (resource[key]) {
@@ -158,7 +160,7 @@ export class Resource {
       for (const resourceAttributeRow of resourceAttributeRows) {
         if (resourceAttributeRow.resource_id === resourceRow.id) {
           for (let key of Object.keys(resourceAttributeRow)) {
-            const whiteList = ['id', 'resource_id'];
+            const whiteList = ['id', 'resource_id', 'created_at', 'updated_at'];
 
             if (whiteList.indexOf(key) === -1) {
               resource.attributes[resourceAttributeRow.key] = resourceAttributeRow.value;
@@ -170,7 +172,7 @@ export class Resource {
       for (const pageRow of pageRows) {
         if (pageRow.resource_id === resourceRow.id) {
           for (let key of Object.keys(pageRow)) {
-            const whiteList = ['id', 'resource_id', 'locale'];
+            const whiteList = ['id', 'resource_id', 'locale', 'created_at', 'updated_at'];
 
             if (whiteList.indexOf(key) === -1) {
               if (resource.page[key]) {
@@ -249,6 +251,8 @@ export class Resource {
         keywords: resource.page.keywords[locale] || resource.page.keywords[this.defaultLocale],
       },
       attributes: resource.attributes,
+      created_at: resource.created_at,
+      updated_at: resource.updated_at,
     };
   }
 
@@ -271,7 +275,13 @@ export class Resource {
     const resourceLocale = resource.locale;
     const resourceName = resource.name;
     const resourceImageUrl = resource.imageUrl;
-    const resourceBodyPath = ''; // TODO: Touch markdown and pass body_path
+
+    const RESOURCE_CONTENTS_PATH = ['resources', resourceId, 'resource_contents'].join('/');
+    const RESOURCE_CONTENTS_FULLPATH = [ROOT_PATH, 'resources', resourceId, 'resource_contents'].join('/');
+    const fileName = `${resourceContentId}.md`;
+    fs.mkdirSync(RESOURCE_CONTENTS_FULLPATH, { recursive: true });
+    fs.closeSync(fs.openSync(path.join(RESOURCE_CONTENTS_FULLPATH, fileName), 'w'));
+    const resourceBodyPath = '/' + path.join(RESOURCE_CONTENTS_PATH, fileName);
     this.resourceContentRows.push({
       id: resourceContentId,
       resource_id: resourceId,
