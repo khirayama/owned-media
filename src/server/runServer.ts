@@ -16,6 +16,8 @@ export function runServer() {
   app.use(bodyParser.json());
 
   app.use('/public', express.static('dist/public'));
+  // TODO: Fix path. It is a temporary path.
+  app.use('/assets', express.static('src/server/assets'));
 
   api
     .get('/resources', fetchResources)
