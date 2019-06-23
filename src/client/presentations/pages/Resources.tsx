@@ -1,19 +1,42 @@
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-import { Head } from 'client/presentations/head/Head';
-import { Application } from 'client/presentations/templates/Application';
+export class Resources extends React.Component<any, any> {
+  constructor(props: any) {
+    super(props);
 
-export const Resources = injectIntl(function(props) {
-  const title: string = props.intl.formatMessage({ id: 'Resources.Title' });
-  const description: string = props.intl.formatMessage({
-    id: 'Resources.Description',
-  });
+    this.state = {
+      resources: [],
+    };
+  }
 
-  return (
-    <Application>
-      <Head title={title} description={description} />
-      <h1>Resources</h1>
-    </Application>
-  );
-});
+  public componentDidMount() {
+    axios.get('/api/v1/resources').then(res => {
+      this.setState({
+        resources: res.data.sort((x: any, y: any) => {
+          const xTime = new Date(x.updated_at).getTime();
+          const yTime = new Date(y.updated_at).getTime();
+
+          return xTime - yTime;
+        }),
+      });
+    });
+  }
+
+  public render() {
+    return (
+      <ul>
+        {this.state.resources.map((resource: any) => (
+          <li key={resource.id}>
+            <Link to={`/resources/${resource.id}`}>
+              {resource.name}
+              {resource.created_at}
+              {resource.updated_at}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+}
