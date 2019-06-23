@@ -4,18 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Home } from 'client/presentations/pages/Home';
 import { About } from 'client/presentations/pages/About';
 import { Resources } from 'client/presentations/pages/Resources';
-import { fetchResources, fetchResource } from 'client/usecases';
-
-import { Counter } from 'client/containers/Counter';
-
-function Resource() {
-  return (
-    <div>
-      <h2>Resource</h2>
-      <Counter />
-    </div>
-  );
-}
+import { Resource } from 'client/presentations/pages/Resource';
 
 export const routes = [
   {
@@ -35,13 +24,13 @@ export const routes = [
     exact: true,
     path: '/resources',
     component: Resources,
-    initializer: fetchResources,
+    initializer: null,
   },
   {
     exact: true,
     path: '/resources/:id',
     component: Resource,
-    initializer: fetchResource,
+    initializer: null,
   },
 ];
 
