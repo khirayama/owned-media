@@ -82,7 +82,8 @@ export class Resource extends React.Component<any, any> {
                 </div>
               ) : null;
             })}
-            <h2>ATTRIBUTES</h2>
+            <h2>DEFINED ATTRIBUTES</h2>
+            <h2>CUSTOM ATTRIBUTES</h2>
           </div>
         ) : null}
       </div>
