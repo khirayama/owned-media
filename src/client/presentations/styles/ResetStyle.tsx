@@ -87,6 +87,7 @@ export const ResetStyle = styled.createGlobalStyle`
 
   img {
     vertical-align: top;
+    width: 100%;
     height: auto;
   }
 
