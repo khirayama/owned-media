@@ -66,6 +66,9 @@ type ResourceType = {
   image_url: {
     [key: string]: string;
   };
+  body_path: {
+    [key: string]: string;
+  };
   body: {
     [key: string]: string;
   };
@@ -147,7 +150,7 @@ export class Resource {
       for (const resourceContentRow of resourceContentRows) {
         if (resourceContentRow.resource_id === resourceRow.id) {
           for (let key of Object.keys(resourceContentRow)) {
-            const whiteList = ['id', 'resource_id', 'locale', 'body_path', 'created_at', 'updated_at'];
+            const whiteList = ['id', 'resource_id', 'locale', 'created_at', 'updated_at'];
 
             if (whiteList.indexOf(key) === -1) {
               if (resource[key]) {
@@ -157,7 +160,8 @@ export class Resource {
                   [resourceContentRow.locale]: resourceContentRow[key],
                 };
               }
-            } else if (key === 'body_path') {
+            }
+            if (key === 'body_path') {
               const markdown = fs.readFileSync(path.join(DATA_PATH, '..', path.join(resourceContentRow[key])), 'utf8');
               const html = marked(markdown);
 
@@ -258,6 +262,7 @@ export class Resource {
       id: resource.id,
       type: resource.type,
       name: resource.name[locale] || resource.name[this.defaultLocale],
+      body_path: resource.body_path[locale] || resource.body_path[this.defaultLocale],
       body: resource.body[locale] || resource.body[this.defaultLocale],
       image_url: resource.image_url[locale] || resource.image_url[this.defaultLocale],
       page: {
