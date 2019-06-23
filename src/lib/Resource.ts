@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import csvParse from 'csv-parse/lib/sync';
+import csvStringify from 'csv-stringify/lib/sync';
 import marked from 'marked';
 
 /*
@@ -35,6 +36,21 @@ const relatedEnResources = Resource.find({
   id: Resource.relation(['1']),
 }, {
   limit: 10,
+});
+Resource.create({
+  type: 'note',
+  locale: 'ja',
+  name: 'テスト',
+  imageUrl: 'イメージパス',
+  attributes: {
+    sample: 'サンプル',
+  },
+  page: {
+    title: 'テストタイトル',
+    description: 'テスト説明文',
+    imageUrl: 'イメージパス',
+    keywords: 'キーワード,キーワード',
+  },
 });
 */
 
@@ -323,6 +339,25 @@ export class Resource {
       created_at: now.toString(),
       updated_at: now.toString(),
     });
+
+    const resourcesString = csvStringify(this.resourceRows, {
+      header: true,
+      columns: Object.keys(this.resourceRows[0]),
+    });
+    const resourceContentsString = csvStringify(this.resourceContentRows, {
+      header: true,
+      columns: Object.keys(this.resourceContentRows[0]),
+    });
+    const resourceAttributesString = csvStringify(this.resourceAttributeRows, {
+      header: true,
+      columns: Object.keys(this.resourceAttributeRows[0]),
+    });
+    const pagesString = csvStringify(this.pageRows, { header: true, columns: Object.keys(this.pageRows[0]) });
+
+    fs.writeFileSync(path.join(DATA_PATH, 'resources.csv'), resourcesString);
+    fs.writeFileSync(path.join(DATA_PATH, 'resource_contents.csv'), resourceContentsString);
+    fs.writeFileSync(path.join(DATA_PATH, 'resource_attributes.csv'), resourceAttributesString);
+    fs.writeFileSync(path.join(DATA_PATH, 'pages.csv'), pagesString);
 
     this.resources = this.buildResource(
       this.resourceRows,
