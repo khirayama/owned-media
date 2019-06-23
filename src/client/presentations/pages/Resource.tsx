@@ -1,6 +1,6 @@
 import * as React from 'react';
 import axios from 'axios';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export class Resource extends React.Component<any, any> {
   constructor(props: any) {
@@ -26,6 +26,7 @@ export class Resource extends React.Component<any, any> {
     console.log(resource);
     return resource ? (
       <div>
+        <Link to="/resources">TO INDEX OF RESOURCES</Link>
         {resource.name}
         {resource.body}
         {resource.created_at}
