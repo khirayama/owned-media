@@ -16,7 +16,7 @@ import { GlobalStyle } from 'client/presentations/styles/GlobalStyle';
 import { Intl } from 'client/containers/Intl';
 
 const assets = (() => {
-  // eslint-disable-next-line node/no-unpublished-require
+  // eslint-disable-next-line node/no-unpublished-require, node/no-missing-require
   const manifest: { [key: string]: string } = require('../../dist/public/manifest');
   const entryPoints: string[] = [];
 
@@ -68,7 +68,7 @@ const generateParams = (url: string, store: any) => {
 export function get(req: express.Request, res: express.Response) {
   const store = createStore(reducer, applyMiddleware(reduxThunk));
 
-  let initializer = null;
+  let initializer: any = null;
   let params = null;
   for (let i = 0; i < routes.length; i += 1) {
     const route = routes[i];
@@ -81,7 +81,7 @@ export function get(req: express.Request, res: express.Response) {
   }
 
   if (initializer) {
-    (store.dispatch(initializer(params)) as any).then(() => {
+    store.dispatch(initializer(params)).then(() => {
       res.send(renderFullPage(generateParams(req.url, store)));
     });
   } else {
