@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { config } from 'config';
 
 function ResourceBody(props: { html: string }) {
-  return <div dangerouslySetInnerHTML={{__html: props.html}} />;
+  return <div dangerouslySetInnerHTML={{ __html: props.html }} />;
 }
 
 export class Resource extends React.Component<any, any> {
