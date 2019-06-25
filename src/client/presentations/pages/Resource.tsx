@@ -82,7 +82,7 @@ export class Resource extends React.Component<any, any> {
       let tmp = obj;
       for (let i = 0; i < keys.length; i += 1) {
         const k = keys[i];
-        if (typeof k === 'object') {
+        if (typeof tmp[k] === 'object') {
           tmp = tmp[k];
         }
       }
