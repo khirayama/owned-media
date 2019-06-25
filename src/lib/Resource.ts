@@ -60,6 +60,7 @@ const DATA_PATH = path.join(ROOT_PATH, 'data');
 type ResourceType = {
   id: string;
   type: string;
+  key: string;
   name: {
     [key: string]: string;
   };
@@ -217,7 +218,7 @@ export class Resource {
     let tmp = this.resources;
 
     if (conditions) {
-      const targetKeys = ['id', 'type'];
+      const targetKeys = ['id', 'type', 'key'];
       for (let targetKey of targetKeys) {
         if (conditions[targetKey]) {
           if (typeof conditions[targetKey] === 'string') {
@@ -261,6 +262,7 @@ export class Resource {
     return {
       id: resource.id,
       type: resource.type,
+      key: resource.key,
       name: resource.name[locale] || resource.name[this.defaultLocale],
       body_path: resource.body_path[locale] || resource.body_path[this.defaultLocale],
       body: resource.body[locale] || resource.body[this.defaultLocale],
