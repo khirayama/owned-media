@@ -50,7 +50,7 @@ function ResourceInfo(props: {
         <select value={resource.type} name="type" onChange={props.onChange}>
           {resourceTypes.map(resourceType => {
             return (
-              <option key={resourceType.type} value={resource.type}>
+              <option key={resourceType.type} value={resourceType.type}>
                 {resourceType.name}
               </option>
             );
