@@ -48,7 +48,7 @@ export function fetchResource(req: express.Request, res: express.Response) {
   const resource =
     Resource.find(
       { id: params.id },
-      { locale: query.locale, raw: query.raw === 'true', limit: Number(query.limit), offset: Number(query.offset) },
+      { locale: query.locale, limit: Number(query.limit), offset: Number(query.offset) },
     )[0] || null;
   res.json(resource);
 }

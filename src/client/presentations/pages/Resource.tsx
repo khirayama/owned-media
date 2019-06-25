@@ -94,7 +94,7 @@ export class Resource extends React.Component<any, any> {
   }
 
   public componentDidMount() {
-    axios.get(`/api/v1/resources/${this.state.id}?raw=true`).then((res: any) => {
+    axios.get(`/api/v1/resources/${this.state.id}?locale=all`).then((res: any) => {
       this.setState({ resource: res.data });
     });
   }
