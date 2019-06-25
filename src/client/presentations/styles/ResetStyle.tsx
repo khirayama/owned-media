@@ -93,7 +93,8 @@ export const ResetStyle = styled.createGlobalStyle`
 
   input,
   textarea,
-  button {
+  button,
+  select {
     font-size: inherit;
     color: inherit;
   }
