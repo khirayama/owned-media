@@ -234,6 +234,7 @@ export class Resource {
     const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
     const limit: number | null = options && options.limit ? options.limit : null;
     const offset: number = options && options.offset ? options.offset : 0;
+    const raw: boolean = options.raw || false;
     // created_at / -created_at
     // const sort: number = options && options.sort ? options.sort : 'created_at';
 
@@ -241,7 +242,7 @@ export class Resource {
       tmp = tmp.slice(offset, limit);
     }
 
-    return tmp.map((t: ResourceType) => this.build(t, locale));
+    return raw ? tmp : tmp.map((t: ResourceType) => this.build(t, locale));
   }
 
   public static relation(resourceIds: string[]): string[] {
