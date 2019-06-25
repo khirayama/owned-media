@@ -65,15 +65,9 @@ export class Resource extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
 
-    const resource = {};
-    for (let locale of config.locales) {
-      resource[locale] = null;
-    }
-
     this.state = {
       id: props.match.params.id,
-      // TODO: 構造作り直す
-      resource,
+      resource: null,
     };
 
     this.onChange = this.onChange.bind(this);
@@ -82,50 +76,48 @@ export class Resource extends React.Component<any, any> {
   private onChange(event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) {
     const name = event.currentTarget.name;
     const value = event.currentTarget.value;
-    console.log(name, value);
+
+    function setValue(key: string, obj: any, val: any) {
+      const keys = key.split('.');
+      let tmp = obj;
+      for (let i = 0; i < keys.length; i += 1) {
+        const k = keys[i];
+        if (typeof k === 'object') {
+          tmp = tmp[k];
+        }
+      }
+      tmp[keys[keys.length - 1]] = val;
+      return obj;
+    }
+
+    this.setState({ resource: setValue(name, this.state.resource, value) });
   }
 
   public componentDidMount() {
-    Promise.all(config.locales.map(locale => axios.get(`/api/v1/resources/${this.state.id}?locale=${locale}`))).then(
-      (res: any) => {
-        const resource = {};
-        for (let r of res) {
-          const paramsString = r.config.url.split('?')[1];
-          const paramStrings = paramsString.split('&');
-          for (let paramString of paramStrings) {
-            const keyValue = paramString.split('=');
-            const key = keyValue[0];
-            const value = keyValue[1];
-            if (key === 'locale') {
-              resource[value] = r.data;
-            }
-          }
-        }
-        this.setState({ resource });
-      },
-    );
+    axios.get(`/api/v1/resources/${this.state.id}?raw=true`).then((res: any) => {
+      this.setState({ resource: res.data });
+    });
   }
 
   public render() {
-    const defaultResource = this.state.resource[config.locales[0]];
+    const resource = this.state.resource;
 
     return (
       <div>
         <Link to="/resources">TO INDEX OF RESOURCES</Link>
-        {defaultResource ? (
+        {resource ? (
           <div>
-            <ResourceInfo resource={defaultResource} onChange={this.onChange} />
+            <ResourceInfo resource={resource} onChange={this.onChange} />
             <h2>CONTENTS</h2>
             <Box>
               {config.locales.map((locale: string) => {
-                const resource = this.state.resource[locale];
                 return resource ? (
                   <Column key={locale}>
-                    {resource.name}
-                    {resource.body_path}
-                    <ResourceBody html={resource.body} />
-                    {resource.image_url}
-                    <img src={resource.image_url} />
+                    {resource.name[locale] || ''}
+                    {resource.body_path[locale] || ''}
+                    <ResourceBody html={resource.body[locale] || ''} />
+                    {resource.image_url[locale] || ''}
+                    <img src={resource.image_url[locale] || ''} />
                   </Column>
                 ) : null;
               })}
@@ -133,14 +125,13 @@ export class Resource extends React.Component<any, any> {
             <h2>PAGE</h2>
             <Box>
               {config.locales.map((locale: string) => {
-                const resource = this.state.resource[locale];
                 return resource ? (
                   <Column key={locale}>
-                    {resource.page.title}
-                    {resource.page.description}
-                    {resource.page.keywords}
-                    {resource.page.image_url}
-                    <img src={resource.page.image_url} />
+                    {resource.page.title[locale] || ''}
+                    {resource.page.description[locale] || ''}
+                    {resource.page.keywords[locale] || ''}
+                    {resource.page.image_url[locale] || ''}
+                    <img src={resource.page.image_url[locale] || ''} />
                   </Column>
                 ) : null;
               })}
