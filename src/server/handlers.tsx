@@ -25,14 +25,17 @@ export function fetchResources(req: express.Request, res: express.Response) {
 }
 
 export function createResource(req: express.Request, res: express.Response) {
+  const locale = req.query.locale;
   const resource = req.body.resource;
+
   const relationIds = req.body.relationIds;
   const now = new Date();
 
-  if (!resource.type || !resource.locale || !resource.name) {
-    return;
-  }
+  resource.locale = resource.locale || locale;
+
   Resource.create(resource);
+
+  // TODO: Create relations
 
   res.json({
     now,
@@ -54,6 +57,12 @@ export function fetchResource(req: express.Request, res: express.Response) {
 }
 
 export function updateResource(req: express.Request, res: express.Response) {
+  const locale = req.query.locale;
+  const resourceId = req.params.id;
+  const resource = req.body.resource;
+
+  Resource.update(resource.id, resource);
+
   res.json({ a: 2 });
 }
 
