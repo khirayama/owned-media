@@ -1,73 +1,87 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import * as React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import * as styled from 'styled-components';
 
 import { config, resourceTypes } from 'config';
+import { ResourceInfo } from 'client/presentations/pages/ResourceInfo';
+import { ResourceContents } from 'client/presentations/pages/ResourceContents';
+import { ResourcePage } from 'client/presentations/pages/ResourcePage';
+import { ResourceAttributes } from 'client/presentations/pages/ResourceAttributes';
 
-const ResourceInfoWrapper = styled.default.div`
-  font-weight: bold;
-`;
+const Wrapper = styled.default.div`
+  padding: 12px;
 
-const Box = styled.default.div`
-  display: flex;
-`;
-
-const Column = styled.default.div`
-  flex: 1;
-`;
-
-function ResourceBody(props: { html: string }) {
-  return <div dangerouslySetInnerHTML={{ __html: props.html }} />;
-}
-
-function ResourceInfo(props: {
-  onChange: any;
-  resource: { id: string; type: string; key: string; created_at: string; updated_at: string };
-}) {
-  const resource = props.resource;
-  const createdAt = resource.created_at ? new Date(resource.created_at) : new Date();
-  const updatedAt = resource.updated_at ? new Date(resource.updated_at) : new Date();
-
-  function format(date: Date) {
-    function zeroPadding(s: string) {
-      return ('00' + s).slice(-2);
-    }
-
-    return `${date.getFullYear()}.${zeroPadding(String(date.getMonth() + 1))}.${zeroPadding(
-      String(date.getDate()),
-    )} ${zeroPadding(String(date.getHours()))}:${zeroPadding(String(date.getMinutes()))}`;
+  h2 {
+    font-weight: bold;
+    padding: 12px 8px;
   }
 
-  return (
-    <ResourceInfoWrapper>
-      <div>ID: {resource.id}</div>
-      <div>
-        UPDATED: {format(updatedAt)} - CREATED: {format(createdAt)}
-      </div>
-      <div>
-        <input type="text" placeholder="resource-key" value={resource.key} name="key" onChange={props.onChange} />
-        <select value={resource.type} name="type" onChange={props.onChange}>
-          {resourceTypes.map(resourceType => {
-            return (
-              <option key={resourceType.type} value={resourceType.type}>
-                {resourceType.name}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-    </ResourceInfoWrapper>
-  );
+  input,
+  select {
+    font-weight: bold;
+    padding: 4px;
+    background: #eee;
+  }
+`;
+
+function createLocaleObj(locales: string[]) {
+  const obj = {};
+  for (let locale of locales) {
+    obj[locale] = '';
+  }
+  return obj;
+}
+
+function isObject(item: any) {
+  return item && typeof item === 'object' && !Array.isArray(item);
+}
+
+function mergeDeep(target: any, ...sources: any): any {
+  if (!sources.length) return target;
+  const source = sources.shift();
+
+  if (isObject(target) && isObject(source)) {
+    for (const key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, { [key]: {} });
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, { [key]: source[key] });
+      }
+    }
+  }
+
+  return mergeDeep(target, ...sources);
 }
 
 export class Resource extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
 
+    const defaultResource = {
+      id: '',
+      type: resourceTypes[0].type,
+      key: '',
+      body: createLocaleObj(config.locales),
+      body_path: createLocaleObj(config.locales),
+      image_url: createLocaleObj(config.locales),
+      name: createLocaleObj(config.locales),
+      page: {
+        title: createLocaleObj(config.locales),
+        description: createLocaleObj(config.locales),
+        image_url: createLocaleObj(config.locales),
+        keywords: createLocaleObj(config.locales),
+      },
+      attributes: {},
+      created_at: '',
+      updated_at: '',
+    };
+
     this.state = {
       id: props.match.params.id,
-      resource: null,
+      resource: defaultResource,
     };
 
     this.onChange = this.onChange.bind(this);
