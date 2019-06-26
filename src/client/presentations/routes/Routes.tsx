@@ -28,6 +28,12 @@ export const routes = [
   },
   {
     exact: true,
+    path: '/resources/new',
+    component: Resource,
+    initializer: null,
+  },
+  {
+    exact: true,
     path: '/resources/:id',
     component: Resource,
     initializer: null,
