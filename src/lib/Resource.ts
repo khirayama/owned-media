@@ -52,6 +52,21 @@ Resource.create({
     keywords: 'キーワード,キーワード',
   },
 });
+Resource.update('1', {
+  type: 'note',
+  locale: 'en',
+  name: 'テスト',
+  imageUrl: 'イメージパス',
+  attributes: {
+    sample: 'サンプル',
+  },
+  page: {
+    title: 'テストタイトル',
+    description: 'テスト説明文',
+    imageUrl: 'イメージパス',
+    keywords: 'キーワード,キーワード',
+  },
+});
 */
 
 const ROOT_PATH = path.join(__dirname, '..', '..');
