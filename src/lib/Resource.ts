@@ -295,6 +295,8 @@ export class Resource {
   }
 
   public static create(resource: any) {
+    const locale = resource.locale || this.defaultLocale;
+
     const now = new Date();
     const lastResourceRow = this.resourceRows[this.resourceRows.length - 1];
     const resourceId = lastResourceRow ? String(Number(lastResourceRow.id) + 1) : 0;
@@ -310,7 +312,6 @@ export class Resource {
     // For resource_contents
     const lastResourceContentRow = this.resourceContentRows[this.resourceContentRows.length - 1];
     const resourceContentId = lastResourceContentRow ? String(Number(lastResourceContentRow.id) + 1) : 0;
-    const resourceLocale = resource.locale;
     const resourceName = resource.name;
     const resourceImageUrl = resource.imageUrl;
 
@@ -323,7 +324,7 @@ export class Resource {
     this.resourceContentRows.push({
       id: resourceContentId,
       resource_id: resourceId,
-      locale: resourceLocale,
+      locale,
       name: resourceName,
       image_url: resourceImageUrl,
       body_path: resourceBodyPath,
@@ -353,7 +354,7 @@ export class Resource {
     this.pageRows.push({
       id: pageId,
       resource_id: resourceId,
-      locale: resourceLocale,
+      locale,
       title: pageTitle,
       description: pageDescription,
       image_url: pageImageUrl,
