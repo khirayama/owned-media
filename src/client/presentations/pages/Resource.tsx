@@ -90,8 +90,33 @@ export class Resource extends React.Component<any, any> {
   private onChange(event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) {
     const name = event.currentTarget.name;
     const value = event.currentTarget.value;
+    const currentResource = JSON.parse(JSON.stringify(this.state.resource));
 
-    function setValue(key: string, obj: any, val: any) {
+    if (name === 'type') {
+      currentResource.attributes = {};
+      const resourceType = resourceTypes.filter(tmp => tmp.type === value)[0];
+      if (resourceType && resourceType.attributes) {
+        for (let attr of resourceType.attributes) {
+          switch (attr.inputType) {
+            case 'select': {
+              currentResource.attributes[attr.key] = (attr as any).options[0].value;
+              break;
+            }
+            case 'number': {
+              currentResource.attributes[attr.key] = 0;
+              break;
+            }
+            case 'date': {
+              const now = new Date();
+              currentResource.attributes[attr.key] = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    function setValue(obj: any, key: string, val: any) {
       const keys = key.split('.');
       let tmp = obj;
       for (let i = 0; i < keys.length; i += 1) {
@@ -104,57 +129,35 @@ export class Resource extends React.Component<any, any> {
       return obj;
     }
 
-    this.setState({ resource: setValue(name, this.state.resource, value) });
+    this.setState({ resource: setValue(currentResource, name, value) });
   }
 
   public componentDidMount() {
-    axios.get(`/api/v1/resources/${this.state.id}?locale=all`).then((res: any) => {
-      this.setState({ resource: res.data });
-    });
+    const resourceId = this.props.match.params.id || null;
+
+    if (resourceId) {
+      axios.get(`/api/v1/resources/${resourceId}?locale=all`).then((res: any) => {
+        const resource = mergeDeep(this.state.resource, res.data);
+        this.setState({ resource });
+      });
+    }
   }
 
   public render() {
     const resource = this.state.resource;
 
     return (
-      <div>
+      <Wrapper>
         <Link to="/resources">TO INDEX OF RESOURCES</Link>
         {resource ? (
           <div>
             <ResourceInfo resource={resource} onChange={this.onChange} />
-            <h2>CONTENTS</h2>
-            <Box>
-              {config.locales.map((locale: string) => {
-                return resource ? (
-                  <Column key={locale}>
-                    {resource.name[locale] || ''}
-                    {resource.body_path[locale] || ''}
-                    <ResourceBody html={resource.body[locale] || ''} />
-                    {resource.image_url[locale] || ''}
-                    <img src={resource.image_url[locale] || ''} />
-                  </Column>
-                ) : null;
-              })}
-            </Box>
-            <h2>PAGE</h2>
-            <Box>
-              {config.locales.map((locale: string) => {
-                return resource ? (
-                  <Column key={locale}>
-                    {resource.page.title[locale] || ''}
-                    {resource.page.description[locale] || ''}
-                    {resource.page.keywords[locale] || ''}
-                    {resource.page.image_url[locale] || ''}
-                    <img src={resource.page.image_url[locale] || ''} />
-                  </Column>
-                ) : null;
-              })}
-            </Box>
-            <h2>DEFINED ATTRIBUTES</h2>
-            <h2>CUSTOM ATTRIBUTES</h2>
+            <ResourceContents resource={resource} onChange={this.onChange} />
+            <ResourcePage resource={resource} onChange={this.onChange} />
+            <ResourceAttributes resource={resource} resourceType={this.state.resource.type} onChange={this.onChange} />
           </div>
         ) : null}
-      </div>
+      </Wrapper>
     );
   }
 }
