@@ -34,25 +34,24 @@ export const resourceTypes = [
         inputType: 'select',
         options: [
           {
-            name: {
-              ja: '弱',
-              en: 'Weak',
-            },
+            name: 'Very Weak',
             value: 0,
           },
           {
-            name: {
-              ja: '中',
-              en: 'Standard',
-            },
+            name: 'Weak',
             value: 1,
           },
           {
-            name: {
-              ja: '強',
-              en: 'Strong',
-            },
+            name: 'Standard',
             value: 2,
+          },
+          {
+            name: 'Strong',
+            value: 3,
+          },
+          {
+            name: 'Very Strong',
+            value: 4,
           },
         ],
       },
@@ -61,25 +60,24 @@ export const resourceTypes = [
         inputType: 'select',
         options: [
           {
-            name: {
-              ja: '弱',
-              en: 'Weak',
-            },
+            name: 'Very Weak',
             value: 0,
           },
           {
-            name: {
-              ja: '中',
-              en: 'Standard',
-            },
+            name: 'Weak',
             value: 1,
           },
           {
-            name: {
-              ja: '強',
-              en: 'Strong',
-            },
+            name: 'Standard',
             value: 2,
+          },
+          {
+            name: 'Strong',
+            value: 3,
+          },
+          {
+            name: 'Very Strong',
+            value: 4,
           },
         ],
       },
