@@ -27,6 +27,9 @@ export class Resources extends React.Component<any, any> {
   public render() {
     return (
       <ul>
+        <li>
+          <Link to="/resources/new">CREATE NEW RESOURCE</Link>
+        </li>
         {this.state.resources.map((resource: any) => (
           <li key={resource.id}>
             <Link to={`/resources/${resource.id}`}>
