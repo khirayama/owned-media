@@ -389,4 +389,18 @@ export class Resource {
       this.pageRows,
     );
   }
+
+  public static update(id: string, resource: any) {
+    const locale = resource.locale || this.defaultLocale;
+
+    const resourceRow = this.resourceRows.filter(resourceRow => resourceRow.id === id);
+    const resourceContentRow = this.resourceContentRows.filter(
+      resourceContentRow => resourceContentRow.resource_id === id && resourceContentRow.locale === locale,
+    );
+    const resourceAttributeRow = this.resourceAttributeRows.filter(
+      resourceAttributeRow => resourceAttributeRow.resource_id === id && resourceAttributeRow.locale === locale,
+    );
+    const pageRow = this.pageRows.filter(pageRow => pageRow.resource_id === id && pageRow.locale === locale);
+    console.log(resourceRow, resourceContentRow, resourceAttributeRow, pageRow);
+  }
 }
