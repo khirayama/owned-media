@@ -14,6 +14,10 @@ export const config = {
     ja: `インドアグリーン、観葉植物の育て方や知識を深めるメディア`,
     en: `The Media of indoor green and plants to know how to grow and knowledge`,
   },
+  path: {
+    api: '/api',
+    admin: '/admin',
+  },
 };
 
 export const resourceTypes = [
