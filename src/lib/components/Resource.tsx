@@ -136,7 +136,7 @@ export class Resource extends React.Component<any, any> {
     const resourceId = this.props.match.params.id || null;
 
     if (resourceId) {
-      axios.get(`/api/v1/resources/${resourceId}?locale=all`).then((res: any) => {
+      axios.get(`${config.path.api}/resources/${resourceId}?locale=all`).then((res: any) => {
         const resource = mergeDeep(this.state.resource, res.data);
         this.setState({ resource });
       });
@@ -148,7 +148,7 @@ export class Resource extends React.Component<any, any> {
 
     return (
       <Wrapper>
-        <Link to="/resources">TO INDEX OF RESOURCES</Link>
+        <Link to={`${config.path.admin}/resources`}>TO INDEX OF RESOURCES</Link>
         {resource ? (
           <div>
             <ResourceInfo resource={resource} onChange={this.onChange} />
