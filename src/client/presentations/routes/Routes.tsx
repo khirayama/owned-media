@@ -3,8 +3,8 @@ import { Route, Switch } from 'react-router-dom';
 
 import { Home } from 'client/presentations/pages/Home';
 import { About } from 'client/presentations/pages/About';
-import { Resources } from 'client/presentations/pages/Resources';
-import { Resource } from 'client/presentations/pages/Resource';
+import { Resources } from 'lib/components/Resources';
+import { Resource } from 'lib/components/Resource';
 
 export const routes = [
   {

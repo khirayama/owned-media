@@ -4,13 +4,13 @@ import * as http from 'http';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 
+import { api } from 'lib/api';
+
 import * as renderer from 'server/renderer';
-import { fetchResources, fetchResource, createResource, updateResource, deleteResource } from 'server/handlers';
 
 export function runServer() {
   const PORT = process.env.PORT || 3000;
   const app: express.Application = express();
-  const api: express.Application = express();
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
@@ -18,13 +18,6 @@ export function runServer() {
   app.use('/public', express.static('dist/public'));
   // TODO: Fix path. It is a temporary path.
   app.use('/assets', express.static('src/server/assets'));
-
-  api
-    .get('/resources', fetchResources)
-    .post('/resources', createResource)
-    .get('/resources/:id', fetchResource)
-    .put('/resources/:id', updateResource)
-    .delete('/resources/:id', deleteResource);
 
   app.use('/api/v1', api);
   app.get('*', renderer.get);
