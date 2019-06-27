@@ -4,8 +4,9 @@ import * as http from 'http';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { api } from 'lib/api';
+import { api, admin } from 'lib/routes';
 
+import { config } from 'config';
 import * as renderer from 'server/renderer';
 
 export function runServer() {
@@ -19,7 +20,11 @@ export function runServer() {
   // TODO: Fix path. It is a temporary path.
   app.use('/assets', express.static('src/server/assets'));
 
-  app.use('/api/v1', api);
+  app.use(config.path.api, api);
+  if (process.env.NODE_ENV === 'development') {
+    app.use(config.path.admin, admin);
+  }
+
   app.get('*', renderer.get);
 
   const server = http.createServer(app);
