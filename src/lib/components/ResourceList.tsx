@@ -1,9 +1,10 @@
 import * as React from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
-export class Resources extends React.Component<any, any> {
-  constructor(props: any) {
+import { config } from 'config';
+
+export class ResourceList extends React.Component<{}, any> {
+  constructor(props: {}) {
     super(props);
 
     this.state = {
@@ -12,7 +13,7 @@ export class Resources extends React.Component<any, any> {
   }
 
   public componentDidMount() {
-    axios.get('/api/v1/resources').then(res => {
+    axios.get(`${config.path.api}/resources`).then((res: any) => {
       this.setState({
         resources: res.data.sort((x: any, y: any) => {
           const xTime = new Date(x.updated_at).getTime();
@@ -25,9 +26,11 @@ export class Resources extends React.Component<any, any> {
   }
 
   public render() {
+    const baseUrl = config.path.admin;
+
     return (
       <div>
-        <Link to="/resources/new">CREATE NEW RESOURCE</Link>
+        <a href={`${baseUrl}/resources/new`}>CREATE NEW RESOURCE</a>
         <table>
           <thead>
             <tr>
@@ -44,7 +47,7 @@ export class Resources extends React.Component<any, any> {
                 <td>{resource.name}</td>
                 <td>{resource.type}</td>
                 <td>
-                  <Link to={`/resources/${resource.id}`}>EDIT</Link>
+                  <a href={`${baseUrl}/resources/${resource.id}`}>EDIT</a>
                 </td>
               </tr>
             ))}

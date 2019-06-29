@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import * as React from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import * as styled from 'styled-components';
 
 import { config, resourceTypes } from 'config';
@@ -9,6 +8,10 @@ import { ResourceInfo } from 'lib/components/ResourceInfo';
 import { ResourceContents } from 'lib/components/ResourceContents';
 import { ResourcePage } from 'lib/components/ResourcePage';
 import { ResourceAttributes } from 'lib/components/ResourceAttributes';
+
+interface Props {
+  id: string;
+}
 
 const Wrapper = styled.default.div`
   padding: 12px;
@@ -56,8 +59,8 @@ function mergeDeep(target: any, ...sources: any): any {
   return mergeDeep(target, ...sources);
 }
 
-export class Resource extends React.Component<any, any> {
-  constructor(props: any) {
+export class ResourceForm extends React.Component<Props, any> {
+  constructor(props: Props) {
     super(props);
 
     const defaultResource = {
@@ -80,7 +83,7 @@ export class Resource extends React.Component<any, any> {
     };
 
     this.state = {
-      id: props.match.params.id,
+      id: props.id,
       resource: defaultResource,
     };
 
@@ -133,7 +136,7 @@ export class Resource extends React.Component<any, any> {
   }
 
   public componentDidMount() {
-    const resourceId = this.props.match.params.id || null;
+    const resourceId = this.props.id;
 
     if (resourceId) {
       axios.get(`${config.path.api}/resources/${resourceId}?locale=all`).then((res: any) => {
@@ -144,11 +147,12 @@ export class Resource extends React.Component<any, any> {
   }
 
   public render() {
+    const baseUrl = config.path.admin;
     const resource = this.state.resource;
 
     return (
       <Wrapper>
-        <Link to={`${config.path.admin}/resources`}>TO INDEX OF RESOURCES</Link>
+        <a href={`${baseUrl}/resources`}>TO INDEX OF RESOURCES</a>
         {resource ? (
           <div>
             <ResourceInfo resource={resource} onChange={this.onChange} />
