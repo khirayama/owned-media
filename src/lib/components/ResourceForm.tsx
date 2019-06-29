@@ -16,7 +16,7 @@ interface State {
 }
 
 interface Props {
-  id: string;
+  resourceId: string;
   onClickResourcesLink?: (event: React.MouseEvent<HTMLButtonElement>, props: Props, state: State) => void;
 }
 
@@ -114,7 +114,7 @@ export class ResourceForm extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    const resourceId = this.props.id;
+    const resourceId = this.props.resourceId;
 
     if (resourceId) {
       axios.get(`${config.path.api}/resources/${resourceId}?locale=all`).then((res: any) => {
@@ -161,7 +161,7 @@ export class ResourceForm extends React.Component<Props, State> {
   private onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (this.props.id) {
+    if (this.props.resourceId) {
       console.log('UPDATE');
       console.log(this.state);
     } else {

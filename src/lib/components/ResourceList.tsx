@@ -2,14 +2,31 @@ import * as React from 'react';
 import axios from 'axios';
 
 import { config } from 'config';
+import { ResourceShape } from 'lib/Resource';
+import { ResourceListItem, Props as ResourceListItemProps } from 'lib/components/ResourceListItem';
 
-export class ResourceList extends React.Component<{}, any> {
-  constructor(props: {}) {
+interface State {
+  resources: ResourceShape[];
+}
+
+interface Props {
+  onClickNewResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: Props, state: State) => void;
+  onClickEditResourceButton?: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    props: ResourceListItemProps,
+    state: void,
+  ) => void;
+}
+
+export class ResourceList extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
       resources: [],
     };
+
+    this.onClickNewResourceButton = this.onClickNewResourceButton.bind(this);
   }
 
   public componentDidMount() {
@@ -26,11 +43,9 @@ export class ResourceList extends React.Component<{}, any> {
   }
 
   public render() {
-    const baseUrl = config.path.admin;
-
     return (
       <div>
-        <a href={`${baseUrl}/resources/new`}>CREATE NEW RESOURCE</a>
+        <button onClick={this.onClickNewResourceButton}>CREATE NEW RESOURCE</button>
         <table>
           <thead>
             <tr>
@@ -42,18 +57,22 @@ export class ResourceList extends React.Component<{}, any> {
           </thead>
           <tbody>
             {this.state.resources.map((resource: any) => (
-              <tr key={resource.id}>
-                <td>{resource.id}</td>
-                <td>{resource.name}</td>
-                <td>{resource.type}</td>
-                <td>
-                  <a href={`${baseUrl}/resources/${resource.id}`}>EDIT</a>
-                </td>
-              </tr>
+              <ResourceListItem
+                key={resource.id}
+                resource={resource}
+                onClickEditResourceButton={this.props.onClickEditResourceButton}
+              />
             ))}
           </tbody>
         </table>
       </div>
     );
+  }
+
+  private onClickNewResourceButton(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    if (this.props.onClickNewResourceButton) {
+      this.props.onClickNewResourceButton(event, this.props, this.state);
+    }
   }
 }
