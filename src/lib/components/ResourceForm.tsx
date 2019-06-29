@@ -10,8 +10,12 @@ import { ResourceContents } from 'lib/components/ResourceContents';
 import { ResourcePage } from 'lib/components/ResourcePage';
 import { ResourceAttributes } from 'lib/components/ResourceAttributes';
 
+interface State {
+}
+
 interface Props {
   id: string;
+  onClickResourcesLink?: (event: React.MouseEvent<HTMLButtonElement>, props: Props, state: State) => void;
 }
 
 const Wrapper = styled.default.div`
@@ -59,6 +63,7 @@ export class ResourceForm extends React.Component<Props, any> {
     };
 
     this.onChange = this.onChange.bind(this);
+    this.onClickResourcesLink = this.onClickResourcesLink.bind(this);
   }
 
   private onChange(event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -118,12 +123,11 @@ export class ResourceForm extends React.Component<Props, any> {
   }
 
   public render() {
-    const baseUrl = config.path.admin;
     const resource = this.state.resource;
 
     return (
       <Wrapper>
-        <a href={`${baseUrl}/resources`}>TO INDEX OF RESOURCES</a>
+        <button onClick={this.onClickResourcesLink}>TO INDEX OF RESOURCES</button>
         {resource ? (
           <div>
             <ResourceInfo resource={resource} onChange={this.onChange} />
@@ -140,5 +144,12 @@ export class ResourceForm extends React.Component<Props, any> {
         ) : null}
       </Wrapper>
     );
+  }
+
+  private onClickResourcesLink(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    if (this.props.onClickResourcesLink) {
+      this.props.onClickResourcesLink(event, this.props, this.state);
+    }
   }
 }
