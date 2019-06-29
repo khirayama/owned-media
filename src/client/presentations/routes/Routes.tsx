@@ -3,8 +3,24 @@ import { Route, Switch } from 'react-router-dom';
 
 import { Home } from 'client/presentations/pages/Home';
 import { About } from 'client/presentations/pages/About';
-import { Resources } from 'lib/components/Resources';
-import { Resource } from 'lib/components/Resource';
+import { ResourceList } from 'lib/components/ResourceList';
+import { ResourceForm } from 'lib/components/ResourceForm';
+
+import { config } from 'config';
+
+class Resources extends React.Component<any, any> {
+  public render() {
+    return <ResourceList />;
+  }
+}
+
+class Resource extends React.Component<any, any> {
+  public render() {
+    const id = this.props.match.params.id || null;
+
+    return <ResourceForm id={id} />;
+  }
+}
 
 export const routes = [
   {
@@ -22,19 +38,19 @@ export const routes = [
   // For adming
   {
     exact: true,
-    path: '/resources',
+    path: `${config.path.admin}/resources`,
     component: Resources,
     initializer: null,
   },
   {
     exact: true,
-    path: '/resources/new',
+    path: `${config.path.admin}/resources/new`,
     component: Resource,
     initializer: null,
   },
   {
     exact: true,
-    path: '/resources/:id',
+    path: `${config.path.admin}/resources/:id`,
     component: Resource,
     initializer: null,
   },
