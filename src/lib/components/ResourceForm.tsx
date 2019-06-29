@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as styled from 'styled-components';
 
 import { config, resourceTypes } from 'config';
+import { ResourceShape } from 'lib/Resource';
 import { createLocaleObj, mergeDeep } from 'lib/utils';
 import { ResourceInfo } from 'lib/components/ResourceInfo';
 import { ResourceContents } from 'lib/components/ResourceContents';
@@ -11,6 +12,7 @@ import { ResourcePage } from 'lib/components/ResourcePage';
 import { ResourceAttributes } from 'lib/components/ResourceAttributes';
 
 interface State {
+  resource: ResourceShape;
 }
 
 interface Props {
@@ -34,11 +36,11 @@ const Wrapper = styled.default.div`
   }
 `;
 
-export class ResourceForm extends React.Component<Props, any> {
+export class ResourceForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
-    const defaultResource = {
+    const defaultResource: ResourceShape = {
       id: '',
       type: resourceTypes[0].type,
       key: '',
@@ -58,7 +60,6 @@ export class ResourceForm extends React.Component<Props, any> {
     };
 
     this.state = {
-      id: props.id,
       resource: defaultResource,
     };
 

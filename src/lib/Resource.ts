@@ -72,7 +72,7 @@ Resource.update('1', {
 const ROOT_PATH = path.join(__dirname, '..', '..');
 const DATA_PATH = path.join(ROOT_PATH, 'data');
 
-type ResourceType = {
+export type ResourceShape = {
   id: string;
   type: string;
   key: string;
@@ -120,7 +120,7 @@ export class Resource {
 
   private static relationRows: any[] = [];
 
-  private static resources: ResourceType[] = [];
+  private static resources: ResourceShape[] = [];
 
   public static init() {
     this.load();
@@ -157,7 +157,7 @@ export class Resource {
     resourceContentRows: any[],
     resourceAttributeRows: any[],
     pageRows: any[],
-  ): ResourceType[] {
+  ): ResourceShape[] {
     const resources = [];
 
     for (const resourceRow of resourceRows) {
@@ -237,9 +237,9 @@ export class Resource {
       for (let targetKey of targetKeys) {
         if (conditions[targetKey]) {
           if (typeof conditions[targetKey] === 'string') {
-            tmp = tmp.filter((t: ResourceType) => t[targetKey] === conditions[targetKey]);
+            tmp = tmp.filter((t: ResourceShape) => t[targetKey] === conditions[targetKey]);
           } else if (Array.isArray(conditions[targetKey])) {
-            tmp = tmp.filter((t: ResourceType) => conditions[targetKey].indexOf(t[targetKey]) !== -1);
+            tmp = tmp.filter((t: ResourceShape) => conditions[targetKey].indexOf(t[targetKey]) !== -1);
           }
         }
       }
@@ -256,7 +256,7 @@ export class Resource {
       tmp = tmp.slice(offset, limit);
     }
 
-    return locale === 'all' ? tmp : tmp.map((t: ResourceType) => this.build(t, locale));
+    return locale === 'all' ? tmp : tmp.map((t: ResourceShape) => this.build(t, locale));
   }
 
   public static relation(resourceIds: string[]): string[] {
@@ -273,7 +273,7 @@ export class Resource {
     return relatedResourceIds;
   }
 
-  private static build(resource: ResourceType, locale: string) {
+  private static build(resource: ResourceShape, locale: string) {
     return {
       id: resource.id,
       type: resource.type,
