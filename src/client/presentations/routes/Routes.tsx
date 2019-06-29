@@ -5,12 +5,26 @@ import { Home } from 'client/presentations/pages/Home';
 import { About } from 'client/presentations/pages/About';
 import { ResourceList } from 'lib/components/ResourceList';
 import { ResourceForm } from 'lib/components/ResourceForm';
+import { Props as ResourceListItemProps } from 'lib/components/ResourceListItem';
 
 import { config } from 'config';
 
 class Resources extends React.Component<any, any> {
   public render() {
-    return <ResourceList />;
+    const onClickNewResourceButton = () => {
+      this.props.history.push(`${config.path.admin}/resources/new`);
+    };
+
+    const onClickEditResourceButton = (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => {
+      this.props.history.push(`${config.path.admin}/resources/${props.resource.id}`);
+    };
+
+    return (
+      <ResourceList
+        onClickNewResourceButton={onClickNewResourceButton}
+        onClickEditResourceButton={onClickEditResourceButton}
+      />
+    );
   }
 }
 
@@ -21,7 +35,7 @@ class Resource extends React.Component<any, any> {
       this.props.history.push(`${config.path.admin}/resources`);
     };
 
-    return <ResourceForm id={id} onClickResourcesLink={onClickResourcesLink} />;
+    return <ResourceForm resourceId={id} onClickResourcesLink={onClickResourcesLink} />;
   }
 }
 
