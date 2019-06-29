@@ -17,8 +17,11 @@ class Resources extends React.Component<any, any> {
 class Resource extends React.Component<any, any> {
   public render() {
     const id = this.props.match.params.id || null;
+    const onClickResourcesLink = () => {
+      this.props.history.push(`${config.path.admin}/resources`);
+    };
 
-    return <ResourceForm id={id} />;
+    return <ResourceForm id={id} onClickResourcesLink={onClickResourcesLink} />;
   }
 }
 
