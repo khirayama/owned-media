@@ -63,6 +63,7 @@ export class ResourceForm extends React.Component<Props, State> {
       resource: defaultResource,
     };
 
+    this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onClickResourcesLink = this.onClickResourcesLink.bind(this);
   }
@@ -129,20 +130,23 @@ export class ResourceForm extends React.Component<Props, State> {
     return (
       <Wrapper>
         <button onClick={this.onClickResourcesLink}>TO INDEX OF RESOURCES</button>
-        {resource ? (
-          <div>
-            <ResourceInfo resource={resource} onChange={this.onChange} />
-            <ResourceContents resource={resource} onChange={this.onChange} />
-            <ResourcePage resource={resource} onChange={this.onChange} />
-            {Object.keys(resource.attributes).length ? (
-              <ResourceAttributes
-                resource={resource}
-                resourceType={this.state.resource.type}
-                onChange={this.onChange}
-              />
-            ) : null}
-          </div>
-        ) : null}
+        <form onSubmit={this.onSubmit}>
+          <button>SUBMIT</button>
+          {resource ? (
+            <div>
+              <ResourceInfo resource={resource} onChange={this.onChange} />
+              <ResourceContents resource={resource} onChange={this.onChange} />
+              <ResourcePage resource={resource} onChange={this.onChange} />
+              {Object.keys(resource.attributes).length ? (
+                <ResourceAttributes
+                  resource={resource}
+                  resourceType={this.state.resource.type}
+                  onChange={this.onChange}
+                />
+              ) : null}
+            </div>
+          ) : null}
+        </form>
       </Wrapper>
     );
   }
@@ -151,6 +155,18 @@ export class ResourceForm extends React.Component<Props, State> {
     event.preventDefault();
     if (this.props.onClickResourcesLink) {
       this.props.onClickResourcesLink(event, this.props, this.state);
+    }
+  }
+
+  private onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (this.props.id) {
+      console.log('UPDATE');
+      console.log(this.state);
+    } else {
+      console.log('CREATE');
+      console.log(this.state);
     }
   }
 }
