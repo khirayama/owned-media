@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as styled from 'styled-components';
 
 import { config, resourceTypes } from 'config';
+import { createLocaleObj, mergeDeep } from 'lib/utils';
 import { ResourceInfo } from 'lib/components/ResourceInfo';
 import { ResourceContents } from 'lib/components/ResourceContents';
 import { ResourcePage } from 'lib/components/ResourcePage';
@@ -28,36 +29,6 @@ const Wrapper = styled.default.div`
     background: #eee;
   }
 `;
-
-function createLocaleObj(locales: string[]) {
-  const obj = {};
-  for (let locale of locales) {
-    obj[locale] = '';
-  }
-  return obj;
-}
-
-function isObject(item: any) {
-  return item && typeof item === 'object' && !Array.isArray(item);
-}
-
-function mergeDeep(target: any, ...sources: any): any {
-  if (!sources.length) return target;
-  const source = sources.shift();
-
-  if (isObject(target) && isObject(source)) {
-    for (const key in source) {
-      if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, { [key]: {} });
-        mergeDeep(target[key], source[key]);
-      } else {
-        Object.assign(target, { [key]: source[key] });
-      }
-    }
-  }
-
-  return mergeDeep(target, ...sources);
-}
 
 export class ResourceForm extends React.Component<Props, any> {
   constructor(props: Props) {
