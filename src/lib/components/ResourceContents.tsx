@@ -4,46 +4,7 @@ import * as styled from 'styled-components';
 import { config } from 'config';
 
 const Wrapper = styled.default.div`
-  .text-center {
-    text-align: center;
-  }
-
-  table {
-    width: 100%;
-    border: solid 1px #ccc;
-
-    th {
-      padding: 4px;
-      font-weight: bold;
-      width: 35%;
-      text-align: left;
-      border: solid 1px #ccc;
-      vertical-align: top;
-    }
-
-    td {
-      border: solid 1px #ccc;
-
-      img {
-        width: auto;
-        max-height: 240px;
-      }
-
-      input {
-        width: 100%;
-        padding: 4px;
-      }
-    }
-  }
-`;
-
-const Box = styled.default.div`
-  display: flex;
-  padding: 0 12px;
-`;
-
-const Column = styled.default.div`
-  flex: 1;
+  margin-bottom: 24px;
 `;
 
 export function ResourceContents(props: any) {
@@ -51,15 +12,15 @@ export function ResourceContents(props: any) {
 
   return (
     <Wrapper>
-      <h2>CONTENTS</h2>
-      <Box>
+      <h3>Contents</h3>
+      <div className="box">
         {config.locales.map((locale: string) => {
           return resource ? (
-            <Column key={locale}>
+            <div key={locale} className="column">
               <table>
                 <tbody>
                   <tr>
-                    <th>Name</th>
+                    <th>Name({locale})</th>
                     <td>
                       <input
                         type="text"
@@ -70,7 +31,7 @@ export function ResourceContents(props: any) {
                     </td>
                   </tr>
                   <tr>
-                    <th>Body Path</th>
+                    <th>Body Path({locale})</th>
                     <td>
                       <input
                         type="text"
@@ -81,7 +42,7 @@ export function ResourceContents(props: any) {
                     </td>
                   </tr>
                   <tr>
-                    <th>Image URL</th>
+                    <th>Image URL({locale})</th>
                     <td>
                       <input
                         type="text"
@@ -92,17 +53,17 @@ export function ResourceContents(props: any) {
                     </td>
                   </tr>
                   <tr>
-                    <th>Image Preview</th>
+                    <th>Image Preview({locale})</th>
                     <td className="text-center">
                       <img src={resource.image_url[locale]} />
                     </td>
                   </tr>
                 </tbody>
               </table>
-            </Column>
+            </div>
           ) : null;
         })}
-      </Box>
+      </div>
     </Wrapper>
   );
 }
