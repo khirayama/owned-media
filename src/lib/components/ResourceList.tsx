@@ -1,5 +1,6 @@
 import * as React from 'react';
 import axios from 'axios';
+import styled from 'styled-components';
 
 import { config } from 'config';
 import { ResourceShape } from 'lib/Resource';
@@ -24,6 +25,38 @@ interface Props {
     state: void,
   ) => void;
 }
+
+export const Wrapper = styled.div`
+  padding: 24px 16px;
+
+  h2 {
+    font-weight: bold;
+    margin-bottom: 36px;
+  }
+
+  button + table {
+    margin-top: 24px;
+  }
+
+  tr {
+    th:nth-of-type(5n + 1) {
+      width: 20px;
+    }
+    th:nth-of-type(5n + 2) {
+      width: 160px;
+    }
+    th:nth-of-type(5n + 4) {
+      width: 80px;
+    }
+    th:nth-of-type(5n) {
+      width: 132px;
+    }
+  }
+
+  button + button {
+    margin-left: 12px;
+  }
+`;
 
 export class ResourceList extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -51,7 +84,8 @@ export class ResourceList extends React.Component<Props, State> {
 
   public render() {
     return (
-      <div>
+      <Wrapper>
+        <h2>Resources</h2>
         <FlatButton onClick={this.onClickNewResourceButton}>CREATE NEW RESOURCE</FlatButton>
         <Table>
           <TableHead>
@@ -74,7 +108,7 @@ export class ResourceList extends React.Component<Props, State> {
             ))}
           </tbody>
         </Table>
-      </div>
+      </Wrapper>
     );
   }
 
