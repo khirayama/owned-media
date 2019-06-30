@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as styled from 'styled-components';
 
 import { config, resourceTypes } from 'config';
+import { styles } from 'lib/components/styles';
 import { ResourceShape } from 'lib/Resource';
 import { createLocaleObj, mergeDeep } from 'lib/utils';
 import { ResourceInfo } from 'lib/components/ResourceInfo';
@@ -22,11 +23,14 @@ interface Props {
 }
 
 const Wrapper = styled.default.div`
-  padding: 12px;
-
   h2 {
     font-weight: bold;
-    padding: 12px 8px;
+    margin-bottom: 8px;
+  }
+
+  h3 {
+    font-weight: bold;
+    margin-bottom: 8px;
   }
 
   input,
@@ -34,6 +38,62 @@ const Wrapper = styled.default.div`
     font-weight: bold;
     padding: 4px;
     background: #eee;
+  }
+
+  .box {
+    display: flex;
+
+    .column {
+      flex: 1;
+    }
+
+    .column-left {
+      flex: 1;
+      padding: 24px 16px;
+      border-right: ${styles.border};
+    }
+
+    .column-right {
+      flex: 3;
+      padding: 24px 16px;
+    }
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    border: ${styles.border};
+
+    th {
+      padding: 4px;
+      font-weight: bold;
+      width: 35%;
+      text-align: left;
+      border: ${styles.border};
+      vertical-align: top;
+    }
+
+    td {
+      border: ${styles.border};
+
+      img {
+        width: auto;
+        max-height: 240px;
+      }
+
+      p {
+        padding: 4px;
+      }
+
+      select,
+      input {
+        width: 100%;
+        padding: 4px;
+      }
+    }
   }
 `;
 
@@ -130,23 +190,30 @@ export class ResourceForm extends React.Component<Props, State> {
 
     return (
       <Wrapper>
-        <FlatButton onClick={this.onClickResourcesLink}>TO INDEX OF RESOURCES</FlatButton>
         <form onSubmit={this.onSubmit}>
-          <FloatButton>SUBMIT</FloatButton>
-          {resource ? (
-            <div>
+          <div className="box">
+            <div className="column column-left">
+              <h2>Resource</h2>
+              <FlatButton onClick={this.onClickResourcesLink}>TO INDEX OF RESOURCES</FlatButton>
               <ResourceInfo resource={resource} onChange={this.onChange} />
-              <ResourceContents resource={resource} onChange={this.onChange} />
-              <ResourcePage resource={resource} onChange={this.onChange} />
-              {Object.keys(resource.attributes).length ? (
-                <ResourceAttributes
-                  resource={resource}
-                  resourceType={this.state.resource.type}
-                  onChange={this.onChange}
-                />
+              <FloatButton>SUBMIT</FloatButton>
+            </div>
+            <div className="column column-right">
+              {resource ? (
+                <div>
+                  <ResourceContents resource={resource} onChange={this.onChange} />
+                  <ResourcePage resource={resource} onChange={this.onChange} />
+                  {Object.keys(resource.attributes).length ? (
+                    <ResourceAttributes
+                      resource={resource}
+                      resourceType={this.state.resource.type}
+                      onChange={this.onChange}
+                    />
+                  ) : null}
+                </div>
               ) : null}
             </div>
-          ) : null}
+          </div>
         </form>
       </Wrapper>
     );
