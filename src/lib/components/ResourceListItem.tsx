@@ -7,6 +7,7 @@ import { TableRow, TableCell } from 'lib/components/Table';
 export interface Props {
   resource: ResourceShape;
   onClickEditResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: Props, state: void) => void;
+  onClickDeleteResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: Props, state: void) => void;
 }
 
 export class ResourceListItem extends React.Component<Props, {}> {
@@ -14,6 +15,7 @@ export class ResourceListItem extends React.Component<Props, {}> {
     super(props);
 
     this.onClickEditResourceButton = this.onClickEditResourceButton.bind(this);
+    this.onClickDeleteResourceButton = this.onClickDeleteResourceButton.bind(this);
   }
 
   public render() {
@@ -27,6 +29,7 @@ export class ResourceListItem extends React.Component<Props, {}> {
         <TableCell>{resource.type}</TableCell>
         <TableCell>
           <FlatButton onClick={this.onClickEditResourceButton}>EDIT</FlatButton>
+          <FlatButton onClick={this.onClickDeleteResourceButton}>DELETE</FlatButton>
         </TableCell>
       </TableRow>
     );
@@ -36,6 +39,13 @@ export class ResourceListItem extends React.Component<Props, {}> {
     event.preventDefault();
     if (this.props.onClickEditResourceButton) {
       this.props.onClickEditResourceButton(event, this.props);
+    }
+  }
+
+  private onClickDeleteResourceButton(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    if (this.props.onClickDeleteResourceButton) {
+      this.props.onClickDeleteResourceButton(event, this.props);
     }
   }
 }
