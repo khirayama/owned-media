@@ -18,6 +18,11 @@ interface Props {
     props: ResourceListItemProps,
     state: void,
   ) => void;
+  onClickDeleteResourceButton?: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    props: ResourceListItemProps,
+    state: void,
+  ) => void;
 }
 
 export class ResourceList extends React.Component<Props, State> {
@@ -64,6 +69,7 @@ export class ResourceList extends React.Component<Props, State> {
                 key={resource.id}
                 resource={resource}
                 onClickEditResourceButton={this.props.onClickEditResourceButton}
+                onClickDeleteResourceButton={this.props.onClickDeleteResourceButton}
               />
             ))}
           </tbody>
