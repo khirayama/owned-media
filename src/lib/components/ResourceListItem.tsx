@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import { ResourceShape } from 'lib/Resource';
+import { FlatButton } from 'lib/components/Button';
+import { TableRow, TableCell } from 'lib/components/Table';
 
 export interface Props {
   resource: ResourceShape;
@@ -18,14 +20,15 @@ export class ResourceListItem extends React.Component<Props, {}> {
     const resource: ResourceShape = this.props.resource;
 
     return (
-      <tr>
-        <td>{resource.id}</td>
-        <td>{resource.name}</td>
-        <td>{resource.type}</td>
-        <td>
-          <button onClick={this.onClickEditResourceButton}>EDIT</button>
-        </td>
-      </tr>
+      <TableRow>
+        <TableCell>{resource.id}</TableCell>
+        <TableCell>{resource.key}</TableCell>
+        <TableCell>{resource.name}</TableCell>
+        <TableCell>{resource.type}</TableCell>
+        <TableCell>
+          <FlatButton onClick={this.onClickEditResourceButton}>EDIT</FlatButton>
+        </TableCell>
+      </TableRow>
     );
   }
 

@@ -10,6 +10,7 @@ import { ResourceInfo } from 'lib/components/ResourceInfo';
 import { ResourceContents } from 'lib/components/ResourceContents';
 import { ResourcePage } from 'lib/components/ResourcePage';
 import { ResourceAttributes } from 'lib/components/ResourceAttributes';
+import { FloatButton, FlatButton } from 'lib/components/Button';
 
 interface State {
   resource: ResourceShape;
@@ -129,9 +130,9 @@ export class ResourceForm extends React.Component<Props, State> {
 
     return (
       <Wrapper>
-        <button onClick={this.onClickResourcesLink}>TO INDEX OF RESOURCES</button>
+        <FlatButton onClick={this.onClickResourcesLink}>TO INDEX OF RESOURCES</FlatButton>
         <form onSubmit={this.onSubmit}>
-          <button>SUBMIT</button>
+          <FloatButton>SUBMIT</FloatButton>
           {resource ? (
             <div>
               <ResourceInfo resource={resource} onChange={this.onChange} />

@@ -4,6 +4,8 @@ import axios from 'axios';
 import { config } from 'config';
 import { ResourceShape } from 'lib/Resource';
 import { ResourceListItem, Props as ResourceListItemProps } from 'lib/components/ResourceListItem';
+import { FlatButton } from 'lib/components/Button';
+import { Table, TableRow, TableHead, TableHeadCell } from 'lib/components/Table';
 
 interface State {
   resources: ResourceShape[];
@@ -45,16 +47,17 @@ export class ResourceList extends React.Component<Props, State> {
   public render() {
     return (
       <div>
-        <button onClick={this.onClickNewResourceButton}>CREATE NEW RESOURCE</button>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Type</th>
-              <th />
-            </tr>
-          </thead>
+        <FlatButton onClick={this.onClickNewResourceButton}>CREATE NEW RESOURCE</FlatButton>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableHeadCell>ID</TableHeadCell>
+              <TableHeadCell>Key</TableHeadCell>
+              <TableHeadCell>Name</TableHeadCell>
+              <TableHeadCell>Type</TableHeadCell>
+              <TableHeadCell />
+            </TableRow>
+          </TableHead>
           <tbody>
             {this.state.resources.map((resource: any) => (
               <ResourceListItem
@@ -64,7 +67,7 @@ export class ResourceList extends React.Component<Props, State> {
               />
             ))}
           </tbody>
-        </table>
+        </Table>
       </div>
     );
   }
