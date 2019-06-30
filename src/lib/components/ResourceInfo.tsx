@@ -4,11 +4,7 @@ import * as styled from 'styled-components';
 import { resourceTypes } from 'config';
 
 const Wrapper = styled.default.div`
-  padding: 12px;
-
-  select + input {
-    margin-left: 12px;
-  }
+  margin-bottom: 24px;
 `;
 
 export function ResourceInfo(props: {
@@ -31,22 +27,54 @@ export function ResourceInfo(props: {
 
   return (
     <Wrapper>
-      <div>ID: {resource.id}</div>
-      <div>
-        UPDATED: {updatedAt ? format(updatedAt) : 'Not Yet'} - CREATED: {createdAt ? format(createdAt) : 'Not Yet'}
-      </div>
-      <div>
-        <select value={resource.type} name="type" onChange={props.onChange}>
-          {resourceTypes.map(resourceType => {
-            return (
-              <option key={resourceType.type} value={resourceType.type}>
-                {resourceType.name}
-              </option>
-            );
-          })}
-        </select>
-        <input type="text" placeholder="Key for resource" value={resource.key} name="key" onChange={props.onChange} />
-      </div>
+      <table>
+        <tbody>
+          <tr>
+            <th>ID</th>
+            <td>
+              <p>{resource.id ? resource.id : 'Not Yet'}</p>
+            </td>
+          </tr>
+          <tr>
+            <th>Created</th>
+            <td>
+              <p>{createdAt ? format(createdAt) : 'Not Yet'}</p>
+            </td>
+          </tr>
+          <tr>
+            <th>Upadted</th>
+            <td>
+              <p>{updatedAt ? format(updatedAt) : 'Not Yet'}</p>
+            </td>
+          </tr>
+          <tr>
+            <th>Type</th>
+            <td>
+              <select value={resource.type} name="type" onChange={props.onChange}>
+                {resourceTypes.map(resourceType => {
+                  return (
+                    <option key={resourceType.type} value={resourceType.type}>
+                      {resourceType.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <th>Key</th>
+            <td>
+              <input
+                type="text"
+                placeholder="Key for resource"
+                value={resource.key}
+                name="key"
+                onChange={props.onChange}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </Wrapper>
   );
 }
