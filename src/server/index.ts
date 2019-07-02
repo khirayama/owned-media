@@ -2,7 +2,7 @@
 import cluster from 'cluster';
 import * as os from 'os';
 
-import { Resource } from 'lib/Resource';
+import { Resource } from 'lib/models/Resource';
 import { runServer } from 'server/runServer';
 
 import { config } from 'config';
