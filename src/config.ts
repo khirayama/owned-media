@@ -34,7 +34,7 @@ export const resourceTypes = [
     type: 'plant',
     attributes: [
       {
-        key: 'shade_tolerance',
+        key: 'shadeTolerance',
         inputType: 'select',
         options: [
           {
@@ -60,7 +60,7 @@ export const resourceTypes = [
         ],
       },
       {
-        key: 'cold_tolerance',
+        key: 'coldTolerance',
         inputType: 'select',
         options: [
           {
@@ -92,11 +92,11 @@ export const resourceTypes = [
     type: 'product',
     attributes: [
       {
-        key: 'suggested_retail_price',
+        key: 'suggestedRetailPrice',
         inputType: 'number',
       },
       {
-        key: 'release_date',
+        key: 'releaseDate',
         inputType: 'date',
       },
     ],
