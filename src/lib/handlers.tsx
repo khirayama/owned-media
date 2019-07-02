@@ -1,6 +1,8 @@
 import express from 'express';
 
-import { Resource } from 'lib/Resource';
+import { Resource } from 'lib/models/Resource';
+import { ResourceFullShape, ResourceShape, ResourceRequest } from 'lib/types';
+import { requestToResource } from 'lib/utils';
 
 export function fetchResources(req: express.Request, res: express.Response) {
   const query = req.query;
@@ -20,28 +22,16 @@ export function fetchResources(req: express.Request, res: express.Response) {
     }
   }
 
-  const resources = Resource.find(conditions, options);
+  const resources: ResourceShape[] | ResourceFullShape[] = Resource.find(conditions, options);
   res.json(resources);
 }
 
 export function createResource(req: express.Request, res: express.Response) {
   const locale = req.query.locale;
-  const resource = req.body.resource;
+  const resourceRequest: ResourceRequest = req.body;
+  const resource: ResourceShape = Resource.create(requestToResource(resourceRequest), { locale }) as ResourceShape;
 
-  const relationIds = req.body.relationIds;
-  const now = new Date();
-
-  resource.locale = resource.locale || locale;
-
-  Resource.create(resource);
-
-  // TODO: Create relations
-
-  res.json({
-    now,
-    resource,
-    relationIds,
-  });
+  res.json(resource);
 }
 
 export function fetchResource(req: express.Request, res: express.Response) {
@@ -57,8 +47,8 @@ export function fetchResource(req: express.Request, res: express.Response) {
 }
 
 export function updateResource(req: express.Request, res: express.Response) {
-  const locale = req.query.locale;
-  const resourceId = req.params.id;
+  // const locale = req.query.locale;
+  // const resourceId = req.params.id;
   const resource = req.body.resource;
 
   Resource.update(resource.id, resource);
