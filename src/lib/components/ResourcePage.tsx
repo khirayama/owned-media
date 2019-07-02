@@ -2,12 +2,18 @@ import * as React from 'react';
 import * as styled from 'styled-components';
 
 import { config } from 'config';
+import { ResourceFullShape } from 'lib/types';
+
+interface Props {
+  resource: ResourceFullShape;
+  onChange: (event: React.FormEvent<HTMLInputElement>) => void;
+}
 
 const Wrapper = styled.default.div`
   margin-bottom: 24px;
 `;
 
-export function ResourcePage(props: any) {
+export function ResourcePage(props: Props) {
   const resource = props.resource;
 
   return (
@@ -57,7 +63,7 @@ export function ResourcePage(props: any) {
                     <td>
                       <input
                         type="text"
-                        value={resource.page.image_url[locale]}
+                        value={resource.page.imageUrl[locale]}
                         name={`page.image_url.${locale}`}
                         onChange={props.onChange}
                       />
@@ -66,7 +72,7 @@ export function ResourcePage(props: any) {
                   <tr>
                     <th>Image Preview({locale})</th>
                     <td className="text-center">
-                      <img src={resource.page.image_url[locale]} />
+                      <img src={resource.page.imageUrl[locale]} />
                     </td>
                   </tr>
                 </tbody>

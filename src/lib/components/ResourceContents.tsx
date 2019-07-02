@@ -2,12 +2,18 @@ import * as React from 'react';
 import * as styled from 'styled-components';
 
 import { config } from 'config';
+import { ResourceFullShape } from 'lib/types';
 
 const Wrapper = styled.default.div`
   margin-bottom: 24px;
 `;
 
-export function ResourceContents(props: any) {
+export interface Props {
+  resource: ResourceFullShape;
+  onChange: (event: React.FormEvent<HTMLInputElement>) => void;
+}
+
+export function ResourceContents(props: Props) {
   const resource = props.resource;
 
   return (
@@ -35,7 +41,7 @@ export function ResourceContents(props: any) {
                     <td>
                       <input
                         type="text"
-                        value={resource.body_path[locale]}
+                        value={resource.bodyPath[locale]}
                         name={`body_path.${locale}`}
                         onChange={props.onChange}
                       />
@@ -46,7 +52,7 @@ export function ResourceContents(props: any) {
                     <td>
                       <input
                         type="text"
-                        value={resource.image_url[locale]}
+                        value={resource.imageUrl[locale]}
                         name={`image_url.${locale}`}
                         onChange={props.onChange}
                       />
@@ -55,7 +61,7 @@ export function ResourceContents(props: any) {
                   <tr>
                     <th>Image Preview({locale})</th>
                     <td className="text-center">
-                      <img src={resource.image_url[locale]} />
+                      <img src={resource.imageUrl[locale]} />
                     </td>
                   </tr>
                 </tbody>

@@ -8,6 +8,7 @@ import marked from 'marked';
 
 import { config } from 'config';
 import { ResourceShape, ResourceFullShape } from 'lib/types';
+import { resourceFullToResource } from 'lib/utils';
 
 /*
 
@@ -322,25 +323,8 @@ export class Resource {
     return relatedResourceIds;
   }
 
-  private static build(resource: ResourceFullShape, locale: string): ResourceShape {
-    return {
-      id: resource.id,
-      type: resource.type,
-      key: resource.key,
-      name: resource.name[locale] || resource.name[this.defaultLocale],
-      bodyPath: resource.bodyPath[locale] || resource.bodyPath[this.defaultLocale],
-      body: resource.body[locale] || resource.body[this.defaultLocale],
-      imageUrl: resource.imageUrl[locale] || resource.imageUrl[this.defaultLocale],
-      page: {
-        title: resource.page.title[locale] || resource.page.title[this.defaultLocale],
-        description: resource.page.description[locale] || resource.page.description[this.defaultLocale],
-        imageUrl: resource.page.imageUrl[locale] || resource.page.imageUrl[this.defaultLocale],
-        keywords: resource.page.keywords[locale] || resource.page.keywords[this.defaultLocale],
-      },
-      attributes: resource.attributes,
-      createdAt: resource.createdAt,
-      updatedAt: resource.updatedAt,
-    };
+  private static build(resourceFull: ResourceFullShape, locale: string): ResourceShape {
+    return resourceFullToResource(resourceFull, locale, { defaultLocale: this.defaultLocale });
   }
 
   public static create(resource: ResourceShape, options: { locale: string } = { locale: this.defaultLocale }) {
