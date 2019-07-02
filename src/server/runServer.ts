@@ -21,7 +21,7 @@ export function runServer() {
   app.use('/assets', express.static('src/server/assets'));
 
   app.use(config.path.api, api);
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV !== 'production') {
     app.use(config.path.admin, admin);
   }
 
