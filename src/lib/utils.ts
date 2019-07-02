@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import { config } from 'config';
 import { ResourceFullShape, ResourceShape, ResourceRequest, ResourceFullResponse, ResourceResponse } from 'lib/types';
 
 export function createLocaleObj(locales: string[]) {
@@ -131,5 +132,69 @@ export function requestToResource(req: ResourceRequest): ResourceShape {
     attributes: req.attributes,
     createdAt: '',
     updatedAt: '',
+  };
+}
+
+export function resourceFullToResource(
+  resourceFull: ResourceFullShape,
+  locale: string,
+  options?: { defaultLocale: string },
+) {
+  const defaultLocale = options ? options.defaultLocale || config.locales[0]: config.locales[0];
+
+  return {
+    id: resourceFull.id,
+    type: resourceFull.type,
+    key: resourceFull.key,
+    name: resourceFull.name[locale] || resourceFull.name[defaultLocale],
+    bodyPath: resourceFull.bodyPath[locale] || resourceFull.bodyPath[defaultLocale],
+    body: resourceFull.body[locale] || resourceFull.body[defaultLocale],
+    imageUrl: resourceFull.imageUrl[locale] || resourceFull.imageUrl[defaultLocale],
+    page: {
+      title: resourceFull.page.title[locale] || resourceFull.page.title[defaultLocale],
+      description: resourceFull.page.description[locale] || resourceFull.page.description[defaultLocale],
+      imageUrl: resourceFull.page.imageUrl[locale] || resourceFull.page.imageUrl[defaultLocale],
+      keywords: resourceFull.page.keywords[locale] || resourceFull.page.keywords[defaultLocale],
+    },
+    attributes: resourceFull.attributes,
+    createdAt: resourceFull.createdAt,
+    updatedAt: resourceFull.updatedAt,
+  };
+}
+
+export function resourceToPartialResourceFull(resource: ResourceShape, locale: string) {
+  return {
+    id: resource.id,
+    type: resource.type,
+    key: resource.key,
+    name: {
+      [locale]: resource.name,
+    },
+    body: {
+      [locale]: resource.body,
+    },
+    bodyPath: {
+      [locale]: resource.bodyPath,
+    },
+    imageUrl: {
+      [locale]: resource.imageUrl,
+    },
+    page: {
+      title: {
+        [locale]: resource.page.title,
+      },
+      description: {
+        [locale]: resource.page.description,
+      },
+      imageUrl: {
+        [locale]: resource.page.imageUrl,
+      },
+      keywords: {
+        [locale]: resource.page.keywords,
+      },
+    },
+    attributes: resource.attributes,
+    createdAt: resource.createdAt,
+    updatedAt: resource.updatedAt,
   };
 }
