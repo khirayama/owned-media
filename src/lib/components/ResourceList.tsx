@@ -3,7 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 import { config } from 'config';
-import { ResourceShape } from 'lib/Resource';
+import { ResourceShape } from 'lib/models/Resource';
 import { ResourceListItem, Props as ResourceListItemProps } from 'lib/components/ResourceListItem';
 import { FlatButton } from 'lib/components/Button';
 import { Table, TableRow, TableHead, TableHeadCell } from 'lib/components/Table';

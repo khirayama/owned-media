@@ -2,18 +2,19 @@ import * as React from 'react';
 import * as styled from 'styled-components';
 
 import { resourceTypes } from 'config';
+import { ResourceShape } from 'lib/models/Resource';
 
 const Wrapper = styled.default.div`
   margin-bottom: 24px;
 `;
 
 export function ResourceInfo(props: {
-  onChange: any;
-  resource: { id: string; type: string; key: string; created_at: string; updated_at: string };
+  onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  resource: ResourceShape;
 }) {
   const resource = props.resource;
-  const createdAt = resource.created_at ? new Date(resource.created_at) : null;
-  const updatedAt = resource.updated_at ? new Date(resource.updated_at) : null;
+  const createdAt = resource.createdAt ? new Date(resource.createdAt) : null;
+  const updatedAt = resource.updatedAt ? new Date(resource.updatedAt) : null;
 
   function format(date: Date) {
     function zeroPadding(s: string) {

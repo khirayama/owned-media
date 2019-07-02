@@ -5,7 +5,8 @@ import * as styled from 'styled-components';
 
 import { config, resourceTypes } from 'config';
 import { styles } from 'lib/components/styles';
-import { ResourceShape } from 'lib/Resource';
+import { ResourceShape } from 'lib/models/Resource';
+import { Resource as ResourceService } from 'lib/services/Resource';
 import { createLocaleObj, mergeDeep } from 'lib/utils';
 import { ResourceInfo } from 'lib/components/ResourceInfo';
 import { ResourceContents } from 'lib/components/ResourceContents';
@@ -106,18 +107,18 @@ export class ResourceForm extends React.Component<Props, State> {
       type: resourceTypes[0].type,
       key: '',
       body: createLocaleObj(config.locales),
-      body_path: createLocaleObj(config.locales),
-      image_url: createLocaleObj(config.locales),
+      bodyPath: createLocaleObj(config.locales),
+      imageUrl: createLocaleObj(config.locales),
       name: createLocaleObj(config.locales),
       page: {
         title: createLocaleObj(config.locales),
         description: createLocaleObj(config.locales),
-        image_url: createLocaleObj(config.locales),
+        imageUrl: createLocaleObj(config.locales),
         keywords: createLocaleObj(config.locales),
       },
       attributes: {},
-      created_at: '',
-      updated_at: '',
+      createdAt: '',
+      updatedAt: '',
     };
 
     this.state = {
@@ -228,13 +229,31 @@ export class ResourceForm extends React.Component<Props, State> {
 
   private onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const resource = this.state.resource;
 
     if (this.props.resourceId) {
       console.log('UPDATE');
       console.log(this.state);
     } else {
-      console.log('CREATE');
-      console.log(this.state);
+      const firstLocale = config.locales[0];
+      axios
+        .post(
+          `${config.path.admin}/resources?locale=${firstLocale}`,
+          ResourceService.createResourceRequest(resource, firstLocale),
+        )
+        .then(res => {
+          const resourceId = res.data.resource.id;
+          Promise.all(
+            config.locales.slice(1, config.locales.length).map(locale => {
+              return axios.put(
+                `${config.path.admin}/resources/${resourceId}?locale=${locale}`,
+                ResourceService.createResourceRequest(resource, locale),
+              );
+            }),
+          ).then(() => {
+            console.log('Done!');
+          });
+        });
     }
   }
 }
