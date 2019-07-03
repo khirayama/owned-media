@@ -32,6 +32,49 @@ export function mergeDeep(target: any, ...sources: any): any {
   return mergeDeep(target, ...sources);
 }
 
+// CSV
+export function extractColumns(csv: string) {
+  return csv
+    .split('\n')[0]
+    .split(',')
+    .map(s => s.replace('\r', '').trim());
+}
+
+export function csvStringify(data: any[], columns: string[]) {
+  let csv = [];
+  csv.push(columns.join(','));
+
+  for (let d of data) {
+    const row = [];
+    for (let column of columns) {
+      row.push(d[column]);
+    }
+
+    csv.push(row.join(','));
+  }
+
+  return csv.filter(row => !!row).join('\n');
+}
+
+export function csvParse(csvString: string): any {
+  const values = [];
+  const rows = csvString.split('\n').filter(s => !!s);
+  const columns = rows[0].split(',');
+
+  for (let i = 1; i < rows.length; i += 1) {
+    const row = rows[i].split(',');
+    const value = {};
+
+    for (let j = 0; j < columns.length; j += 1) {
+      value[columns[j]] = row[j];
+    }
+
+    values.push(value);
+  }
+  return values;
+}
+
+// Strings
 export function snakeToCamel(t: string) {
   return t.replace(/_./g, (s: string) => s.charAt(1).toUpperCase());
 }
@@ -40,6 +83,7 @@ export function camelToSnake(t: string) {
   return t.replace(/([A-Z])/g, (s: string) => '_' + s.charAt(0).toLowerCase());
 }
 
+// Transformer
 export function resourceToRequest(resource: ResourceShape): ResourceRequest {
   return {
     type: resource.type,
