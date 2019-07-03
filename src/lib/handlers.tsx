@@ -2,7 +2,7 @@ import express from 'express';
 
 import { Resource } from 'lib/models/Resource';
 import { ResourceFullShape, ResourceShape, ResourceRequest } from 'lib/types';
-import { requestToResource } from 'lib/utils';
+import { requestToPartialResource } from 'lib/utils';
 
 export function fetchResources(req: express.Request, res: express.Response) {
   const query = req.query;
@@ -29,7 +29,9 @@ export function fetchResources(req: express.Request, res: express.Response) {
 export function createResource(req: express.Request, res: express.Response) {
   const locale = req.query.locale;
   const resourceRequest: ResourceRequest = req.body;
-  const resource: ResourceShape = Resource.create(requestToResource(resourceRequest), { locale }) as ResourceShape;
+  const resource: ResourceShape = Resource.create(requestToPartialResource(resourceRequest), {
+    locale,
+  }) as ResourceShape;
 
   res.json(resource);
 }
@@ -47,15 +49,19 @@ export function fetchResource(req: express.Request, res: express.Response) {
 }
 
 export function updateResource(req: express.Request, res: express.Response) {
-  // const locale = req.query.locale;
-  // const resourceId = req.params.id;
-  const resource = req.body.resource;
+  const locale = req.query.locale;
+  const resourceRequest: ResourceRequest = req.body;
+  const resourceId = req.params.id;
+  const resource: ResourceShape = Resource.update(resourceId, requestToPartialResource(resourceRequest), {
+    locale,
+  }) as ResourceShape;
 
-  Resource.update(resource.id, resource);
-
-  res.json({ a: 2 });
+  res.json(resource);
 }
 
 export function deleteResource(req: express.Request, res: express.Response) {
-  res.json({ a: 2 });
+  const resourceId = req.params.id;
+  Resource.delete(resourceId);
+
+  res.json({ status: 'success' });
 }
