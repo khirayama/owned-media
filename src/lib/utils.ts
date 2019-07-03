@@ -114,15 +114,15 @@ export function responseFullToResourceFull(resourceFullResponse: ResourceFullRes
   };
 }
 
-export function requestToResource(req: ResourceRequest): ResourceShape {
+export function requestToPartialResource(req: ResourceRequest): Partial<ResourceShape> {
   return {
-    id: '',
+    // id: '',
     type: req.type,
     name: req.name,
     key: req.key,
     imageUrl: req.image_url,
-    bodyPath: req.body_path || '',
-    body: '',
+    bodyPath: req.body_path,
+    // body: '',
     page: {
       title: req.page.title,
       description: req.page.description,
@@ -130,8 +130,8 @@ export function requestToResource(req: ResourceRequest): ResourceShape {
       imageUrl: req.page.image_url,
     },
     attributes: req.attributes,
-    createdAt: '',
-    updatedAt: '',
+    // createdAt: '',
+    // updatedAt: '',
   };
 }
 
@@ -140,7 +140,7 @@ export function resourceFullToResource(
   locale: string,
   options?: { defaultLocale: string },
 ) {
-  const defaultLocale = options ? options.defaultLocale || config.locales[0]: config.locales[0];
+  const defaultLocale = options ? options.defaultLocale || config.locales[0] : config.locales[0];
 
   return {
     id: resourceFull.id,
