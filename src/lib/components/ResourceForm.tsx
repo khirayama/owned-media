@@ -179,7 +179,7 @@ export class ResourceForm extends React.Component<Props, State> {
     const resourceId = this.props.resourceId;
 
     if (resourceId) {
-      ResourceService.find(resourceId, { locale: 'all' }).then((resource) => {
+      ResourceService.find(resourceId, { locale: 'all' }).then(resource => {
         const newResource = mergeDeep(this.state.resource, resource);
         this.setState({ resource: newResource });
       });
