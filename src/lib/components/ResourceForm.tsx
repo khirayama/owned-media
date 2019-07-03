@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import * as React from 'react';
-import axios from 'axios';
 import * as styled from 'styled-components';
 
 import { config, resourceTypes } from 'config';
@@ -180,9 +179,9 @@ export class ResourceForm extends React.Component<Props, State> {
     const resourceId = this.props.resourceId;
 
     if (resourceId) {
-      axios.get(`${config.path.api}/resources/${resourceId}?locale=all`).then((res: any) => {
-        const resource = mergeDeep(this.state.resource, res.data);
-        this.setState({ resource });
+      ResourceService.find(resourceId, { locale: 'all' }).then((resource) => {
+        const newResource = mergeDeep(this.state.resource, resource);
+        this.setState({ resource: newResource });
       });
     }
   }
@@ -230,33 +229,43 @@ export class ResourceForm extends React.Component<Props, State> {
 
   private onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const resourceId = this.props.resourceId;
     const resource = this.state.resource;
 
-    if (this.props.resourceId) {
-      console.log('UPDATE');
-      console.log(this.state);
-    } else {
-      const locale = config.locales[0];
-      ResourceService.create(resourceFullToResource(resource, locale), { locale }).then((res: ResourceShape) => {
-        this.setState({
-          resource: resourceToPartialResourceFull(res, locale),
-        });
+    if (resourceId) {
+      Promise.all(
+        config.locales.map(locale => {
+          return ResourceService.update(resourceId, resourceFullToResource(resource, locale), { locale });
+        }),
+      ).then(res => {
+        for (let i = 0; i < config.locales.length; i += 1) {
+          const locale = config.locales[i];
+          const newResource = res[i];
+          this.setState({
+            resource: resourceToPartialResourceFull(newResource, locale),
+          });
+        }
       });
-      // axios
-      //   .post(`${config.path.admin}/resources?locale=${firstLocale}`, resourceFullToRequest(resource, firstLocale))
-      //   .then(res => {
-      //     const resource = res.data;
-      //     Promise.all(
-      //       config.locales.slice(1, config.locales.length).map(locale => {
-      //         return axios.put(
-      //           `${config.path.admin}/resources/${resourceId}?locale=${locale}`,
-      //           resourceFullToRequest(resource, firstLocale),
-      //         );
-      //       }),
-      //     ).then(() => {
-      //       console.log('Done!');
-      //     });
-      //   });
+    } else {
+      const firstLocale = config.locales[0];
+      const otherLocales = config.locales.slice(1, config.locales.length);
+      ResourceService.create(resourceFullToResource(resource, firstLocale), { locale: firstLocale }).then(
+        (newResource: ResourceShape) => {
+          Promise.all(
+            otherLocales.map(locale => {
+              return ResourceService.update(newResource.id, resourceFullToResource(resource, locale), { locale });
+            }),
+          ).then(res => {
+            for (let i = 0; i < otherLocales.length; i += 1) {
+              const locale = otherLocales[i];
+              const newResource = res[i];
+              this.setState({
+                resource: resourceToPartialResourceFull(newResource, locale),
+              });
+            }
+          });
+        },
+      );
     }
   }
 }

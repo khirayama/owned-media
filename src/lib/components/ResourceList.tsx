@@ -1,9 +1,8 @@
 import * as React from 'react';
-import axios from 'axios';
 import styled from 'styled-components';
 
-import { config } from 'config';
-import { ResourceShape } from 'lib/models/Resource';
+import { ResourceShape } from 'lib/types';
+import { Resource as ResourceService } from 'lib/services/Resource';
 import { ResourceListItem, Props as ResourceListItemProps } from 'lib/components/ResourceListItem';
 import { FlatButton } from 'lib/components/Button';
 import { Table, TableRow, TableHead, TableHeadCell } from 'lib/components/Table';
@@ -70,9 +69,9 @@ export class ResourceList extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    axios.get(`${config.path.api}/resources`).then((res: any) => {
+    ResourceService.fetch().then((resources: ResourceShape[]) => {
       this.setState({
-        resources: res.data.sort((x: any, y: any) => {
+        resources: resources.sort((x: any, y: any) => {
           const xTime = new Date(x.updated_at).getTime();
           const yTime = new Date(y.updated_at).getTime();
 

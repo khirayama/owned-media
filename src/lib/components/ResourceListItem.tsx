@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ResourceShape } from 'lib/models/Resource';
+import { ResourceShape } from 'lib/types';
 import { FlatButton } from 'lib/components/Button';
 import { TableRow, TableCell } from 'lib/components/Table';
 

@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as styled from 'styled-components';
 
 import { resourceTypes } from 'config';
-import { ResourceShape } from 'lib/models/Resource';
+import { ResourceFullShape } from 'lib/types';
 
 const Wrapper = styled.default.div`
   margin-bottom: 24px;
@@ -10,7 +10,7 @@ const Wrapper = styled.default.div`
 
 export function ResourceInfo(props: {
   onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  resource: ResourceShape;
+  resource: ResourceFullShape;
 }) {
   const resource = props.resource;
   const createdAt = resource.createdAt ? new Date(resource.createdAt) : null;
