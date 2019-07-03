@@ -6,7 +6,7 @@ import csvParse from 'csv-parse/lib/sync';
 import csvStringify from 'csv-stringify/lib/sync';
 import marked from 'marked';
 
-import { config } from 'config';
+import { config, resourceTypes } from 'config';
 import { ResourceShape, ResourceFullShape } from 'lib/types';
 import { resourceFullToResource } from 'lib/utils';
 
@@ -327,7 +327,7 @@ export class Resource {
     return resourceFullToResource(resourceFull, locale, { defaultLocale: this.defaultLocale });
   }
 
-  public static create(resource: ResourceShape, options: { locale: string } = { locale: this.defaultLocale }) {
+  public static create(resource: Partial<ResourceShape>, options: { locale: string } = { locale: this.defaultLocale }) {
     const locale = options.locale || this.defaultLocale;
 
     const now = new Date();
@@ -335,8 +335,8 @@ export class Resource {
     const resourceId: string = lastResourceRow ? String(Number(lastResourceRow.id) + 1) : '1';
 
     // For resources
-    const resourceType = resource.type;
-    const resourceKey = resource.key;
+    const resourceType = resource.type || resourceTypes[0].type;
+    const resourceKey = resource.key || '';
     this.rows.resources.push({
       id: resourceId,
       type: resourceType,
@@ -345,10 +345,167 @@ export class Resource {
       updated_at: now.toString(),
     });
     // For resource_contents
+    this.createContent(resourceId, resource, locale);
+    // For pages
+    if (resource.page) {
+      this.createPage(resourceId, resource.page, locale);
+    }
+    // For resource_attributes
+    if (resource.attributes) {
+      for (let key of Object.keys(resource.attributes)) {
+        const lastResourceAttributeRow = this.rows.resourceAttributes[this.rows.resourceAttributes.length - 1];
+        const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : '0';
+        this.rows.resourceAttributes.push({
+          id: resourceAttributeId,
+          resource_id: resourceId,
+          key,
+          value: resource.attributes[key],
+          created_at: now.toString(),
+          updated_at: now.toString(),
+        });
+      }
+    }
+
+    this.save();
+    this.resources = this.buildResource(
+      this.rows.resources,
+      this.rows.resourceContents,
+      this.rows.resourceAttributes,
+      this.rows.pages,
+    );
+
+    return this.find({ id: [resourceId] }, { locale })[0];
+  }
+
+  public static update(
+    resourceId: string,
+    resource: Partial<ResourceShape>,
+    options: { locale?: string } = { locale: this.defaultLocale },
+  ) {
+    const locale = options.locale || this.defaultLocale;
+    const now = new Date();
+
+    const resourceRow = this.rows.resources.filter(resourceRow => resourceRow.id === resourceId)[0];
+    const resourceContentRow = this.rows.resourceContents.filter(
+      resourceContentRow => resourceContentRow.resource_id === resourceId && resourceContentRow.locale === locale,
+    )[0];
+    const pageRow = this.rows.pages.filter(
+      pageRow => pageRow.resource_id === resourceId && pageRow.locale === locale,
+    )[0];
+    const resourceAttributeRows = this.rows.resourceAttributes.filter(
+      resourceAttributeRow => resourceAttributeRow.resource_id === resourceId,
+    );
+
+    // For resources
+    if (resource.type) {
+      resourceRow.type = resource.type;
+      resourceRow.updated_at = now.toString();
+    }
+    if (resource.key) {
+      resourceRow.key = resource.key;
+      resourceRow.updated_at = now.toString();
+    }
+    // For resource_contents
+    if (resourceContentRow) {
+      if (resource.name) {
+        resourceContentRow.name = resource.name;
+        resourceContentRow.updated_at = now.toString();
+      }
+      if (resource.bodyPath) {
+        resourceContentRow.body_path = resource.bodyPath;
+        resourceContentRow.updated_at = now.toString();
+      }
+      if (resource.imageUrl) {
+        resourceContentRow.image_url = resource.imageUrl;
+        resourceContentRow.updated_at = now.toString();
+      }
+    } else {
+      this.createContent(resourceId, resource, locale);
+    }
+    // For pages
+    if (resource.page) {
+      if (pageRow) {
+        if (resource.page.title) {
+          pageRow.title = resource.page.title;
+          pageRow.updated_at = now.toString();
+        }
+        if (resource.page.description) {
+          pageRow.description = resource.page.description;
+          pageRow.updated_at = now.toString();
+        }
+        if (resource.page.keywords) {
+          pageRow.keywords = resource.page.keywords;
+          pageRow.updated_at = now.toString();
+        }
+        if (resource.page.imageUrl) {
+          pageRow.image_url = resource.page.imageUrl;
+          pageRow.updated_at = now.toString();
+        }
+      } else {
+        this.createPage(resourceId, resource.page, locale);
+      }
+    }
+    // For resource_attributes
+    if (resource.attributes) {
+      for (let key of Object.keys(resource.attributes)) {
+        let isExisting = false;
+        for (let resourceAttributeRow of resourceAttributeRows) {
+          if (resourceAttributeRow.key === key) {
+            resourceAttributeRow.value = resource.attributes[key];
+            resourceAttributeRow.updated_at = now.toString();
+            isExisting = true;
+          }
+        }
+        if (!isExisting) {
+          const lastResourceAttributeRow = this.rows.resourceAttributes[this.rows.resourceAttributes.length - 1];
+          const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : '0';
+          this.rows.resourceAttributes.push({
+            id: resourceAttributeId,
+            resource_id: resourceId,
+            key,
+            value: resource.attributes[key],
+            created_at: now.toString(),
+            updated_at: now.toString(),
+          });
+        }
+      }
+    }
+
+    this.save();
+    this.resources = this.buildResource(
+      this.rows.resources,
+      this.rows.resourceContents,
+      this.rows.resourceAttributes,
+      this.rows.pages,
+    );
+
+    return this.find({ id: [resourceId] }, { locale })[0];
+  }
+
+  public static delete(resourceId: string): void {
+    this.rows.resources = this.rows.resources.filter(row => row.id !== resourceId);
+    this.rows.resourceContents = this.rows.resourceContents.filter(row => row.resource_id !== resourceId);
+    this.rows.resourceAttributes = this.rows.resourceAttributes.filter(row => row.resource_id !== resourceId);
+    this.rows.pages = this.rows.pages.filter(row => row.resource_id !== resourceId);
+    this.rows.relations = this.rows.relations.filter(
+      row => row.resource1_id !== resourceId && row.resource2_id !== resourceId,
+    );
+
+    this.save();
+    this.resources = this.buildResource(
+      this.rows.resources,
+      this.rows.resourceContents,
+      this.rows.resourceAttributes,
+      this.rows.pages,
+    );
+  }
+
+  private static createContent(resourceId: string, resource: Partial<ResourceShape>, locale: string) {
+    const now = new Date();
     const lastResourceContentRow = this.rows.resourceContents[this.rows.resourceContents.length - 1];
     const resourceContentId = lastResourceContentRow ? String(Number(lastResourceContentRow.id) + 1) : '0';
-    const resourceName = resource.name;
-    const resourceImageUrl = resource.imageUrl;
+    const resourceName = resource.name || '';
+    const resourceImageUrl = resource.imageUrl || '';
 
     const RESOURCE_CONTENTS_PATH = ['resources', resourceId, 'resource_contents'].join('/');
     const RESOURCE_CONTENTS_FULLPATH = [ROOT_PATH, 'resources', resourceId, 'resource_contents'].join('/');
@@ -366,26 +523,16 @@ export class Resource {
       created_at: now.toString(),
       updated_at: now.toString(),
     });
-    // For resource_attributes
-    for (let key of Object.keys(resource.attributes)) {
-      const lastResourceAttributeRow = this.rows.resourceAttributes[this.rows.resourceAttributes.length - 1];
-      const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : '0';
-      this.rows.resourceAttributes.push({
-        id: resourceAttributeId,
-        resource_id: resourceId,
-        key,
-        value: resource.attributes[key],
-        created_at: now.toString(),
-        updated_at: now.toString(),
-      });
-    }
-    // For page
+  }
+
+  private static createPage(resourceId: string, page: Partial<ResourceShape['page']>, locale: string) {
+    const now = new Date();
     const lastPageRow = this.rows.pages[this.rows.pages.length - 1];
     const pageId = lastPageRow ? String(Number(lastPageRow.id) + 1) : '0';
-    const pageTitle = resource.page.title;
-    const pageDescription = resource.page.description;
-    const pageImageUrl = resource.page.imageUrl;
-    const pageKeywords = resource.page.keywords;
+    const pageTitle = page.title || '';
+    const pageDescription = page.description || '';
+    const pageImageUrl = page.imageUrl || '';
+    const pageKeywords = page.keywords || '';
     this.rows.pages.push({
       id: pageId,
       resource_id: resourceId,
@@ -397,30 +544,6 @@ export class Resource {
       created_at: now.toString(),
       updated_at: now.toString(),
     });
-
-    this.save();
-
-    this.resources = this.buildResource(
-      this.rows.resources,
-      this.rows.resourceContents,
-      this.rows.resourceAttributes,
-      this.rows.pages,
-    );
-
-    return this.find({ id: [resourceId] }, { locale })[0];
-  }
-
-  public static update(id: string, resource: Partial<ResourceShape>) {
-    console.log(id, resource);
-    // const locale = resource.locale || this.defaultLocale;
-    //
-    // const resourceRow = this.rows.resources.filter(resourceRow => resourceRow.id === id);
-    // const resourceContentRow = this.rows.resourceContents.filter(
-    //   resourceContentRow => resourceContentRow.resource_id === id && resourceContentRow.locale === locale,
-    // );
-    // const resourceAttributeRow = [];
-    // const pageRow = this.rows.pages.filter(pageRow => pageRow.resource_id === id && pageRow.locale === locale);
-    // console.log(resourceRow, resourceContentRow, resourceAttributeRow, pageRow);
   }
 
   public static save() {
