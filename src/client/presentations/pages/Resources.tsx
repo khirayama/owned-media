@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { Resource as ResourceService } from 'lib/services/Resource';
 import { ResourceList } from 'lib/components/ResourceList';
 import { Props as ResourceListItemProps } from 'lib/components/ResourceListItem';
 
@@ -16,7 +17,7 @@ export class Resources extends React.Component<any, any> {
     const onClickDeleteResourceButton = (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => {
       const isDelete = window.confirm('Delete this resource?');
       if (isDelete) {
-        console.log(`Delete ${props.resource.id}`);
+        ResourceService.delete(props.resource.id);
       }
     };
 
