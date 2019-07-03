@@ -16,7 +16,7 @@ export const config = {
   },
   path: {
     api: '/api',
-    admin: '/admin',
+    adminApi: '/admin/api',
   },
 };
 

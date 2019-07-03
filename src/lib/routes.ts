@@ -5,8 +5,8 @@ import { fetchResources, fetchResource, createResource, updateResource, deleteRe
 export const api: express.Application = express();
 api.get('/resources', fetchResources).get('/resources/:id', fetchResource);
 
-export const admin: express.Application = express();
-admin
+export const adminApi: express.Application = express();
+adminApi
   .post('/resources', createResource)
   .put('/resources/:id', updateResource)
   .delete('/resources/:id', deleteResource);

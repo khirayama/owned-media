@@ -4,7 +4,7 @@ import * as http from 'http';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { api, admin } from 'lib/routes';
+import { api, adminApi } from 'lib/routes';
 
 import { config } from 'config';
 import * as renderer from 'server/renderer';
@@ -21,10 +21,7 @@ export function runServer() {
   app.use('/assets', express.static('src/server/assets'));
 
   app.use(config.path.api, api);
-  if (process.env.NODE_ENV !== 'production') {
-    app.use(config.path.admin, admin);
-  }
-
+  app.use(config.path.adminApi, adminApi);
   app.get('*', renderer.get);
 
   const server = http.createServer(app);

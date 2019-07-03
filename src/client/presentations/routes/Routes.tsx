@@ -6,8 +6,6 @@ import { About } from 'client/presentations/pages/About';
 import { Resources } from 'client/presentations/pages/Resources';
 import { Resource } from 'client/presentations/pages/Resource';
 
-import { config } from 'config';
-
 export const routes = [
   {
     exact: true,
@@ -21,22 +19,22 @@ export const routes = [
     component: About,
     initializer: null,
   },
-  // For adming
+  // For admin UI
   {
     exact: true,
-    path: `${config.path.admin}/resources`,
+    path: `/resources`,
     component: Resources,
     initializer: null,
   },
   {
     exact: true,
-    path: `${config.path.admin}/resources/new`,
+    path: `/resources/new`,
     component: Resource,
     initializer: null,
   },
   {
     exact: true,
-    path: `${config.path.admin}/resources/:id`,
+    path: `/resources/:id`,
     component: Resource,
     initializer: null,
   },
