@@ -53,9 +53,8 @@ export class Resource {
     });
   }
 
-  public static delete(resource: ResourceShape, options?: { locale: string }): Promise<ResourceShape> {
-    const locale = options ? options.locale : null;
-    const url = `${config.path.adminApi}/resources` + (locale ? `?locale=${locale}` : '');
+  public static delete(resourceId: string): Promise<ResourceShape> {
+    const url = `${config.path.adminApi}/resources/${resourceId}`;
 
     return new Promise((resolve: (res: ResourceShape) => void) => {
       axios.delete(url).then(res => {
