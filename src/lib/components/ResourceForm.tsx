@@ -240,9 +240,9 @@ export class ResourceForm extends React.Component<Props, State> {
       ).then(res => {
         for (let i = 0; i < config.locales.length; i += 1) {
           const locale = config.locales[i];
-          const newResource = res[i];
+          const tmpResource = res[i];
           this.setState({
-            resource: resourceToPartialResourceFull(newResource, locale),
+            resource: mergeDeep({}, this.state.resource, resourceToPartialResourceFull(tmpResource, locale)),
           });
         }
       });
@@ -251,6 +251,9 @@ export class ResourceForm extends React.Component<Props, State> {
       const otherLocales = config.locales.slice(1, config.locales.length);
       ResourceService.create(resourceFullToResource(resource, firstLocale), { locale: firstLocale }).then(
         (newResource: ResourceShape) => {
+          this.setState({
+            resource: mergeDeep({}, this.state.resource, resourceToPartialResourceFull(newResource, firstLocale)),
+          });
           Promise.all(
             otherLocales.map(locale => {
               return ResourceService.update(newResource.id, resourceFullToResource(resource, locale), { locale });
@@ -258,9 +261,9 @@ export class ResourceForm extends React.Component<Props, State> {
           ).then(res => {
             for (let i = 0; i < otherLocales.length; i += 1) {
               const locale = otherLocales[i];
-              const newResource = res[i];
+              const tmpResource = res[i];
               this.setState({
-                resource: resourceToPartialResourceFull(newResource, locale),
+                resource: mergeDeep({}, this.state.resource, resourceToPartialResourceFull(tmpResource, locale)),
               });
             }
           });
