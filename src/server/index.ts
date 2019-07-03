@@ -9,21 +9,6 @@ import { config } from 'config';
 
 Resource.init();
 Resource.defaultLocale = config.locales[0];
-Resource.update('4', {
-  type: 'note',
-  locale: 'en',
-  name: 'TEST',
-  imageUrl: 'IMAGE PATH',
-  attributes: {
-    sample: 'SAMPLE',
-  },
-  page: {
-    title: 'TEST TITLE',
-    description: 'TEST DESCRIPTION',
-    imageUrl: 'IMAGE PATH',
-    keywords: 'KEYWORD1,KEYWORD2',
-  },
-});
 
 const isProd = process.env.NODE_ENV === 'production';
 
