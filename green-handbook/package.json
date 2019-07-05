@@ -4,7 +4,8 @@
   "description": "観葉植物についての情報発信。",
   "main": "index.js",
   "scripts": {
-    "start": "npm link publisher && npx publisher"
+    "dev": "NODE_PATH=dist npx nodemon -w ../publisher/dist -x publisher",
+    "start": "npm link publisher && publisher"
   },
   "keywords": [],
   "author": "",
