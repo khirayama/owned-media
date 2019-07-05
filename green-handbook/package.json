@@ -1,0 +1,12 @@
+{
+  "name": "green-handbook",
+  "version": "1.0.0",
+  "description": "観葉植物についての情報発信。",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm link publisher && npx publisher"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
