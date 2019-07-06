@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { Home } from '../pages/Home';
-import { About } from '../pages/About';
 import { Resources } from '../pages/Resources';
 import { Resource } from '../pages/Resource';
 
@@ -10,16 +8,9 @@ export const routes = [
   {
     exact: true,
     path: '/',
-    component: Home,
+    component: Resources,
     initializer: null,
   },
-  {
-    exact: true,
-    path: '/about',
-    component: About,
-    initializer: null,
-  },
-  // For admin UI
   {
     exact: true,
     path: `/resources`,

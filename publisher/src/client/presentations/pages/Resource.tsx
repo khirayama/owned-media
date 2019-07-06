@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { ResourceForm } from '../../../lib/components/ResourceForm';
+import { ResourceForm } from '../components/ResourceForm';
 
 export class Resource extends React.Component<any, any> {
   public render() {
