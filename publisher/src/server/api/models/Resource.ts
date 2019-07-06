@@ -5,10 +5,9 @@ import * as path from 'path';
 import marked from 'marked';
 
 import { ResourceShape, ResourceFullShape } from '../../../types';
-import { resourceFullToResource, extractColumns, csvStringify, csvParse } from '../../../utils';
+import { resourceFullToResource, extractColumns, csvStringify, csvParse, loadConfig } from '../../../utils';
 
-const CONFIG_PATH = path.join(process.cwd(), 'config');
-const { config, resourceTypes } = require(CONFIG_PATH);
+const config = loadConfig();
 
 /*
 
@@ -334,7 +333,7 @@ export class Resource {
     const resourceId: string = lastResourceRow ? String(Number(lastResourceRow.id) + 1) : '1';
 
     // For resources
-    const resourceType = resource.type || resourceTypes[0].type;
+    const resourceType = resource.type || config.resourceTypes[0].type;
     const resourceKey = resource.key || '';
     this.rows.resources.push({
       id: resourceId,
