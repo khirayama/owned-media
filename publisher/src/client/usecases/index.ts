@@ -8,7 +8,7 @@ import { Resource as ResourceService } from '../services/Resource';
 export const fetchResources = () => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
     dispatch(changeIsFetchingResources(true));
-    ResourceService.fetch().then((resources: ResourceShape[]) => {
+    return ResourceService.fetch().then((resources: ResourceShape[]) => {
       dispatch(setResources(resources));
       dispatch(changeIsFetchingResources(false));
     });
@@ -18,7 +18,7 @@ export const fetchResources = () => {
 export const deleteResource = (resourceId: string) => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
     dispatch(changeIsFetchingResources(true));
-    ResourceService.delete(resourceId).then(() => {
+    return ResourceService.delete(resourceId).then(() => {
       dispatch(removeResource(resourceId));
       dispatch(changeIsFetchingResources(false));
     });

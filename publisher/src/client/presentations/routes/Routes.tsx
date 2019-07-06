@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import { fetchResources } from '../../usecases';
 import { Resources } from '../pages/Resources';
 import { Resource } from '../pages/Resource';
 
@@ -9,13 +10,13 @@ export const routes = [
     exact: true,
     path: '/',
     component: Resources,
-    initializer: null,
+    initializer: fetchResources,
   },
   {
     exact: true,
     path: `/resources`,
     component: Resources,
-    initializer: null,
+    initializer: fetchResources,
   },
   {
     exact: true,

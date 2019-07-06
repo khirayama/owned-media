@@ -3,13 +3,22 @@ import axios from 'axios';
 import { ResourceShape } from '../../types';
 import { resourceToRequest } from '../../utils';
 
+const PORT = process.env.PORT || 3000;
+
+const req =
+  typeof window === 'object'
+    ? axios.create()
+    : axios.create({
+        baseURL: `http://localhost:${PORT}`,
+      });
+
 export class Resource {
   public static fetch(options?: { locale: string }) {
     return new Promise((resolve: (res: ResourceShape[]) => void) => {
       const locale = options ? options.locale : null;
       const url = `/api/resources` + (locale ? `?locale=${locale}` : '');
 
-      axios.get(url).then(res => {
+      req.get(url).then(res => {
         resolve(res.data);
       });
     });
@@ -20,7 +29,7 @@ export class Resource {
     const url = `/api/resources/${resourceId}` + (locale ? `?locale=${locale}` : '');
 
     return new Promise((resolve: (res: ResourceShape) => void) => {
-      axios.get(url).then(res => {
+      req.get(url).then(res => {
         resolve(res.data);
       });
     });
@@ -31,7 +40,7 @@ export class Resource {
     const url = `/api/resources` + (locale ? `?locale=${locale}` : '');
 
     return new Promise((resolve: (res: ResourceShape) => void) => {
-      axios.post(url, resourceToRequest(resource)).then(res => {
+      req.post(url, resourceToRequest(resource)).then(res => {
         resolve(res.data);
       });
     });
@@ -46,7 +55,7 @@ export class Resource {
     const url = `/api/resources/${resourceId}` + (locale ? `?locale=${locale}` : '');
 
     return new Promise((resolve: (res: ResourceShape) => void) => {
-      axios.put(url, resourceToRequest(resource)).then(res => {
+      req.put(url, resourceToRequest(resource)).then(res => {
         resolve(res.data);
       });
     });
@@ -56,7 +65,7 @@ export class Resource {
     const url = `/api/resources/${resourceId}`;
 
     return new Promise((resolve: (res: ResourceShape) => void) => {
-      axios.delete(url).then(res => {
+      req.delete(url).then(res => {
         resolve(res.data);
       });
     });
