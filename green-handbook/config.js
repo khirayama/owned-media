@@ -3,19 +3,6 @@ const name = {
   en: 'GREEN HANDBOOK',
 };
 
-const config = {
-  locales: ['ja', 'en'],
-  name,
-  tagline: {
-    ja: `${name.ja} - インドアグリーン、観葉植物の育て方や知識を入門から楽しむまで`,
-    en: `${name.en} - The Media of indoor green and plants to know how to grow and knowledge`,
-  },
-  description: {
-    ja: `インドアグリーン、観葉植物の育て方や知識を入門から楽しむまで`,
-    en: `The Media of indoor green and plants to know how to grow and knowledge`,
-  },
-};
-
 const resourceTypes = [
   {
     name: 'notes',
@@ -99,7 +86,18 @@ const resourceTypes = [
   },
 ];
 
-module.exports = {
-  config,
+const config = {
+  locales: ['ja', 'en'],
+  name,
+  tagline: {
+    ja: `${name.ja} - インドアグリーン、観葉植物の育て方や知識を入門から楽しむまで`,
+    en: `${name.en} - The Media of indoor green and plants to know how to grow and knowledge`,
+  },
+  description: {
+    ja: `インドアグリーン、観葉植物の育て方や知識を入門から楽しむまで`,
+    en: `The Media of indoor green and plants to know how to grow and knowledge`,
+  },
   resourceTypes,
 };
+
+module.exports = config;
