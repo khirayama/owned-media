@@ -1,4 +1,7 @@
+import { Config } from '../types';
+
 type Params = {
+  config: Config;
   locale: 'en' | 'ja';
   meta: string;
   assets: Array<string>;
@@ -16,12 +19,13 @@ const escape = (str: string) => {
     .replace(/>/g, '&gt;');
 };
 
-export const renderFullPage = ({ locale, meta, assets, body, style, preloadedState }: Params) => {
+export const renderFullPage = ({ config, locale, meta, assets, body, style, preloadedState }: Params) => {
   return `<!DOCTYPE html>
     <html lang=${locale}>
       <head>
         ${meta}
         ${style}
+        <script>window.config = ${JSON.stringify(config)}</script>
       </head>
       <body>
         <div id="root">${body}</div>

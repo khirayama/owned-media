@@ -8,11 +8,10 @@ import * as bodyParser from 'body-parser';
 import { api } from './api/routes';
 import { Resource } from './api/models/Resource';
 import * as renderer from './renderer';
+import { loadConfig } from '../utils';
 
 const STATIC_PATH = path.join(__dirname, '..', 'public');
-const CONFIG_PATH = path.join(process.cwd(), 'config');
-
-const { config } = require(CONFIG_PATH);
+const config = loadConfig();
 
 Resource.init();
 Resource.defaultLocale = config.locales[0];
