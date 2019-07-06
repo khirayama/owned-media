@@ -5,14 +5,17 @@ import * as path from 'path';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 
-import { api, adminApi } from '../lib/routes';
+import { api } from './api/routes';
+import { Resource } from './api/models/Resource';
 import * as renderer from './renderer';
 
+const STATIC_PATH = path.join(__dirname, '..', 'public');
 const CONFIG_PATH = path.join(process.cwd(), 'config');
+
 const { config } = require(CONFIG_PATH);
 
-const STATIC_PATH = path.join(__dirname, '..', 'public');
-console.log(STATIC_PATH);
+Resource.init();
+Resource.defaultLocale = config.locales[0];
 
 export function runServer() {
   const PORT = process.env.PORT || 3000;
@@ -24,7 +27,6 @@ export function runServer() {
   app.use('/public', express.static(STATIC_PATH));
 
   app.use(config.path.api, api);
-  app.use(config.path.adminApi, adminApi);
   app.get('*', renderer.get);
 
   const server = http.createServer(app);

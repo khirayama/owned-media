@@ -2,16 +2,8 @@
 /* eslint-disable no-console, no-process-exit, node/shebang */
 import cluster from 'cluster';
 import * as os from 'os';
-import * as path from 'path';
 
-import { Resource } from '../lib/models/Resource';
 import { runServer } from './runServer';
-
-const CONFIG_PATH = path.join(process.cwd(), 'config');
-const { config } = require(CONFIG_PATH);
-
-Resource.init();
-Resource.defaultLocale = config.locales[0];
 
 const isProd = process.env.NODE_ENV === 'production';
 
