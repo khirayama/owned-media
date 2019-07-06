@@ -1,66 +1,35 @@
+import * as path from 'path';
+
+import { ResourceShape } from '../../types';
+
+const CONFIG_PATH = path.join(process.cwd(), 'config');
+const { config } = require(CONFIG_PATH);
+
 export interface State {
-  count: {
+  resources: {
     isFetching: boolean[];
-    value: number;
+    data: ResourceShape[];
   };
   ui: {
-    locale: 'en' | 'ja';
+    locale: string;
   };
 }
 
 export const initialState: State = {
-  count: {
+  resources: {
     isFetching: [],
-    value: 1,
+    data: [],
   },
   ui: {
-    locale: 'en',
+    locale: config.locales[0],
   },
 };
 
 export function reducer(state = initialState, action: any) {
   switch (action.type) {
-    case 'FETCHING_COUNT': {
-      state.count.isFetching.push(true);
-      return {
-        count: {
-          isFetching: state.count.isFetching,
-          value: state.count.value,
-        },
-        ui: state.ui,
-      };
-    }
-    case 'FETCHED_COUNT': {
-      state.count.isFetching.shift();
-      return {
-        count: {
-          isFetching: state.count.isFetching,
-          value: state.count.value,
-        },
-        ui: state.ui,
-      };
-    }
-    case 'INCREMENT': {
-      return {
-        count: {
-          isFetching: state.count.isFetching,
-          value: state.count.value + 1,
-        },
-        ui: state.ui,
-      };
-    }
-    case 'DECREMENT': {
-      return {
-        count: {
-          isFetching: state.count.isFetching,
-          value: state.count.value - 1,
-        },
-        ui: state.ui,
-      };
-    }
     case 'CHANGE_LOCALE': {
       return {
-        count: state.count,
+        resources: state.resources,
         ui: {
           locale: action.payload.locale,
         },
