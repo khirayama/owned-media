@@ -46,7 +46,7 @@ export function reducer(state = initialState, action: any) {
         ...state,
         resources: {
           ...state.resources,
-          resources: payload.resources,
+          data: payload.resources,
         },
       };
     }
