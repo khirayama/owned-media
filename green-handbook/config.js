@@ -14,10 +14,6 @@ const config = {
     ja: `インドアグリーン、観葉植物の育て方や知識を入門から楽しむまで`,
     en: `The Media of indoor green and plants to know how to grow and knowledge`,
   },
-  path: {
-    api: '/api',
-    adminApi: '/admin/api',
-  },
 };
 
 const resourceTypes = [
