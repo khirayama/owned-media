@@ -1,10 +1,30 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import * as path from 'path';
 
-import { ResourceFullShape, ResourceShape, ResourceRequest, ResourceFullResponse, ResourceResponse } from '../types';
+import {
+  ResourceFullShape,
+  ResourceShape,
+  ResourceRequest,
+  ResourceFullResponse,
+  ResourceResponse,
+  Config,
+} from '../types';
 
-const CONFIG_PATH = path.join(process.cwd(), 'config');
-const { config } = require(CONFIG_PATH);
+declare var window: any;
+
+export function loadConfig(): Config {
+  let conf;
+
+  if (typeof window === 'object') {
+    conf = window.config as Config;
+  } else {
+    const CONFIG_PATH = path.join(process.cwd(), 'config');
+    conf = require(CONFIG_PATH) as Config;
+  }
+
+  return conf;
+}
+const config = loadConfig();
 
 export function createLocaleObj(locales: string[]) {
   const obj = {};
