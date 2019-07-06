@@ -6,23 +6,17 @@ addLocaleData(enLocaleData);
 addLocaleData(jaLocaleData);
 
 export const en = {
-  'Home.Title': 'Hi, Home!',
-  'Home.Description': 'This is Home page!',
-  'About.Title': 'Hi, About!',
-  'About.Description': 'This is About page!',
   'Resources.Title': 'Resources',
   'Resources.Description': 'Resources Page',
-  'Counter.Label': 'Counted by {name}: ',
+  'Resource.Title': 'Resource',
+  'Resource.Description': 'Resource Page',
 };
 
 export const ja = {
-  'Home.Title': 'やぁ、ホーム！',
-  'Home.Description': 'ここはホームページです。',
-  'About.Title': 'やぁ、アバウト',
-  'About.Description': 'ここはアバウトページです',
   'Resources.Title': 'リソース',
-  'Resources.Description': 'リソース一覧ページ',
-  'Counter.Label': '{name}さんのカウント数: ',
+  'Resources.Description': 'リソースページ',
+  'Resource.Title': 'リソース',
+  'Resource.Description': 'リソースページ',
 };
 
 export function chooseLocale(locale: string) {

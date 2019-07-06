@@ -8,7 +8,7 @@ import { ResourceInfo } from '../components/ResourceInfo';
 import { ResourceContents } from '../components/ResourceContents';
 import { ResourcePage } from '../components/ResourcePage';
 import { ResourceAttributes } from '../components/ResourceAttributes';
-import { FloatButton, FlatButton } from '../components/Button';
+import { FloatButton, FlatLink } from '../components/Button';
 import { createLocaleObj, mergeDeep, resourceFullToResource, resourceToPartialResourceFull } from '../../../utils';
 import { ResourceFullShape, ResourceShape } from '../../../types';
 import { loadConfig } from '../../../utils';
@@ -21,7 +21,6 @@ interface State {
 
 interface Props {
   resourceId: string;
-  onClickResourcesLink?: (event: React.MouseEvent<HTMLButtonElement>, props: Props, state: State) => void;
 }
 
 const Wrapper = styled.default.div`
@@ -128,7 +127,6 @@ export class ResourceForm extends React.Component<Props, State> {
 
     this.onSubmit = this.onSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
-    this.onClickResourcesLink = this.onClickResourcesLink.bind(this);
   }
 
   private onChange(event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -196,7 +194,7 @@ export class ResourceForm extends React.Component<Props, State> {
           <div className="box">
             <div className="column column-left">
               <h2>Resource</h2>
-              <FlatButton onClick={this.onClickResourcesLink}>TO INDEX OF RESOURCES</FlatButton>
+              <FlatLink to="/resources">TO INDEX OF RESOURCES</FlatLink>
               <ResourceInfo resource={resource} onChange={this.onChange} />
               <FloatButton>SUBMIT</FloatButton>
             </div>
@@ -219,13 +217,6 @@ export class ResourceForm extends React.Component<Props, State> {
         </form>
       </Wrapper>
     );
-  }
-
-  private onClickResourcesLink(event: React.MouseEvent<HTMLButtonElement>) {
-    event.preventDefault();
-    if (this.props.onClickResourcesLink) {
-      this.props.onClickResourcesLink(event, this.props, this.state);
-    }
   }
 
   private onSubmit(event: React.FormEvent<HTMLFormElement>) {
