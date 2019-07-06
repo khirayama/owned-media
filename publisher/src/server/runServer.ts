@@ -25,7 +25,7 @@ export function runServer() {
 
   app.use('/public', express.static(STATIC_PATH));
 
-  app.use(config.path.api, api);
+  app.use('/api', api);
   app.get('*', renderer.get);
 
   const server = http.createServer(app);
