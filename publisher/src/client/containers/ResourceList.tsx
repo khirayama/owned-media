@@ -3,7 +3,8 @@ import { Action } from 'redux';
 import { connect } from 'react-redux';
 
 import { ResourceList as Component } from '../presentations/components/ResourceList';
-import { asyncDecrement } from '../usecases';
+import { Props as ResourceListItemProps } from '../presentations/components/ResourceListItem';
+import { fetchResources, deleteResource } from '../usecases';
 import { State } from '../reducers';
 
 const mapStateToProps = (state: State) => {
@@ -15,13 +16,16 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
   return {
-    onClickDeleteResourceButton: () => {
-      dispatch(asyncDecrement());
+    onMount: () => {
+      dispatch(fetchResources());
+    },
+    onClickDeleteResourceButton: (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => {
+      dispatch(deleteResource(props.resource.id));
     },
   };
 };
 
-export const Counter = connect(
+export const ResourceList = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Component);
