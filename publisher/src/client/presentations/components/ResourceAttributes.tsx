@@ -1,10 +1,9 @@
-import * as path from 'path';
-
 import * as React from 'react';
 import * as styled from 'styled-components';
 
-const CONFIG_PATH = path.join(process.cwd(), 'config');
-const { resourceTypes } = require(CONFIG_PATH);
+import { loadConfig } from '../../../utils';
+
+const config = loadConfig();
 
 const Wrapper = styled.default.div`
   .text-center {
@@ -71,7 +70,7 @@ export function ResourceAttributes(props: any) {
   const resource = props.resource;
   const resourceType = props.resourceType;
   const resourceTypeAttributes =
-    resourceTypes.filter((rType: any) => {
+    config.resourceTypes.filter((rType: any) => {
       return resourceType === rType.type;
     })[0].attributes || null;
 

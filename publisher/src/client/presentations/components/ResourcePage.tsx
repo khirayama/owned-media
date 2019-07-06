@@ -1,12 +1,10 @@
-import * as path from 'path';
-
 import * as React from 'react';
 import * as styled from 'styled-components';
 
 import { ResourceFullShape } from '../../../types';
+import { loadConfig } from '../../../utils';
 
-const CONFIG_PATH = path.join(process.cwd(), 'config');
-const { config } = require(CONFIG_PATH);
+const config = loadConfig();
 
 interface Props {
   resource: ResourceFullShape;

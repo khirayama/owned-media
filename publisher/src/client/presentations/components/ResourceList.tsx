@@ -2,20 +2,16 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import { ResourceShape } from '../../../types';
-import { Resource as ResourceService } from '../../services/Resource';
 import { ResourceListItem, Props as ResourceListItemProps } from '../components/ResourceListItem';
 import { Table, TableRow, TableHead, TableHeadCell } from '../components/Table';
 
-interface Props {
+export interface Props {
   resources: {
     isFetching: boolean[];
     data: ResourceShape[];
   };
-  onClickDeleteResourceButton?: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    props: ResourceListItemProps,
-    state: void,
-  ) => void;
+  onClickDeleteResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => void;
+  onMount?: (props: Props) => void;
 }
 
 export const Wrapper = styled.div`
@@ -51,9 +47,11 @@ export const Wrapper = styled.div`
 `;
 
 export function ResourceList(props: Props) {
-  ResourceService.fetch().then((resources: ResourceShape[]) => {
-    console.log(resources);
-  });
+  React.useEffect(() => {
+    if (props.onMount) {
+      props.onMount(props);
+    }
+  }, []);
 
   return (
     <Wrapper>

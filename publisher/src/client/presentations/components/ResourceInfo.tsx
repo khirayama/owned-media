@@ -1,12 +1,10 @@
-import * as path from 'path';
-
 import * as React from 'react';
 import * as styled from 'styled-components';
 
 import { ResourceFullShape } from '../../../types';
+import { loadConfig } from '../../../utils';
 
-const CONFIG_PATH = path.join(process.cwd(), 'config');
-const { resourceTypes } = require(CONFIG_PATH);
+const config = loadConfig();
 
 const Wrapper = styled.default.div`
   margin-bottom: 24px;
@@ -56,7 +54,7 @@ export function ResourceInfo(props: {
             <th>Type</th>
             <td>
               <select value={resource.type} name="type" onChange={props.onChange}>
-                {resourceTypes.map((resourceType: any) => {
+                {config.resourceTypes.map((resourceType: any) => {
                   return (
                     <option key={resourceType.type} value={resourceType.type}>
                       {resourceType.name}

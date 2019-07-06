@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import * as path from 'path';
-
 import * as React from 'react';
 import * as styled from 'styled-components';
 
@@ -13,9 +11,9 @@ import { ResourceAttributes } from '../components/ResourceAttributes';
 import { FloatButton, FlatButton } from '../components/Button';
 import { createLocaleObj, mergeDeep, resourceFullToResource, resourceToPartialResourceFull } from '../../../utils';
 import { ResourceFullShape, ResourceShape } from '../../../types';
+import { loadConfig } from '../../../utils';
 
-const CONFIG_PATH = path.join(process.cwd(), 'config');
-const { config, resourceTypes } = require(CONFIG_PATH);
+const config = loadConfig();
 
 interface State {
   resource: ResourceFullShape;
@@ -107,7 +105,7 @@ export class ResourceForm extends React.Component<Props, State> {
 
     const defaultResource: ResourceFullShape = {
       id: '',
-      type: resourceTypes[0].type,
+      type: config.resourceTypes[0].type,
       key: '',
       body: createLocaleObj(config.locales),
       bodyPath: createLocaleObj(config.locales),
@@ -140,7 +138,7 @@ export class ResourceForm extends React.Component<Props, State> {
 
     if (name === 'type') {
       currentResource.attributes = {};
-      const resourceType = resourceTypes.filter((tmp: any) => tmp.type === value)[0];
+      const resourceType = config.resourceTypes.filter((tmp: any) => tmp.type === value)[0];
       if (resourceType && resourceType.attributes) {
         for (let attr of resourceType.attributes) {
           switch (attr.inputType) {
