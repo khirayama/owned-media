@@ -1,34 +1,26 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { fetchingCount, fetchedCount, increment, decrement } from '../actions';
+import { ResourceShape } from '../../types';
+import { changeIsFetchingResources, setResources, removeResource } from '../actions';
+import { Resource as ResourceService } from '../services/Resource';
 
-class ExampleAPI {
-  public static call() {
-    return new Promise((resolve: any) => {
-      setTimeout(() => {
-        resolve();
-      }, 1000);
-    });
-  }
-}
-
-export const asyncIncrement = () => {
+export const fetchResources = () => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
-    dispatch(fetchingCount());
-    ExampleAPI.call().then(() => {
-      dispatch(increment());
-      dispatch(fetchedCount());
+    dispatch(changeIsFetchingResources(true));
+    ResourceService.fetch().then((resources: ResourceShape[]) => {
+      dispatch(setResources(resources));
+      dispatch(changeIsFetchingResources(false));
     });
   };
 };
 
-export const asyncDecrement = () => {
+export const deleteResource = (resourceId: string) => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
-    dispatch(fetchingCount());
-    ExampleAPI.call().then(() => {
-      dispatch(decrement());
-      dispatch(fetchedCount());
+    dispatch(changeIsFetchingResources(true));
+    ResourceService.delete(resourceId).then(() => {
+      dispatch(removeResource(resourceId));
+      dispatch(changeIsFetchingResources(false));
     });
   };
 };
