@@ -1,29 +1,41 @@
-import { ResourceShape } from '../../types';
+import { ResourceShape, ResourceFullShape } from '../../types';
 import { loadConfig } from '../../utils';
 
 const config = loadConfig();
 
 export interface State {
   resources: {
+    hasChange: boolean;
     isFetching: boolean[];
     data: ResourceShape[];
   };
+  resourceFull: {
+    isFetching: boolean[];
+    data: ResourceFullShape | null;
+  };
   ui: {
     locale: string;
+    resourceLocale: string;
   };
 }
 
 export const initialState: State = {
   resources: {
+    hasChange: false,
     isFetching: [],
     data: [],
   },
+  resourceFull: {
+    isFetching: [],
+    data: null,
+  },
   ui: {
-    locale: config.locales[0],
+    locale: 'en',
+    resourceLocale: config.locales[0],
   },
 };
 
-export function reducer(state = initialState, action: any) {
+export function reducer(state: State = initialState, action: any): State {
   const payload = action.payload;
 
   switch (action.type) {
@@ -33,13 +45,7 @@ export function reducer(state = initialState, action: any) {
       } else {
         state.resources.isFetching.shift();
       }
-      return {
-        ...state,
-        resources: {
-          isFetching: state.resources.isFetching,
-          data: state.resources.data,
-        },
-      };
+      return state;
     }
     case 'SET_RESOURCES': {
       return {
@@ -47,6 +53,15 @@ export function reducer(state = initialState, action: any) {
         resources: {
           ...state.resources,
           data: payload.resources,
+        },
+      };
+    }
+    case 'SET_RESOURCE': {
+      return {
+        ...state,
+        resourceFull: {
+          ...state.resourceFull,
+          data: payload.resourceFull,
         },
       };
     }
@@ -63,6 +78,7 @@ export function reducer(state = initialState, action: any) {
       return {
         ...state,
         ui: {
+          ...state.ui,
           locale: action.payload.locale,
         },
       };
