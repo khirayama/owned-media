@@ -16,7 +16,7 @@ const mapStateToProps = (state: State) => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
   return {
     onMount: (props: Props) => {
-      if (!props.resources.data.length) {
+      if (!props.resources.data.length || props.resources.hasChange) {
         dispatch(fetchResources());
       }
     },
