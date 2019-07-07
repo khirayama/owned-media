@@ -6,7 +6,7 @@ import { LocaleBar } from '../../containers/LocaleBar';
 import { Head } from '../head/Head';
 
 export const Resource = injectIntl(function(props: any) {
-  // const id = props.match.params.id || null;
+  const resourceId = props.match.params.id || null;
   const title: string = props.intl.formatMessage({ id: 'Resource.Title' });
   const description: string = props.intl.formatMessage({
     id: 'Resource.Description',
@@ -16,7 +16,7 @@ export const Resource = injectIntl(function(props: any) {
     <>
       <Head title={title} description={description} />
       <LocaleBar />
-      <ResourceForm />
+      <ResourceForm resourceId={resourceId} />
     </>
   );
 });

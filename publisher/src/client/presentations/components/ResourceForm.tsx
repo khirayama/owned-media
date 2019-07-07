@@ -21,6 +21,7 @@ interface OwnState {
 }
 
 export interface Props {
+  resourceId: string | null;
   resourceFull: State['resourceFull'];
 }
 
@@ -177,10 +178,9 @@ export class ResourceForm extends React.Component<Props, OwnState> {
 
   public componentDidMount() {
     const data = this.props.resourceFull.data;
-    const resourceId = data ? data.id : null;
 
-    if (resourceId) {
-      ResourceService.find(resourceId, { locale: 'all' }).then(resourceFull => {
+    if (data && data.id !== this.props.resourceId && this.props.resourceId) {
+      ResourceService.find(this.props.resourceId, { locale: 'all' }).then(resourceFull => {
         const newResourceFull = mergeDeep(this.state.resourceFull, resourceFull);
         this.setState({ resourceFull: newResourceFull });
       });
