@@ -14,7 +14,7 @@ const req =
 
 export class Resource {
   public static fetch(options?: { locale: string }) {
-    return new Promise((resolve: (res: ResourceShape[]) => void) => {
+    return new Promise((resolve: (res: (ResourceShape | ResourceFullShape)[]) => void) => {
       const locale = options ? options.locale : null;
       const url = `/api/resources` + (locale ? `?locale=${locale}` : '');
 

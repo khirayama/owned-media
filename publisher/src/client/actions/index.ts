@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { ResourceShape, ResourceFullShape } from '../../types';
+import { ResourceFullShape } from '../../types';
 
 export interface ChangeIsFetchingResources extends Action<'CHANGE_IS_FETCHING_RESOURCES'> {
   payload: {
@@ -17,15 +17,15 @@ export const changeIsFetchingResources = (isFetching: boolean): ChangeIsFetching
   };
 };
 
-export interface ChangeIsFetchingResourceFull extends Action<'CHANGE_IS_FETCHING_RESOURCE_FULL'> {
+export interface ChangeIsFetchingResource extends Action<'CHANGE_IS_FETCHING_RESOURCE'> {
   payload: {
     isFetching: boolean;
   };
 }
 
-export const changeIsFetchingResourceFull = (isFetching: boolean): ChangeIsFetchingResourceFull => {
+export const changeIsFetchingResource = (isFetching: boolean): ChangeIsFetchingResource => {
   return {
-    type: 'CHANGE_IS_FETCHING_RESOURCE_FULL',
+    type: 'CHANGE_IS_FETCHING_RESOURCE',
     payload: {
       isFetching,
     },
@@ -34,11 +34,11 @@ export const changeIsFetchingResourceFull = (isFetching: boolean): ChangeIsFetch
 
 export interface SetResources extends Action<'SET_RESOURCES'> {
   payload: {
-    resources: ResourceShape[];
+    resources: ResourceFullShape[];
   };
 }
 
-export const setResources = (resources: ResourceShape[]): SetResources => {
+export const setResources = (resources: ResourceFullShape[]): SetResources => {
   return {
     type: 'SET_RESOURCES',
     payload: {
@@ -47,17 +47,17 @@ export const setResources = (resources: ResourceShape[]): SetResources => {
   };
 };
 
-export interface SetResourceFull extends Action<'SET_RESOURCE_FULL'> {
+export interface SetResource extends Action<'SET_RESOURCE'> {
   payload: {
-    resourceFull: ResourceFullShape;
+    resource: ResourceFullShape;
   };
 }
 
-export const setResourceFull = (resourceFull: ResourceFullShape): SetResourceFull => {
+export const setResource = (resource: ResourceFullShape): SetResource => {
   return {
-    type: 'SET_RESOURCE_FULL',
+    type: 'SET_RESOURCE',
     payload: {
-      resourceFull,
+      resource,
     },
   };
 };

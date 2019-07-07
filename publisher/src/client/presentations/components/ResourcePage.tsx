@@ -7,7 +7,7 @@ import { loadConfig } from '../../../utils';
 const config = loadConfig();
 
 interface Props {
-  resourceFull: ResourceFullShape;
+  resource: ResourceFullShape;
   onChange: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
@@ -16,14 +16,14 @@ const Wrapper = styled.default.div`
 `;
 
 export function ResourcePage(props: Props) {
-  const resourceFull = props.resourceFull;
+  const resource = props.resource;
 
   return (
     <Wrapper>
       <h3>Page</h3>
       <div className="box">
         {config.locales.map((locale: string) => {
-          return resourceFull ? (
+          return resource ? (
             <div key={locale} className="column">
               <table>
                 <tbody>
@@ -32,7 +32,7 @@ export function ResourcePage(props: Props) {
                     <td>
                       <input
                         type="text"
-                        value={resourceFull.page.title[locale]}
+                        value={resource.page.title[locale]}
                         name={`page.title.${locale}`}
                         onChange={props.onChange}
                       />
@@ -43,7 +43,7 @@ export function ResourcePage(props: Props) {
                     <td>
                       <input
                         type="text"
-                        value={resourceFull.page.description[locale]}
+                        value={resource.page.description[locale]}
                         name={`page.description.${locale}`}
                         onChange={props.onChange}
                       />
@@ -54,7 +54,7 @@ export function ResourcePage(props: Props) {
                     <td>
                       <input
                         type="text"
-                        value={resourceFull.page.keywords[locale]}
+                        value={resource.page.keywords[locale]}
                         name={`page.keywords.${locale}`}
                         onChange={props.onChange}
                       />
@@ -65,7 +65,7 @@ export function ResourcePage(props: Props) {
                     <td>
                       <input
                         type="text"
-                        value={resourceFull.page.imageUrl[locale]}
+                        value={resource.page.imageUrl[locale]}
                         name={`page.image_url.${locale}`}
                         onChange={props.onChange}
                       />
@@ -74,7 +74,7 @@ export function ResourcePage(props: Props) {
                   <tr>
                     <th>Image Preview({locale})</th>
                     <td className="text-center">
-                      <img src={resourceFull.page.imageUrl[locale]} />
+                      <img src={resource.page.imageUrl[locale]} />
                     </td>
                   </tr>
                 </tbody>

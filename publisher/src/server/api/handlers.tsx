@@ -7,7 +7,6 @@ import { requestToPartialResource } from '../../utils';
 export function fetchResources(req: express.Request, res: express.Response) {
   const query = req.query;
   const conditions = {};
-  const options = {};
 
   const conditionWhiteList = ['id', 'type'];
   for (let key of conditionWhiteList) {
@@ -15,12 +14,7 @@ export function fetchResources(req: express.Request, res: express.Response) {
       conditions[key] = query[key].split(',');
     }
   }
-  const optionWhiteList = ['locale', 'limit', 'offset', 'sort'];
-  for (let key of optionWhiteList) {
-    if (options[key]) {
-      options[key] = query[key].split(',');
-    }
-  }
+  const options = { locale: query.locale, limit: Number(query.limit), offset: Number(query.offset), sort: query.sort };
 
   const resources: ResourceShape[] | ResourceFullShape[] = Resource.find(conditions, options);
   res.json(resources);
@@ -40,11 +34,8 @@ export function fetchResource(req: express.Request, res: express.Response) {
   const params = req.params;
   const query = req.query;
 
-  const resource =
-    Resource.find(
-      { id: params.id },
-      { locale: query.locale, limit: Number(query.limit), offset: Number(query.offset) },
-    )[0] || null;
+  const options = { locale: query.locale, limit: Number(query.limit), offset: Number(query.offset), sort: query.sort };
+  const resource = Resource.find({ id: params.id }, options)[0] || null;
   res.json(resource);
 }
 

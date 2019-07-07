@@ -1,4 +1,4 @@
-import { ResourceShape, ResourceFullShape } from '../../types';
+import { ResourceFullShape } from '../../types';
 import { loadConfig } from '../../utils';
 
 const config = loadConfig();
@@ -6,9 +6,9 @@ const config = loadConfig();
 export interface State {
   resources: {
     isFetching: boolean[];
-    data: ResourceShape[];
+    data: ResourceFullShape[];
   };
-  resourceFull: {
+  resource: {
     isFetching: boolean[];
     data: ResourceFullShape | null;
   };
@@ -23,7 +23,7 @@ export const initialState: State = {
     isFetching: [],
     data: [],
   },
-  resourceFull: {
+  resource: {
     isFetching: [],
     data: null,
   },
@@ -35,6 +35,7 @@ export const initialState: State = {
 
 export function reducer(state: State = initialState, action: any): State {
   const payload = action.payload;
+  console.log(state, action);
 
   switch (action.type) {
     case 'CHANGE_IS_FETCHING_RESOURCES': {
@@ -45,7 +46,7 @@ export function reducer(state: State = initialState, action: any): State {
       }
       return state;
     }
-    case 'CHANGE_IS_FETCHING_RESOURCE_FULL': {
+    case 'CHANGE_IS_FETCHING_RESOURCE': {
       if (payload.isFetching) {
         state.resources.isFetching.push(true);
       } else {
@@ -62,12 +63,12 @@ export function reducer(state: State = initialState, action: any): State {
         },
       };
     }
-    case 'SET_RESOURCE_FULL': {
+    case 'SET_RESOURCE': {
       return {
         ...state,
-        resourceFull: {
-          ...state.resourceFull,
-          data: payload.resourceFull,
+        resource: {
+          ...state.resource,
+          data: payload.resource,
         },
       };
     }
@@ -76,7 +77,7 @@ export function reducer(state: State = initialState, action: any): State {
         ...state,
         resources: {
           ...state.resources,
-          data: state.resources.data.filter((resource: ResourceShape) => resource.id !== payload.resourceId),
+          data: state.resources.data.filter((resource: ResourceFullShape) => resource.id !== payload.resourceId),
         },
       };
     }

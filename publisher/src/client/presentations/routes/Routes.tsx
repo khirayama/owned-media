@@ -10,13 +10,13 @@ export const routes = [
     exact: true,
     path: '/',
     component: Resources,
-    initializer: fetchResources,
+    initializer: () => fetchResources({ locale: 'all' }),
   },
   {
     exact: true,
     path: `/resources`,
     component: Resources,
-    initializer: fetchResources,
+    initializer: () => fetchResources({ locale: 'all' }),
   },
   {
     exact: true,

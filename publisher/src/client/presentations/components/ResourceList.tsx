@@ -1,14 +1,14 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ResourceShape } from '../../../types';
+import { ResourceFullShape } from '../../../types';
 import { ResourceListItem, Props as ResourceListItemProps } from '../components/ResourceListItem';
 import { Table, TableRow, TableHead, TableHeadCell } from '../components/Table';
 
 export interface Props {
   resources: {
     isFetching: boolean[];
-    data: ResourceShape[];
+    data: ResourceFullShape[];
   };
   onClickDeleteResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => void;
   onMount?: (props: Props) => void;
@@ -61,13 +61,13 @@ export function ResourceList(props: Props) {
           <TableRow>
             <TableHeadCell>ID</TableHeadCell>
             <TableHeadCell>Key</TableHeadCell>
-            <TableHeadCell>Name</TableHeadCell>
             <TableHeadCell>Type</TableHeadCell>
+            <TableHeadCell>Name</TableHeadCell>
             <TableHeadCell />
           </TableRow>
         </TableHead>
         <tbody>
-          {props.resources.data.map((resource: ResourceShape) => (
+          {props.resources.data.map((resource: ResourceFullShape) => (
             <ResourceListItem
               key={resource.id}
               resource={resource}

@@ -5,8 +5,8 @@ import { ResourceShape, ResourceFullShape } from '../../types';
 import {
   changeIsFetchingResources,
   setResources,
-  changeIsFetchingResourceFull,
-  setResourceFull,
+  changeIsFetchingResource,
+  setResource,
   removeResource,
 } from '../actions';
 import { Resource as ResourceService } from '../services/Resource';
@@ -14,19 +14,19 @@ import { Resource as ResourceService } from '../services/Resource';
 export const fetchResources = (options?) => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
     dispatch(changeIsFetchingResources(true));
-    return ResourceService.fetch(options).then((resources: ResourceShape[]) => {
-      dispatch(setResources(resources));
+    return ResourceService.fetch(options).then((resources: (ResourceShape | ResourceFullShape)[]) => {
+      dispatch(setResources(resources as ResourceFullShape[]));
       dispatch(changeIsFetchingResources(false));
     });
   };
 };
 
-export const fetchResourceFull = (resourceId: string) => {
+export const fetchResource = (resourceId: string, options?) => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
-    dispatch(changeIsFetchingResourceFull(true));
-    return ResourceService.find(resourceId, { locale: 'all' }).then(resourceFull => {
-      dispatch(setResourceFull(resourceFull as ResourceFullShape));
-      dispatch(changeIsFetchingResourceFull(false));
+    dispatch(changeIsFetchingResource(true));
+    return ResourceService.find(resourceId, options).then((resource: ResourceShape | ResourceFullShape) => {
+      dispatch(setResource(resource as ResourceFullShape));
+      dispatch(changeIsFetchingResource(false));
     });
   };
 };

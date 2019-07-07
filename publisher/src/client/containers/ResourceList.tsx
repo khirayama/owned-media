@@ -17,7 +17,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
   return {
     onMount: (props: Props) => {
       if (!props.resources.data.length) {
-        dispatch(fetchResources());
+        dispatch(fetchResources({ locale: 'all' }));
       }
     },
     onClickDeleteResourceButton: (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => {

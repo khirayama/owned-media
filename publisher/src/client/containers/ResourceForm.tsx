@@ -10,7 +10,7 @@ interface Props {
 const mapStateToProps = (state: State, props: Props) => {
   return {
     resourceId: props.resourceId,
-    resourceFull: state.resourceFull,
+    resource: state.resource,
   };
 };
 
