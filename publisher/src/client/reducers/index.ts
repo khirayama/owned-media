@@ -45,6 +45,14 @@ export function reducer(state: State = initialState, action: any): State {
       }
       return state;
     }
+    case 'CHANGE_IS_FETCHING_RESOURCE_FULL': {
+      if (payload.isFetching) {
+        state.resources.isFetching.push(true);
+      } else {
+        state.resources.isFetching.shift();
+      }
+      return state;
+    }
     case 'SET_RESOURCES': {
       return {
         ...state,
@@ -54,7 +62,7 @@ export function reducer(state: State = initialState, action: any): State {
         },
       };
     }
-    case 'SET_RESOURCE': {
+    case 'SET_RESOURCE_FULL': {
       return {
         ...state,
         resourceFull: {

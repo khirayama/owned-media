@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ResourceShape } from '../../types';
+import { ResourceShape, ResourceFullShape } from '../../types';
 import { resourceToRequest } from '../../utils';
 
 const PORT = process.env.PORT || 3000;
@@ -28,7 +28,7 @@ export class Resource {
     const locale = options ? options.locale : null;
     const url = `/api/resources/${resourceId}` + (locale ? `?locale=${locale}` : '');
 
-    return new Promise((resolve: (res: ResourceShape) => void) => {
+    return new Promise((resolve: (res: ResourceShape | ResourceFullShape) => void) => {
       req.get(url).then(res => {
         resolve(res.data);
       });

@@ -1,8 +1,14 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { ResourceShape } from '../../types';
-import { changeIsFetchingResources, setResources, removeResource } from '../actions';
+import { ResourceShape, ResourceFullShape } from '../../types';
+import {
+  changeIsFetchingResources,
+  setResources,
+  changeIsFetchingResourceFull,
+  setResourceFull,
+  removeResource,
+} from '../actions';
 import { Resource as ResourceService } from '../services/Resource';
 
 export const fetchResources = (options?) => {
@@ -11,6 +17,16 @@ export const fetchResources = (options?) => {
     return ResourceService.fetch(options).then((resources: ResourceShape[]) => {
       dispatch(setResources(resources));
       dispatch(changeIsFetchingResources(false));
+    });
+  };
+};
+
+export const fetchResourceFull = (resourceId: string) => {
+  return (dispatch: ThunkDispatch<{}, {}, Action>) => {
+    dispatch(changeIsFetchingResourceFull(true));
+    return ResourceService.find(resourceId, { locale: 'all' }).then(resourceFull => {
+      dispatch(setResourceFull(resourceFull as ResourceFullShape));
+      dispatch(changeIsFetchingResourceFull(false));
     });
   };
 };
