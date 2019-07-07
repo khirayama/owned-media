@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ResourceShape, ResourceFullShape } from '../../types';
+import { ResourceShape, ResourceWithAllLocalesShape } from '../../types';
 import { resourceToRequest } from '../../utils';
 
 const PORT = process.env.PORT || 3000;
@@ -14,7 +14,7 @@ const req =
 
 export class Resource {
   public static fetch(options?: { locale: string }) {
-    return new Promise((resolve: (res: (ResourceShape | ResourceFullShape)[]) => void) => {
+    return new Promise((resolve: (res: (ResourceShape | ResourceWithAllLocalesShape)[]) => void) => {
       const locale = options ? options.locale : null;
       const url = `/api/resources` + (locale ? `?locale=${locale}` : '');
 
@@ -28,7 +28,7 @@ export class Resource {
     const locale = options ? options.locale : null;
     const url = `/api/resources/${resourceId}` + (locale ? `?locale=${locale}` : '');
 
-    return new Promise((resolve: (res: ResourceShape | ResourceFullShape) => void) => {
+    return new Promise((resolve: (res: ResourceShape | ResourceWithAllLocalesShape) => void) => {
       req.get(url).then(res => {
         resolve(res.data);
       });

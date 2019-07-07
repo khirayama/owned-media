@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { ResourceShape, ResourceFullShape } from '../../types';
+import { ResourceShape, ResourceWithAllLocalesShape } from '../../types';
 import {
   changeIsFetchingResources,
   setResources,
@@ -14,8 +14,8 @@ import { Resource as ResourceService } from '../services/Resource';
 export const fetchResources = (options?) => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
     dispatch(changeIsFetchingResources(true));
-    return ResourceService.fetch(options).then((resources: (ResourceShape | ResourceFullShape)[]) => {
-      dispatch(setResources(resources as ResourceFullShape[]));
+    return ResourceService.fetch(options).then((resources: (ResourceShape | ResourceWithAllLocalesShape)[]) => {
+      dispatch(setResources(resources as ResourceWithAllLocalesShape[]));
       dispatch(changeIsFetchingResources(false));
     });
   };
@@ -24,8 +24,8 @@ export const fetchResources = (options?) => {
 export const fetchResource = (resourceId: string, options?) => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
     dispatch(changeIsFetchingResource(true));
-    return ResourceService.find(resourceId, options).then((resource: ResourceShape | ResourceFullShape) => {
-      dispatch(setResource(resource as ResourceFullShape));
+    return ResourceService.find(resourceId, options).then((resource: ResourceShape | ResourceWithAllLocalesShape) => {
+      dispatch(setResource(resource as ResourceWithAllLocalesShape));
       dispatch(changeIsFetchingResource(false));
     });
   };

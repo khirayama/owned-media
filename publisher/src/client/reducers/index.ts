@@ -1,4 +1,4 @@
-import { ResourceFullShape } from '../../types';
+import { ResourceWithAllLocalesShape } from '../../types';
 import { loadConfig } from '../../utils';
 
 const config = loadConfig();
@@ -6,11 +6,11 @@ const config = loadConfig();
 export interface State {
   resources: {
     isFetching: boolean[];
-    data: ResourceFullShape[];
+    data: ResourceWithAllLocalesShape[];
   };
   resource: {
     isFetching: boolean[];
-    data: ResourceFullShape | null;
+    data: ResourceWithAllLocalesShape | null;
   };
   ui: {
     locale: string;
@@ -29,7 +29,7 @@ export const initialState: State = {
   },
   ui: {
     locale: 'en',
-    resourceLocale: config.locales[0],
+    resourceLocale: 'all',
   },
 };
 
@@ -77,7 +77,9 @@ export function reducer(state: State = initialState, action: any): State {
         ...state,
         resources: {
           ...state.resources,
-          data: state.resources.data.filter((resource: ResourceFullShape) => resource.id !== payload.resourceId),
+          data: state.resources.data.filter(
+            (resource: ResourceWithAllLocalesShape) => resource.id !== payload.resourceId,
+          ),
         },
       };
     }

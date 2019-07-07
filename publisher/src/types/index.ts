@@ -59,35 +59,19 @@ export type ResourceResponse = {
   updated_at: string;
 };
 
-export type ResourceFullResponse = {
+export type ResourceWithAllLocalesResponse = {
   id: string;
   type: string;
   key: string;
-  name: {
-    [key: string]: string;
-  };
-  body: {
-    [key: string]: string;
-  };
-  body_path: {
-    [key: string]: string;
-  };
-  image_url: {
-    [key: string]: string;
-  };
+  name: LocaleObject;
+  body: LocaleObject;
+  body_path: LocaleObject;
+  image_url: LocaleObject;
   page: {
-    title: {
-      [key: string]: string;
-    };
-    description: {
-      [key: string]: string;
-    };
-    image_url: {
-      [key: string]: string;
-    };
-    keywords: {
-      [key: string]: string;
-    };
+    title: LocaleObject;
+    description: LocaleObject;
+    image_url: LocaleObject;
+    keywords: LocaleObject;
   };
   attributes: {
     [key: string]: string;
@@ -117,35 +101,19 @@ export type ResourceShape = {
   updatedAt: string;
 };
 
-export type ResourceFullShape = {
+export type ResourceWithAllLocalesShape = {
   id: string;
   type: string;
   key: string;
-  name: {
-    [key: string]: string;
-  };
-  imageUrl: {
-    [key: string]: string;
-  };
-  bodyPath: {
-    [key: string]: string;
-  };
-  body: {
-    [key: string]: string;
-  };
+  name: LocaleObject;
+  imageUrl: LocaleObject;
+  bodyPath: LocaleObject;
+  body: LocaleObject;
   page: {
-    title: {
-      [key: string]: string;
-    };
-    description: {
-      [key: string]: string;
-    };
-    imageUrl: {
-      [key: string]: string;
-    };
-    keywords: {
-      [key: string]: string;
-    };
+    title: LocaleObject;
+    description: LocaleObject;
+    imageUrl: LocaleObject;
+    keywords: LocaleObject;
   };
   attributes: {
     [key: string]: string;

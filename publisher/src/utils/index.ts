@@ -2,10 +2,10 @@
 import * as path from 'path';
 
 import {
-  ResourceFullShape,
+  ResourceWithAllLocalesShape,
   ResourceShape,
   ResourceRequest,
-  ResourceFullResponse,
+  ResourceWithAllLocalesResponse,
   ResourceResponse,
   Config,
 } from '../types';
@@ -124,19 +124,22 @@ export function resourceToRequest(resource: ResourceShape): ResourceRequest {
   };
 }
 
-export function resourceFullToRequest(resourceFull: ResourceFullShape, locale: string): ResourceRequest {
+export function resourceWithAllLocalesToRequest(
+  resourceWithAllLocales: ResourceWithAllLocalesShape,
+  locale: string,
+): ResourceRequest {
   return {
-    type: resourceFull.type,
-    key: resourceFull.key,
-    name: resourceFull.name[locale],
-    image_url: resourceFull.imageUrl[locale],
+    type: resourceWithAllLocales.type,
+    key: resourceWithAllLocales.key,
+    name: resourceWithAllLocales.name[locale],
+    image_url: resourceWithAllLocales.imageUrl[locale],
     page: {
-      title: resourceFull.page.title[locale],
-      description: resourceFull.page.description[locale],
-      image_url: resourceFull.page.imageUrl[locale],
-      keywords: resourceFull.page.keywords[locale],
+      title: resourceWithAllLocales.page.title[locale],
+      description: resourceWithAllLocales.page.description[locale],
+      image_url: resourceWithAllLocales.page.imageUrl[locale],
+      keywords: resourceWithAllLocales.page.keywords[locale],
     },
-    attributes: resourceFull.attributes,
+    attributes: resourceWithAllLocales.attributes,
   };
 }
 
@@ -161,24 +164,26 @@ export function responseToResource(resourceResponse: ResourceResponse): Resource
   };
 }
 
-export function responseFullToResourceFull(resourceFullResponse: ResourceFullResponse): ResourceFullShape {
+export function responseWithAllLocalesToResourceWithAllLocales(
+  resourceWithAllLocalesResponse: ResourceWithAllLocalesResponse,
+): ResourceWithAllLocalesShape {
   return {
-    id: resourceFullResponse.id,
-    type: resourceFullResponse.type,
-    key: resourceFullResponse.key,
-    name: resourceFullResponse.name,
-    imageUrl: resourceFullResponse.image_url,
-    bodyPath: resourceFullResponse.body_path,
-    body: resourceFullResponse.body,
+    id: resourceWithAllLocalesResponse.id,
+    type: resourceWithAllLocalesResponse.type,
+    key: resourceWithAllLocalesResponse.key,
+    name: resourceWithAllLocalesResponse.name,
+    imageUrl: resourceWithAllLocalesResponse.image_url,
+    bodyPath: resourceWithAllLocalesResponse.body_path,
+    body: resourceWithAllLocalesResponse.body,
     page: {
-      title: resourceFullResponse.page.title,
-      description: resourceFullResponse.page.description,
-      keywords: resourceFullResponse.page.keywords,
-      imageUrl: resourceFullResponse.page.image_url,
+      title: resourceWithAllLocalesResponse.page.title,
+      description: resourceWithAllLocalesResponse.page.description,
+      keywords: resourceWithAllLocalesResponse.page.keywords,
+      imageUrl: resourceWithAllLocalesResponse.page.image_url,
     },
-    attributes: resourceFullResponse.attributes,
-    createdAt: resourceFullResponse.created_at,
-    updatedAt: resourceFullResponse.updated_at,
+    attributes: resourceWithAllLocalesResponse.attributes,
+    createdAt: resourceWithAllLocalesResponse.created_at,
+    updatedAt: resourceWithAllLocalesResponse.updated_at,
   };
 }
 
@@ -203,34 +208,38 @@ export function requestToPartialResource(req: ResourceRequest): Partial<Resource
   };
 }
 
-export function resourceFullToResource(
-  resourceFull: ResourceFullShape,
+export function resourceWithAllLocalesToResource(
+  resourceWithAllLocales: ResourceWithAllLocalesShape,
   locale: string,
   options?: { defaultLocale: string },
 ) {
   const defaultLocale = options ? options.defaultLocale || config.locales[0] : config.locales[0];
 
   return {
-    id: resourceFull.id,
-    type: resourceFull.type,
-    key: resourceFull.key,
-    name: resourceFull.name[locale] || resourceFull.name[defaultLocale],
-    bodyPath: resourceFull.bodyPath[locale] || resourceFull.bodyPath[defaultLocale],
-    body: resourceFull.body[locale] || resourceFull.body[defaultLocale],
-    imageUrl: resourceFull.imageUrl[locale] || resourceFull.imageUrl[defaultLocale],
+    id: resourceWithAllLocales.id,
+    type: resourceWithAllLocales.type,
+    key: resourceWithAllLocales.key,
+    name: resourceWithAllLocales.name[locale] || resourceWithAllLocales.name[defaultLocale],
+    bodyPath: resourceWithAllLocales.bodyPath[locale] || resourceWithAllLocales.bodyPath[defaultLocale],
+    body: resourceWithAllLocales.body[locale] || resourceWithAllLocales.body[defaultLocale],
+    imageUrl: resourceWithAllLocales.imageUrl[locale] || resourceWithAllLocales.imageUrl[defaultLocale],
     page: {
-      title: resourceFull.page.title[locale] || resourceFull.page.title[defaultLocale],
-      description: resourceFull.page.description[locale] || resourceFull.page.description[defaultLocale],
-      imageUrl: resourceFull.page.imageUrl[locale] || resourceFull.page.imageUrl[defaultLocale],
-      keywords: resourceFull.page.keywords[locale] || resourceFull.page.keywords[defaultLocale],
+      title: resourceWithAllLocales.page.title[locale] || resourceWithAllLocales.page.title[defaultLocale],
+      description:
+        resourceWithAllLocales.page.description[locale] || resourceWithAllLocales.page.description[defaultLocale],
+      imageUrl: resourceWithAllLocales.page.imageUrl[locale] || resourceWithAllLocales.page.imageUrl[defaultLocale],
+      keywords: resourceWithAllLocales.page.keywords[locale] || resourceWithAllLocales.page.keywords[defaultLocale],
     },
-    attributes: resourceFull.attributes,
-    createdAt: resourceFull.createdAt,
-    updatedAt: resourceFull.updatedAt,
+    attributes: resourceWithAllLocales.attributes,
+    createdAt: resourceWithAllLocales.createdAt,
+    updatedAt: resourceWithAllLocales.updatedAt,
   };
 }
 
-export function resourceToPartialResourceFull(resource: ResourceShape, locale: string) {
+export function resourceToPartialResourceWithAllLocales(
+  resource: ResourceShape,
+  locale: string,
+): ResourceWithAllLocalesShape {
   return {
     id: resource.id,
     type: resource.type,

@@ -1,15 +1,16 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ResourceFullShape } from '../../../types';
+import { ResourceWithAllLocalesShape } from '../../../types';
 import { ResourceListItem, Props as ResourceListItemProps } from '../components/ResourceListItem';
 import { Table, TableRow, TableHead, TableHeadCell } from '../components/Table';
 
 export interface Props {
   resources: {
     isFetching: boolean[];
-    data: ResourceFullShape[];
+    data: ResourceWithAllLocalesShape[];
   };
+  locale: string;
   onClickDeleteResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => void;
   onMount?: (props: Props) => void;
 }
@@ -67,10 +68,11 @@ export function ResourceList(props: Props) {
           </TableRow>
         </TableHead>
         <tbody>
-          {props.resources.data.map((resource: ResourceFullShape) => (
+          {props.resources.data.map((resource: ResourceWithAllLocalesShape) => (
             <ResourceListItem
               key={resource.id}
               resource={resource}
+              locale={props.locale}
               onClickDeleteResourceButton={props.onClickDeleteResourceButton}
             />
           ))}

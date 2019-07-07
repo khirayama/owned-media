@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { ResourceFullShape } from '../../types';
+import { ResourceWithAllLocalesShape } from '../../types';
 
 export interface ChangeIsFetchingResources extends Action<'CHANGE_IS_FETCHING_RESOURCES'> {
   payload: {
@@ -34,11 +34,11 @@ export const changeIsFetchingResource = (isFetching: boolean): ChangeIsFetchingR
 
 export interface SetResources extends Action<'SET_RESOURCES'> {
   payload: {
-    resources: ResourceFullShape[];
+    resources: ResourceWithAllLocalesShape[];
   };
 }
 
-export const setResources = (resources: ResourceFullShape[]): SetResources => {
+export const setResources = (resources: ResourceWithAllLocalesShape[]): SetResources => {
   return {
     type: 'SET_RESOURCES',
     payload: {
@@ -49,11 +49,11 @@ export const setResources = (resources: ResourceFullShape[]): SetResources => {
 
 export interface SetResource extends Action<'SET_RESOURCE'> {
   payload: {
-    resource: ResourceFullShape;
+    resource: ResourceWithAllLocalesShape;
   };
 }
 
-export const setResource = (resource: ResourceFullShape): SetResource => {
+export const setResource = (resource: ResourceWithAllLocalesShape): SetResource => {
   return {
     type: 'SET_RESOURCE',
     payload: {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as styled from 'styled-components';
 
-import { ResourceFullShape } from '../../../types';
+import { ResourceWithAllLocalesShape } from '../../../types';
 import { loadConfig } from '../../../utils';
 
 const config = loadConfig();
@@ -12,7 +12,7 @@ const Wrapper = styled.default.div`
 
 export function ResourceInfo(props: {
   onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  resource: ResourceFullShape;
+  resource: ResourceWithAllLocalesShape;
 }) {
   const resource = props.resource;
   const createdAt = resource.createdAt ? new Date(resource.createdAt) : null;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as styled from 'styled-components';
 
-import { ResourceFullShape } from '../../../types';
+import { ResourceWithAllLocalesShape } from '../../../types';
 import { loadConfig } from '../../../utils';
 
 const config = loadConfig();
@@ -11,7 +11,7 @@ const Wrapper = styled.default.div`
 `;
 
 export interface Props {
-  resource: ResourceFullShape;
+  resource: ResourceWithAllLocalesShape;
   onChange: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 

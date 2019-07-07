@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { Resource } from './models/Resource';
-import { ResourceFullShape, ResourceShape, ResourceRequest } from '../../types';
+import { ResourceWithAllLocalesShape, ResourceShape, ResourceRequest } from '../../types';
 import { requestToPartialResource } from '../../utils';
 
 export function fetchResources(req: express.Request, res: express.Response) {
@@ -16,7 +16,7 @@ export function fetchResources(req: express.Request, res: express.Response) {
   }
   const options = { locale: query.locale, limit: Number(query.limit), offset: Number(query.offset), sort: query.sort };
 
-  const resources: ResourceShape[] | ResourceFullShape[] = Resource.find(conditions, options);
+  const resources: ResourceShape[] | ResourceWithAllLocalesShape[] = Resource.find(conditions, options);
   res.json(resources);
 }
 

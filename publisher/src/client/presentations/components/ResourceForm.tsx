@@ -9,15 +9,20 @@ import { ResourceContents } from '../components/ResourceContents';
 import { ResourcePage } from '../components/ResourcePage';
 import { ResourceAttributes } from '../components/ResourceAttributes';
 import { FloatButton, FlatLink } from '../components/Button';
-import { createLocaleObj, mergeDeep, resourceFullToResource, resourceToPartialResourceFull } from '../../../utils';
-import { ResourceFullShape, ResourceShape } from '../../../types';
+import {
+  createLocaleObj,
+  mergeDeep,
+  resourceWithAllLocalesToResource,
+  resourceToPartialResourceWithAllLocales,
+} from '../../../utils';
+import { ResourceWithAllLocalesShape, ResourceShape } from '../../../types';
 import { loadConfig } from '../../../utils';
 import { State } from '../../reducers';
 
 const config = loadConfig();
 
 interface OwnState {
-  resource: ResourceFullShape;
+  resource: ResourceWithAllLocalesShape;
 }
 
 export interface Props {
@@ -104,7 +109,7 @@ export class ResourceForm extends React.Component<Props, OwnState> {
   constructor(props: Props) {
     super(props);
 
-    const defaultResource: ResourceFullShape = {
+    const defaultResource: ResourceWithAllLocalesShape = {
       id: '',
       type: config.resourceTypes[0].type,
       key: '',
@@ -230,35 +235,45 @@ export class ResourceForm extends React.Component<Props, OwnState> {
     if (resourceId) {
       Promise.all(
         config.locales.map((locale: string) => {
-          return ResourceService.update(resourceId, resourceFullToResource(resource, locale), { locale });
+          return ResourceService.update(resourceId, resourceWithAllLocalesToResource(resource, locale), { locale });
         }),
       ).then(res => {
         for (let i = 0; i < config.locales.length; i += 1) {
           const locale = config.locales[i];
           const tmpResource: ResourceShape = res[i] as ResourceShape;
           this.setState({
-            resource: mergeDeep({}, this.state.resource, resourceToPartialResourceFull(tmpResource, locale)),
+            resource: mergeDeep({}, this.state.resource, resourceToPartialResourceWithAllLocales(tmpResource, locale)),
           });
         }
       });
     } else {
       const firstLocale = config.locales[0];
       const otherLocales = config.locales.slice(1, config.locales.length);
-      ResourceService.create(resourceFullToResource(resource, firstLocale), { locale: firstLocale }).then(
+      ResourceService.create(resourceWithAllLocalesToResource(resource, firstLocale), { locale: firstLocale }).then(
         (newResource: ResourceShape) => {
           this.setState({
-            resource: mergeDeep({}, this.state.resource, resourceToPartialResourceFull(newResource, firstLocale)),
+            resource: mergeDeep(
+              {},
+              this.state.resource,
+              resourceToPartialResourceWithAllLocales(newResource, firstLocale),
+            ),
           });
           Promise.all(
             otherLocales.map((locale: string) => {
-              return ResourceService.update(newResource.id, resourceFullToResource(resource, locale), { locale });
+              return ResourceService.update(newResource.id, resourceWithAllLocalesToResource(resource, locale), {
+                locale,
+              });
             }),
           ).then(res => {
             for (let i = 0; i < otherLocales.length; i += 1) {
               const locale = otherLocales[i];
               const tmpResource: ResourceShape = res[i] as ResourceShape;
               this.setState({
-                resource: mergeDeep({}, this.state.resource, resourceToPartialResourceFull(tmpResource, locale)),
+                resource: mergeDeep(
+                  {},
+                  this.state.resource,
+                  resourceToPartialResourceWithAllLocales(tmpResource, locale),
+                ),
               });
             }
           });

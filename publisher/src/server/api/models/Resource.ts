@@ -4,8 +4,8 @@ import * as path from 'path';
 
 import marked from 'marked';
 
-import { ResourceShape, ResourceFullShape } from '../../../types';
-import { resourceFullToResource, extractColumns, csvStringify, csvParse, loadConfig } from '../../../utils';
+import { ResourceShape, ResourceWithAllLocalesShape } from '../../../types';
+import { resourceWithAllLocalesToResource, extractColumns, csvStringify, csvParse, loadConfig } from '../../../utils';
 
 const config = loadConfig();
 
@@ -162,7 +162,7 @@ export class Resource {
     relations: [],
   };
 
-  private static resources: ResourceFullShape[] = [];
+  private static resources: ResourceWithAllLocalesShape[] = [];
 
   public static init() {
     this.load();
@@ -202,11 +202,11 @@ export class Resource {
     resourceContentRows: ResourceContentRow[],
     resourceAttributeRows: ResourceAttributeRow[],
     pageRows: PageRow[],
-  ): ResourceFullShape[] {
-    const resources: ResourceFullShape[] = [];
+  ): ResourceWithAllLocalesShape[] {
+    const resources: ResourceWithAllLocalesShape[] = [];
 
     for (const resourceRow of resourceRows) {
-      const resource: ResourceFullShape = {
+      const resource: ResourceWithAllLocalesShape = {
         id: resourceRow.id,
         type: resourceRow.type,
         key: resourceRow.key,
@@ -278,7 +278,7 @@ export class Resource {
   public static find(
     conditions?: FindCondition | null,
     options?: { locale?: string; limit?: number; offset?: number; sort?: string },
-  ): ResourceShape[] | ResourceFullShape[] {
+  ): ResourceShape[] | ResourceWithAllLocalesShape[] {
     let tmp = this.resources;
 
     if (conditions) {
@@ -286,9 +286,9 @@ export class Resource {
       for (let targetKey of targetKeys) {
         if (conditions[targetKey]) {
           if (typeof conditions[targetKey] === 'string') {
-            tmp = tmp.filter((t: ResourceFullShape) => t[targetKey] === conditions[targetKey]);
+            tmp = tmp.filter((t: ResourceWithAllLocalesShape) => t[targetKey] === conditions[targetKey]);
           } else if (Array.isArray(conditions[targetKey])) {
-            tmp = tmp.filter((t: ResourceFullShape) => conditions[targetKey].indexOf(t[targetKey]) !== -1);
+            tmp = tmp.filter((t: ResourceWithAllLocalesShape) => conditions[targetKey].indexOf(t[targetKey]) !== -1);
           }
         }
       }
@@ -304,7 +304,7 @@ export class Resource {
       tmp = tmp.slice(offset, limit);
     }
 
-    return locale === 'all' ? tmp : tmp.map((t: ResourceFullShape) => this.build(t, locale));
+    return locale === 'all' ? tmp : tmp.map((t: ResourceWithAllLocalesShape) => this.build(t, locale));
   }
 
   public static relation(resourceIds: string[]): string[] {
@@ -321,8 +321,8 @@ export class Resource {
     return relatedResourceIds;
   }
 
-  private static build(resourceFull: ResourceFullShape, locale: string): ResourceShape {
-    return resourceFullToResource(resourceFull, locale, { defaultLocale: this.defaultLocale });
+  private static build(resourceWithAllLocales: ResourceWithAllLocalesShape, locale: string): ResourceShape {
+    return resourceWithAllLocalesToResource(resourceWithAllLocales, locale, { defaultLocale: this.defaultLocale });
   }
 
   public static create(resource: Partial<ResourceShape>, options: { locale: string } = { locale: this.defaultLocale }) {

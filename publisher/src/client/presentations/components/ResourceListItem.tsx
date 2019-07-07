@@ -1,16 +1,17 @@
 import * as React from 'react';
 
-import { ResourceFullShape } from '../../../types';
+import { ResourceWithAllLocalesShape } from '../../../types';
 import { FlatButton, FlatLink } from '../components/Button';
 import { TableRow, TableCell } from '../components/Table';
 
 export interface Props {
-  resource: ResourceFullShape;
+  resource: ResourceWithAllLocalesShape;
+  locale: string;
   onClickDeleteResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: Props) => void;
 }
 
 export function ResourceListItem(props: Props) {
-  const resource: ResourceFullShape = props.resource;
+  const resource: ResourceWithAllLocalesShape = props.resource;
 
   const onClickDeleteResourceButton = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
