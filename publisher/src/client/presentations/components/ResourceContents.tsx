@@ -11,19 +11,19 @@ const Wrapper = styled.default.div`
 `;
 
 export interface Props {
-  resource: ResourceFullShape;
+  resourceFull: ResourceFullShape;
   onChange: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
 export function ResourceContents(props: Props) {
-  const resource = props.resource;
+  const resourceFull = props.resourceFull;
 
   return (
     <Wrapper>
       <h3>Contents</h3>
       <div className="box">
         {config.locales.map((locale: string) => {
-          return resource ? (
+          return resourceFull ? (
             <div key={locale} className="column">
               <table>
                 <tbody>
@@ -32,7 +32,7 @@ export function ResourceContents(props: Props) {
                     <td>
                       <input
                         type="text"
-                        value={resource.name[locale]}
+                        value={resourceFull.name[locale]}
                         name={`name.${locale}`}
                         onChange={props.onChange}
                       />
@@ -43,7 +43,7 @@ export function ResourceContents(props: Props) {
                     <td>
                       <input
                         type="text"
-                        value={resource.bodyPath[locale]}
+                        value={resourceFull.bodyPath[locale]}
                         name={`body_path.${locale}`}
                         onChange={props.onChange}
                       />
@@ -54,7 +54,7 @@ export function ResourceContents(props: Props) {
                     <td>
                       <input
                         type="text"
-                        value={resource.imageUrl[locale]}
+                        value={resourceFull.imageUrl[locale]}
                         name={`image_url.${locale}`}
                         onChange={props.onChange}
                       />
@@ -63,7 +63,7 @@ export function ResourceContents(props: Props) {
                   <tr>
                     <th>Image Preview({locale})</th>
                     <td className="text-center">
-                      <img src={resource.imageUrl[locale]} />
+                      <img src={resourceFull.imageUrl[locale]} />
                     </td>
                   </tr>
                 </tbody>

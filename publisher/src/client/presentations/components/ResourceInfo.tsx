@@ -12,11 +12,11 @@ const Wrapper = styled.default.div`
 
 export function ResourceInfo(props: {
   onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => void;
-  resource: ResourceFullShape;
+  resourceFull: ResourceFullShape;
 }) {
-  const resource = props.resource;
-  const createdAt = resource.createdAt ? new Date(resource.createdAt) : null;
-  const updatedAt = resource.updatedAt ? new Date(resource.updatedAt) : null;
+  const resourceFull = props.resourceFull;
+  const createdAt = resourceFull.createdAt ? new Date(resourceFull.createdAt) : null;
+  const updatedAt = resourceFull.updatedAt ? new Date(resourceFull.updatedAt) : null;
 
   function format(date: Date) {
     function zeroPadding(s: string) {
@@ -35,7 +35,7 @@ export function ResourceInfo(props: {
           <tr>
             <th>ID</th>
             <td>
-              <p>{resource.id ? resource.id : 'Not Yet'}</p>
+              <p>{resourceFull.id ? resourceFull.id : 'Not Yet'}</p>
             </td>
           </tr>
           <tr>
@@ -53,7 +53,7 @@ export function ResourceInfo(props: {
           <tr>
             <th>Type</th>
             <td>
-              <select value={resource.type} name="type" onChange={props.onChange}>
+              <select value={resourceFull.type} name="type" onChange={props.onChange}>
                 {config.resourceTypes.map((resourceType: any) => {
                   return (
                     <option key={resourceType.type} value={resourceType.type}>
@@ -70,7 +70,7 @@ export function ResourceInfo(props: {
               <input
                 type="text"
                 placeholder="Key for resource"
-                value={resource.key}
+                value={resourceFull.key}
                 name="key"
                 onChange={props.onChange}
               />

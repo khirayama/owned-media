@@ -12,15 +12,16 @@ import { FloatButton, FlatLink } from '../components/Button';
 import { createLocaleObj, mergeDeep, resourceFullToResource, resourceToPartialResourceFull } from '../../../utils';
 import { ResourceFullShape, ResourceShape } from '../../../types';
 import { loadConfig } from '../../../utils';
+import { State } from '../../reducers';
 
 const config = loadConfig();
 
-interface State {
-  resource: ResourceFullShape;
+interface OwnState {
+  resourceFull: ResourceFullShape;
 }
 
-interface Props {
-  resourceId: string;
+export interface Props {
+  resourceFull: State['resourceFull'];
 }
 
 const Wrapper = styled.default.div`
@@ -98,7 +99,7 @@ const Wrapper = styled.default.div`
   }
 `;
 
-export class ResourceForm extends React.Component<Props, State> {
+export class ResourceForm extends React.Component<Props, OwnState> {
   constructor(props: Props) {
     super(props);
 
@@ -122,7 +123,7 @@ export class ResourceForm extends React.Component<Props, State> {
     };
 
     this.state = {
-      resource: defaultResource,
+      resourceFull: props.resourceFull.data || defaultResource,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -132,7 +133,7 @@ export class ResourceForm extends React.Component<Props, State> {
   private onChange(event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) {
     const name = event.currentTarget.name;
     const value = event.currentTarget.value;
-    const currentResource = JSON.parse(JSON.stringify(this.state.resource));
+    const currentResource = JSON.parse(JSON.stringify(this.state.resourceFull));
 
     if (name === 'type') {
       currentResource.attributes = {};
@@ -171,22 +172,23 @@ export class ResourceForm extends React.Component<Props, State> {
       return obj;
     }
 
-    this.setState({ resource: setValue(currentResource, name, value) });
+    this.setState({ resourceFull: setValue(currentResource, name, value) });
   }
 
   public componentDidMount() {
-    const resourceId = this.props.resourceId;
+    const data = this.props.resourceFull.data;
+    const resourceId = data ? data.id : null;
 
     if (resourceId) {
-      ResourceService.find(resourceId, { locale: 'all' }).then(resource => {
-        const newResource = mergeDeep(this.state.resource, resource);
-        this.setState({ resource: newResource });
+      ResourceService.find(resourceId, { locale: 'all' }).then(resourceFull => {
+        const newResourceFull = mergeDeep(this.state.resourceFull, resourceFull);
+        this.setState({ resourceFull: newResourceFull });
       });
     }
   }
 
   public render() {
-    const resource = this.state.resource;
+    const resourceFull = this.state.resourceFull;
 
     return (
       <Wrapper>
@@ -195,18 +197,18 @@ export class ResourceForm extends React.Component<Props, State> {
             <div className="column column-left">
               <h2>Resource</h2>
               <FlatLink to="/">TO INDEX OF RESOURCES</FlatLink>
-              <ResourceInfo resource={resource} onChange={this.onChange} />
+              <ResourceInfo resourceFull={resourceFull} onChange={this.onChange} />
               <FloatButton>SUBMIT</FloatButton>
             </div>
             <div className="column column-right">
-              {resource ? (
+              {resourceFull ? (
                 <div>
-                  <ResourceContents resource={resource} onChange={this.onChange} />
-                  <ResourcePage resource={resource} onChange={this.onChange} />
-                  {Object.keys(resource.attributes).length ? (
+                  <ResourceContents resourceFull={resourceFull} onChange={this.onChange} />
+                  <ResourcePage resourceFull={resourceFull} onChange={this.onChange} />
+                  {Object.keys(resourceFull.attributes).length ? (
                     <ResourceAttributes
-                      resource={resource}
-                      resourceType={this.state.resource.type}
+                      resourceFull={resourceFull}
+                      resourceType={this.state.resourceFull.type}
                       onChange={this.onChange}
                     />
                   ) : null}
@@ -221,41 +223,50 @@ export class ResourceForm extends React.Component<Props, State> {
 
   private onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const resourceId = this.props.resourceId;
-    const resource = this.state.resource;
+    const data = this.props.resourceFull.data;
+    const resourceId = data ? data.id : null;
+    const resourceFull = this.state.resourceFull;
 
     if (resourceId) {
       Promise.all(
         config.locales.map((locale: string) => {
-          return ResourceService.update(resourceId, resourceFullToResource(resource, locale), { locale });
+          return ResourceService.update(resourceId, resourceFullToResource(resourceFull, locale), { locale });
         }),
       ).then(res => {
         for (let i = 0; i < config.locales.length; i += 1) {
           const locale = config.locales[i];
           const tmpResource: ResourceShape = res[i] as ResourceShape;
           this.setState({
-            resource: mergeDeep({}, this.state.resource, resourceToPartialResourceFull(tmpResource, locale)),
+            resourceFull: mergeDeep({}, this.state.resourceFull, resourceToPartialResourceFull(tmpResource, locale)),
           });
         }
       });
     } else {
       const firstLocale = config.locales[0];
       const otherLocales = config.locales.slice(1, config.locales.length);
-      ResourceService.create(resourceFullToResource(resource, firstLocale), { locale: firstLocale }).then(
+      ResourceService.create(resourceFullToResource(resourceFull, firstLocale), { locale: firstLocale }).then(
         (newResource: ResourceShape) => {
           this.setState({
-            resource: mergeDeep({}, this.state.resource, resourceToPartialResourceFull(newResource, firstLocale)),
+            resourceFull: mergeDeep(
+              {},
+              this.state.resourceFull,
+              resourceToPartialResourceFull(newResource, firstLocale),
+            ),
           });
           Promise.all(
             otherLocales.map((locale: string) => {
-              return ResourceService.update(newResource.id, resourceFullToResource(resource, locale), { locale });
+              return ResourceService.update(newResource.id, resourceFullToResource(resourceFull, locale), { locale });
             }),
           ).then(res => {
             for (let i = 0; i < otherLocales.length; i += 1) {
               const locale = otherLocales[i];
               const tmpResource: ResourceShape = res[i] as ResourceShape;
               this.setState({
-                resource: mergeDeep({}, this.state.resource, resourceToPartialResourceFull(tmpResource, locale)),
+                resourceFull: mergeDeep(
+                  {},
+                  this.state.resourceFull,
+                  resourceToPartialResourceFull(tmpResource, locale),
+                ),
               });
             }
           });

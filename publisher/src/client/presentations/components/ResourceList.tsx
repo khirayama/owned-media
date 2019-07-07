@@ -7,7 +7,6 @@ import { Table, TableRow, TableHead, TableHeadCell } from '../components/Table';
 
 export interface Props {
   resources: {
-    hasChange: boolean;
     isFetching: boolean[];
     data: ResourceShape[];
   };
