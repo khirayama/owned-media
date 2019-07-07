@@ -5,7 +5,6 @@ const config = loadConfig();
 
 export interface State {
   resources: {
-    hasChange: boolean;
     isFetching: boolean[];
     data: ResourceShape[];
   };
@@ -21,7 +20,6 @@ export interface State {
 
 export const initialState: State = {
   resources: {
-    hasChange: false,
     isFetching: [],
     data: [],
   },
