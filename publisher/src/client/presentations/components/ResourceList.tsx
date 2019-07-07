@@ -56,7 +56,6 @@ export function ResourceList(props: Props) {
 
   return (
     <Wrapper>
-      <h2>Resources</h2>
       <Table>
         <TableHead>
           <TableRow>

@@ -10,6 +10,7 @@ import { State } from '../reducers';
 const mapStateToProps = (state: State) => {
   return {
     resources: state.resources,
+    locale: state.ui.resourceLocale,
   };
 };
 
