@@ -16,7 +16,7 @@ export interface Props {
 }
 
 export const Wrapper = styled.div`
-  padding: 24px 16px;
+  font-size: 0.85rem;
 
   h2 {
     font-weight: bold;
@@ -34,7 +34,7 @@ export const Wrapper = styled.div`
     th:nth-of-type(5n + 2) {
       width: 160px;
     }
-    th:nth-of-type(5n + 4) {
+    th:nth-of-type(5n + 3) {
       width: 80px;
     }
     th:nth-of-type(5n) {
@@ -62,7 +62,7 @@ export function ResourceList(props: Props) {
             <TableHeadCell>ID</TableHeadCell>
             <TableHeadCell>Key</TableHeadCell>
             <TableHeadCell>Type</TableHeadCell>
-            <TableHeadCell>Name</TableHeadCell>
+            <TableHeadCell>Contents</TableHeadCell>
             <TableHeadCell />
           </TableRow>
         </TableHead>

@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   padding: 12px;
 
   & > h2 {
-    margin-bottom: 32px;
+    margin: 12px 0 32px;
   }
 `;
 
