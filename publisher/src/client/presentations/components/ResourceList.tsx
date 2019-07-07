@@ -18,27 +18,26 @@ export interface Props {
 export const Wrapper = styled.div`
   font-size: 0.85rem;
 
-  h2 {
-    font-weight: bold;
-    margin-bottom: 36px;
-  }
-
-  button + table {
-    margin-top: 24px;
-  }
-
   tr {
-    th:nth-of-type(8n + 1) {
+    th:nth-of-type(6n + 1) {
       width: 20px;
     }
-    th:nth-of-type(8n + 2) {
+    th:nth-of-type(6n + 2) {
       width: 160px;
     }
-    th:nth-of-type(8n + 3) {
+    th:nth-of-type(6n + 3) {
       width: 80px;
     }
-    th:nth-of-type(8n) {
+    th:nth-of-type(6n) {
       width: 132px;
+    }
+  }
+
+  small {
+    color: #aaa;
+
+    & + small {
+      margin-left: 12px;
     }
   }
 
@@ -62,10 +61,8 @@ export function ResourceList(props: Props) {
             <TableHeadCell>ID</TableHeadCell>
             <TableHeadCell>Key</TableHeadCell>
             <TableHeadCell>Type</TableHeadCell>
-            <TableHeadCell>Name</TableHeadCell>
-            <TableHeadCell>Page Title</TableHeadCell>
-            <TableHeadCell>Page Description</TableHeadCell>
-            <TableHeadCell>Page Keywords</TableHeadCell>
+            <TableHeadCell>Contents and Page</TableHeadCell>
+            <TableHeadCell>Relations</TableHeadCell>
             <TableHeadCell />
           </TableRow>
         </TableHead>
