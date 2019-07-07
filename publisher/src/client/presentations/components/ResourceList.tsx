@@ -28,16 +28,16 @@ export const Wrapper = styled.div`
   }
 
   tr {
-    th:nth-of-type(5n + 1) {
+    th:nth-of-type(8n + 1) {
       width: 20px;
     }
-    th:nth-of-type(5n + 2) {
+    th:nth-of-type(8n + 2) {
       width: 160px;
     }
-    th:nth-of-type(5n + 3) {
+    th:nth-of-type(8n + 3) {
       width: 80px;
     }
-    th:nth-of-type(5n) {
+    th:nth-of-type(8n) {
       width: 132px;
     }
   }
@@ -62,7 +62,10 @@ export function ResourceList(props: Props) {
             <TableHeadCell>ID</TableHeadCell>
             <TableHeadCell>Key</TableHeadCell>
             <TableHeadCell>Type</TableHeadCell>
-            <TableHeadCell>Contents</TableHeadCell>
+            <TableHeadCell>Name</TableHeadCell>
+            <TableHeadCell>Page Title</TableHeadCell>
+            <TableHeadCell>Page Description</TableHeadCell>
+            <TableHeadCell>Page Keywords</TableHeadCell>
             <TableHeadCell />
           </TableRow>
         </TableHead>
