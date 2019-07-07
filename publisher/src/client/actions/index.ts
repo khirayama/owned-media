@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { ResourceShape } from '../../types';
+import { ResourceShape, ResourceFullShape } from '../../types';
 
 export interface ChangeIsFetchingResources extends Action<'CHANGE_IS_FETCHING_RESOURCES'> {
   payload: {
@@ -11,6 +11,21 @@ export interface ChangeIsFetchingResources extends Action<'CHANGE_IS_FETCHING_RE
 export const changeIsFetchingResources = (isFetching: boolean): ChangeIsFetchingResources => {
   return {
     type: 'CHANGE_IS_FETCHING_RESOURCES',
+    payload: {
+      isFetching,
+    },
+  };
+};
+
+export interface ChangeIsFetchingResourceFull extends Action<'CHANGE_IS_FETCHING_RESOURCE_FULL'> {
+  payload: {
+    isFetching: boolean;
+  };
+}
+
+export const changeIsFetchingResourceFull = (isFetching: boolean): ChangeIsFetchingResourceFull => {
+  return {
+    type: 'CHANGE_IS_FETCHING_RESOURCE_FULL',
     payload: {
       isFetching,
     },
@@ -28,6 +43,21 @@ export const setResources = (resources: ResourceShape[]): SetResources => {
     type: 'SET_RESOURCES',
     payload: {
       resources,
+    },
+  };
+};
+
+export interface SetResourceFull extends Action<'SET_RESOURCE_FULL'> {
+  payload: {
+    resourceFull: ResourceFullShape;
+  };
+}
+
+export const setResourceFull = (resourceFull: ResourceFullShape): SetResourceFull => {
+  return {
+    type: 'SET_RESOURCE_FULL',
+    payload: {
+      resourceFull,
     },
   };
 };
