@@ -194,7 +194,7 @@ export class ResourceForm extends React.Component<Props, State> {
           <div className="box">
             <div className="column column-left">
               <h2>Resource</h2>
-              <FlatLink to="/resources">TO INDEX OF RESOURCES</FlatLink>
+              <FlatLink to="/">TO INDEX OF RESOURCES</FlatLink>
               <ResourceInfo resource={resource} onChange={this.onChange} />
               <FloatButton>SUBMIT</FloatButton>
             </div>
