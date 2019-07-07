@@ -22,6 +22,11 @@ export const en = {
   'Resources.Heading': 'Resources',
   'Resource.Title': 'Resource',
   'Resource.Description': 'Resource Page',
+  // components
+  'ResourceListItem.NoName': 'No Name',
+  'ResourceListItem.NoTitle': 'No Title',
+  'ResourceListItem.NoDescription': 'No Description',
+  'ResourceListItem.NoKeywords': 'No Keywords',
 };
 
 export const ja = {
@@ -30,6 +35,11 @@ export const ja = {
   'Resources.Heading': 'リソース一覧',
   'Resource.Title': 'リソース',
   'Resource.Description': 'リソースページ',
+  // components
+  'ResourceListItem.NoName': '名前なし',
+  'ResourceListItem.NoTitle': 'タイトルなし',
+  'ResourceListItem.NoDescription': '説明文なし',
+  'ResourceListItem.NoKeywords': 'キーワードなし',
 };
 
 export function chooseLocale(locale: string) {
