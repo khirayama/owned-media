@@ -1,7 +1,4 @@
 import { ResourceWithAllLocalesShape } from '../../types';
-import { loadConfig } from '../../utils';
-
-const config = loadConfig();
 
 export interface State {
   resources: {
