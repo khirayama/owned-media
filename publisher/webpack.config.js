@@ -4,7 +4,6 @@ const path = require('path');
 const webpack = require('webpack');
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
 const WebpackBundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isProd = argv.mode === 'production';
@@ -21,11 +20,6 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json'],
-      plugins: [
-        new TsconfigPathsPlugin({
-          configFile: './tsconfig.client.json',
-        }),
-      ],
     },
     plugins: [
       new webpack.DefinePlugin({
