@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { fetchResources } from '../../usecases';
+import { fetchResources, fetchResource } from '../../usecases';
 import { Resources } from '../pages/Resources';
 import { Resource } from '../pages/Resource';
 
@@ -28,7 +28,7 @@ export const routes = [
     exact: true,
     path: `/resources/:id`,
     component: Resource,
-    initializer: null,
+    initializer: params => fetchResource(params.id, { locale: 'all' }),
   },
 ];
 
