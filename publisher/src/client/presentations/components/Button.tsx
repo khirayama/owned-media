@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import { styles } from '../styles/vars';
 
 export const FlatButton = styled.button`
+  display: inline-block;
   padding: 8px 0;
   font-weight: bold;
   cursor: pointer;
 `;
 
 export const FlatLink = styled(Link)`
+  display: inline-block;
   padding: 8px 0;
   font-weight: bold;
   cursor: pointer;

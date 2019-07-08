@@ -27,50 +27,67 @@ export function ResourceListItem(props: Props) {
     }
   };
 
-  return targetLocales.map((targetLocale, i) => {
-    let contents: JSX.Element | null = null;
-    if (i === 0) {
-      contents = (
-        <>
-          <TableCell rowSpan={targetLocales.length}>{resource.id}</TableCell>
-          <TableCell rowSpan={targetLocales.length}>{resource.key}</TableCell>
-          <TableCell rowSpan={targetLocales.length}>{resource.type}</TableCell>
-          <IntlProvider locale={targetLocale} messages={chooseLocale(targetLocale)}>
-            <TableCell>
-              <p>{resource.name[targetLocale] || <FormattedMessage id="ResourceListItem.NoName" />}</p>
-              <small>{resource.page.title[targetLocale] || <FormattedMessage id="ResourceListItem.NoTitle" />}</small>
-              <small>
-                {resource.page.description[targetLocale] || <FormattedMessage id="ResourceListItem.NoDescription" />}
-              </small>
-              <small>
-                {resource.page.keywords[targetLocale] || <FormattedMessage id="ResourceListItem.NoKeywords" />}
-              </small>
-            </TableCell>
-          </IntlProvider>
-          <TableCell rowSpan={targetLocales.length} />
-          <TableCell rowSpan={targetLocales.length}>
-            <FlatLink to={`/resources/${resource.id}`}>EDIT</FlatLink>
-            <FlatButton onClick={onClickDeleteResourceButton}>DELETE</FlatButton>
-          </TableCell>
-        </>
-      );
-    } else {
-      contents = (
-        <IntlProvider locale={targetLocale} messages={chooseLocale(targetLocale)}>
-          <TableCell>
-            <p>{resource.name[targetLocale] || <FormattedMessage id="ResourceListItem.NoName" />}</p>
-            <small>{resource.page.title[targetLocale] || <FormattedMessage id="ResourceListItem.NoTitle" />}</small>
-            <small>
-              {resource.page.description[targetLocale] || <FormattedMessage id="ResourceListItem.NoDescription" />}
-            </small>
-            <small>
-              {resource.page.keywords[targetLocale] || <FormattedMessage id="ResourceListItem.NoKeywords" />}
-            </small>
-          </TableCell>
-        </IntlProvider>
-      );
-    }
+  return (
+    <>
+      {targetLocales.map((targetLocale, i) => {
+        let contents: JSX.Element | null = null;
+        if (i === 0) {
+          contents = (
+            <>
+              <TableCell rowSpan={targetLocales.length}>{resource.id}</TableCell>
+              <TableCell rowSpan={targetLocales.length}>{resource.key}</TableCell>
+              <TableCell rowSpan={targetLocales.length}>{resource.type}</TableCell>
+              <IntlProvider locale={targetLocale} messages={chooseLocale(targetLocale)}>
+                <TableCell>
+                  <div>
+                    <p>{resource.name[targetLocale] || <FormattedMessage id="ResourceListItem.NoName" />}</p>
+                    <small>
+                      {resource.page.title[targetLocale] || <FormattedMessage id="ResourceListItem.NoTitle" />}
+                    </small>
+                    <small>
+                      {resource.page.description[targetLocale] || (
+                        <FormattedMessage id="ResourceListItem.NoDescription" />
+                      )}
+                    </small>
+                    <small>
+                      {resource.page.keywords[targetLocale] || <FormattedMessage id="ResourceListItem.NoKeywords" />}
+                    </small>
+                  </div>
+                </TableCell>
+              </IntlProvider>
+              <TableCell rowSpan={targetLocales.length} />
+              <TableCell rowSpan={targetLocales.length}>
+                <FlatLink to={`/resources/${resource.id}`}>EDIT</FlatLink>
+                <br />
+                <FlatButton onClick={onClickDeleteResourceButton}>DELETE</FlatButton>
+              </TableCell>
+            </>
+          );
+        } else {
+          contents = (
+            <IntlProvider locale={targetLocale} messages={chooseLocale(targetLocale)}>
+              <TableCell>
+                <div>
+                  <p>{resource.name[targetLocale] || <FormattedMessage id="ResourceListItem.NoName" />}</p>
+                  <small>
+                    {resource.page.title[targetLocale] || <FormattedMessage id="ResourceListItem.NoTitle" />}
+                  </small>
+                  <small>
+                    {resource.page.description[targetLocale] || (
+                      <FormattedMessage id="ResourceListItem.NoDescription" />
+                    )}
+                  </small>
+                  <small>
+                    {resource.page.keywords[targetLocale] || <FormattedMessage id="ResourceListItem.NoKeywords" />}
+                  </small>
+                </div>
+              </TableCell>
+            </IntlProvider>
+          );
+        }
 
-    return <TableRow key={`${resource.id}-${targetLocale}`}>{contents}</TableRow>;
-  });
+        return <TableRow key={`${resource.id}-${targetLocale}`}>{contents}</TableRow>;
+      })}
+    </>
+  );
 }

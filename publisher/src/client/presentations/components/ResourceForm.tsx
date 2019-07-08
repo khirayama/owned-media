@@ -5,10 +5,7 @@ import * as styled from 'styled-components';
 import { styles } from '../styles/vars';
 import { Resource as ResourceService } from '../../services/Resource';
 import { ResourceInfo } from '../components/ResourceInfo';
-import { ResourceContents } from '../components/ResourceContents';
-import { ResourcePage } from '../components/ResourcePage';
-import { ResourceAttributes } from '../components/ResourceAttributes';
-import { FloatButton, FlatLink } from '../components/Button';
+import { FloatButton } from '../components/Button';
 import {
   createLocaleObj,
   mergeDeep,
@@ -28,43 +25,16 @@ interface OwnState {
 export interface Props {
   resourceId: string | null;
   resource: State['resource'];
+  locale: string;
+  onMount?: (props: Props) => void;
 }
 
 const Wrapper = styled.default.div`
-  h2 {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-
-  h3 {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-
   input,
   select {
     font-weight: bold;
     padding: 4px;
     background: #eee;
-  }
-
-  .box {
-    display: flex;
-
-    .column {
-      flex: 1;
-    }
-
-    .column-left {
-      flex: 1;
-      padding: 24px 16px;
-      border-right: ${styles.border};
-    }
-
-    .column-right {
-      flex: 3;
-      padding: 24px 16px;
-    }
   }
 
   .text-center {
@@ -105,28 +75,28 @@ const Wrapper = styled.default.div`
   }
 `;
 
+const defaultResource: ResourceWithAllLocalesShape = {
+  id: '',
+  type: config.resourceTypes[0].type,
+  key: '',
+  body: createLocaleObj(config.locales),
+  bodyPath: createLocaleObj(config.locales),
+  imageUrl: createLocaleObj(config.locales),
+  name: createLocaleObj(config.locales),
+  page: {
+    title: createLocaleObj(config.locales),
+    description: createLocaleObj(config.locales),
+    imageUrl: createLocaleObj(config.locales),
+    keywords: createLocaleObj(config.locales),
+  },
+  attributes: {},
+  createdAt: '',
+  updatedAt: '',
+};
+
 export class ResourceForm extends React.Component<Props, OwnState> {
   constructor(props: Props) {
     super(props);
-
-    const defaultResource: ResourceWithAllLocalesShape = {
-      id: '',
-      type: config.resourceTypes[0].type,
-      key: '',
-      body: createLocaleObj(config.locales),
-      bodyPath: createLocaleObj(config.locales),
-      imageUrl: createLocaleObj(config.locales),
-      name: createLocaleObj(config.locales),
-      page: {
-        title: createLocaleObj(config.locales),
-        description: createLocaleObj(config.locales),
-        imageUrl: createLocaleObj(config.locales),
-        keywords: createLocaleObj(config.locales),
-      },
-      attributes: {},
-      createdAt: '',
-      updatedAt: '',
-    };
 
     this.state = {
       resource: props.resource.data || defaultResource,
@@ -182,13 +152,16 @@ export class ResourceForm extends React.Component<Props, OwnState> {
   }
 
   public componentDidMount() {
-    const data = this.props.resource.data;
+    if (this.props.onMount) {
+      this.props.onMount(this.props);
+    }
+  }
 
-    if (data && data.id !== this.props.resourceId && this.props.resourceId) {
-      ResourceService.find(this.props.resourceId, { locale: 'all' }).then(resource => {
-        const newResource = mergeDeep(this.state.resource, resource);
-        this.setState({ resource: newResource });
-      });
+  public componentDidUpdate(props: Props) {
+    if (!props.resourceId) {
+      this.setState({ resource: defaultResource });
+    } else if (this.props.resource.data && this.state.resource.id !== this.props.resource.data.id) {
+      this.setState({ resource: this.props.resource.data });
     }
   }
 
@@ -198,29 +171,8 @@ export class ResourceForm extends React.Component<Props, OwnState> {
     return (
       <Wrapper>
         <form onSubmit={this.onSubmit}>
-          <div className="box">
-            <div className="column column-left">
-              <h2>Resource</h2>
-              <FlatLink to="/">TO INDEX OF RESOURCES</FlatLink>
-              <ResourceInfo resource={resource} onChange={this.onChange} />
-              <FloatButton>SUBMIT</FloatButton>
-            </div>
-            <div className="column column-right">
-              {resource ? (
-                <div>
-                  <ResourceContents resource={resource} onChange={this.onChange} />
-                  <ResourcePage resource={resource} onChange={this.onChange} />
-                  {Object.keys(resource.attributes).length ? (
-                    <ResourceAttributes
-                      resource={resource}
-                      resourceType={this.state.resource.type}
-                      onChange={this.onChange}
-                    />
-                  ) : null}
-                </div>
-              ) : null}
-            </div>
-          </div>
+          <ResourceInfo resource={resource} locale={this.props.locale} onChange={this.onChange} />
+          <FloatButton>SUBMIT</FloatButton>
         </form>
       </Wrapper>
     );

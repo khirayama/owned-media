@@ -58,11 +58,21 @@ export function ResourceList(props: Props) {
       <Table>
         <TableHead>
           <TableRow>
-            <TableHeadCell>ID</TableHeadCell>
-            <TableHeadCell>Key</TableHeadCell>
-            <TableHeadCell>Type</TableHeadCell>
-            <TableHeadCell>Contents and Page</TableHeadCell>
-            <TableHeadCell>Relations</TableHeadCell>
+            <TableHeadCell>
+              <div>ID</div>
+            </TableHeadCell>
+            <TableHeadCell>
+              <div>Key</div>
+            </TableHeadCell>
+            <TableHeadCell>
+              <div>Type</div>
+            </TableHeadCell>
+            <TableHeadCell>
+              <div>Contents and Page</div>
+            </TableHeadCell>
+            <TableHeadCell>
+              <div>Relations</div>
+            </TableHeadCell>
             <TableHeadCell />
           </TableRow>
         </TableHead>

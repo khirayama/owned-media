@@ -13,6 +13,10 @@ const Wrapper = styled.div`
   & > h2 {
     margin: 12px 0 32px;
   }
+
+  & > a {
+    margin: 0 0 16px;
+  }
 `;
 
 export const Resources = injectIntl(function(props: any) {

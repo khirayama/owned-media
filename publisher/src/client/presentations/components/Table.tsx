@@ -18,9 +18,13 @@ export const TableRow = styled.default.tr`
 `;
 
 export const TableHeadCell = styled.default.th`
-  padding: 8px;
+  & > div {
+    padding: 4px 8px;
+  }
 `;
 
 export const TableCell = styled.default.td`
-  padding: 8px;
+  & > div {
+    padding: 4px 8px;
+  }
 `;

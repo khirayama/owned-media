@@ -1,9 +1,23 @@
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
+import { injectIntl, FormattedMessage } from 'react-intl';
+import styled from 'styled-components';
 
 import { ResourceForm } from '../../containers/ResourceForm';
 import { LocaleBar } from '../../containers/LocaleBar';
+import { FlatLink } from '../components/Button';
 import { Head } from '../head/Head';
+
+const Wrapper = styled.div`
+  padding: 12px;
+
+  & > h2 {
+    margin: 12px 0;
+  }
+
+  & > a {
+    margin: 0 0 16px;
+  }
+`;
 
 export const Resource = injectIntl(function(props: any) {
   const resourceId = props.match.params.id || null;
@@ -13,10 +27,12 @@ export const Resource = injectIntl(function(props: any) {
   });
 
   return (
-    <>
+    <Wrapper>
       <Head title={title} description={description} />
       <LocaleBar />
+      <FormattedMessage tagName="h2" id="Resource.Heading" />
+      <FlatLink to="/">TO RESOURCE INDEX</FlatLink>
       <ResourceForm resourceId={resourceId} />
-    </>
+    </Wrapper>
   );
 });
