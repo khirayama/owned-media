@@ -21,7 +21,8 @@ export const en = {
   'Resources.Description': 'Resources',
   'Resources.Heading': 'Resources',
   'Resource.Title': 'Resource',
-  'Resource.Description': 'Resource Page',
+  'Resource.Description': 'Resource',
+  'Resource.Heading': 'Resource',
   // components
   'ResourceListItem.NoName': 'No Name',
   'ResourceListItem.NoTitle': 'No Title',
@@ -34,7 +35,8 @@ export const ja = {
   'Resources.Description': 'リソース一覧',
   'Resources.Heading': 'リソース一覧',
   'Resource.Title': 'リソース',
-  'Resource.Description': 'リソースページ',
+  'Resource.Description': 'リソース',
+  'Resource.Heading': 'リソース',
   // components
   'ResourceListItem.NoName': '名前なし',
   'ResourceListItem.NoTitle': 'タイトルなし',
