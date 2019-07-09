@@ -56,3 +56,12 @@ export function deleteResource(req: express.Request, res: express.Response) {
 
   res.json({ status: 'success' });
 }
+
+export function fetchRelatedResources(req: express.Request, res: express.Response) {
+  const params = req.params;
+  const query = req.query;
+
+  const options = { locale: query.locale, limit: Number(query.limit), offset: Number(query.offset), sort: query.sort };
+  const resources = Resource.find({ id: Resource.relation([params.id]) }, options);
+  res.json(resources);
+}
