@@ -8,6 +8,10 @@ export interface State {
   resource: {
     isFetching: boolean[];
     data: ResourceWithAllLocalesShape | null;
+    relatedResources: {
+      isFetching: boolean[];
+      data: ResourceWithAllLocalesShape[];
+    };
   };
   ui: {
     locale: string;
@@ -23,6 +27,10 @@ export const initialState: State = {
   resource: {
     isFetching: [],
     data: null,
+    relatedResources: {
+      isFetching: [],
+      data: [],
+    },
   },
   ui: {
     locale: 'en',
