@@ -70,4 +70,15 @@ export class Resource {
       });
     });
   }
+
+  public static fetchRelations(resourceId: string, options?: { locale: string }) {
+    const locale = options ? options.locale : null;
+    const url = `/api/resources/${resourceId}/relations` + (locale ? `?locale=${locale}` : '');
+
+    return new Promise((resolve: (res: (ResourceShape | ResourceWithAllLocalesShape)[]) => void) => {
+      req.get(url).then(res => {
+        resolve(res.data);
+      });
+    });
+  }
 }
