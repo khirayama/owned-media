@@ -77,7 +77,7 @@ export function reducer(state: State = initialState, action: any): State {
         },
       };
     }
-    case 'REMOVE_RESOURCES': {
+    case 'REMOVE_RESOURCE': {
       return {
         ...state,
         resources: {
