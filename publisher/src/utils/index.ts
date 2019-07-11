@@ -277,6 +277,8 @@ export function resourceToPartialResourceWithAllLocales(
 }
 
 export function createDefaultResource(): ResourceWithAllLocalesShape {
+  const now = new Date();
+
   return {
     id: '',
     type: config.resourceTypes[0].type,
@@ -292,7 +294,7 @@ export function createDefaultResource(): ResourceWithAllLocalesShape {
       keywords: createLocaleObj(config.locales),
     },
     attributes: {},
-    createdAt: '',
-    updatedAt: '',
+    createdAt: now.toString(),
+    updatedAt: now.toString(),
   };
 }
