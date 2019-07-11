@@ -25,11 +25,11 @@ export const createResource = (resource: ResourceWithAllLocalesShape) => {
 
     const firstLocale = config.locales[0];
     const otherLocales = config.locales.slice(1, config.locales.length);
+    let result: ResourceWithAllLocalesShape = resource;
+
     ResourceService.create(resourceWithAllLocalesToResource(resource, firstLocale), { locale: firstLocale }).then(
       (newResource: ResourceShape) => {
-        dispatch(
-          setResource(mergeDeep({}, resource, resourceToPartialResourceWithAllLocales(newResource, firstLocale))),
-        );
+        result = mergeDeep({}, result, resourceToPartialResourceWithAllLocales(newResource, firstLocale));
         Promise.all(
           otherLocales.map((locale: string) => {
             return ResourceService.update(newResource.id, resourceWithAllLocalesToResource(resource, locale), {
@@ -40,10 +40,9 @@ export const createResource = (resource: ResourceWithAllLocalesShape) => {
           for (let i = 0; i < otherLocales.length; i += 1) {
             const locale = otherLocales[i];
             const tmpResource: ResourceShape = res[i] as ResourceShape;
-            dispatch(
-              setResource(mergeDeep({}, resource, resourceToPartialResourceWithAllLocales(tmpResource, locale))),
-            );
+            result = mergeDeep({}, result, resourceToPartialResourceWithAllLocales(tmpResource, locale));
           }
+          dispatch(setResource(result));
         });
       },
     );
