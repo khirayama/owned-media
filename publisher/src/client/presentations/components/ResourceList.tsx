@@ -1,15 +1,13 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ResourceWithAllLocalesShape } from '../../../types';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 import { ResourceListItem, Props as ResourceListItemProps } from '../components/ResourceListItem';
 import { Table, TableRow, TableHead, TableHeadCell } from '../components/Table';
+import { State } from '../../reducers';
 
 export interface Props {
-  resources: {
-    isFetching: boolean[];
-    data: ResourceWithAllLocalesShape[];
-  };
+  resources: State['resources'];
   locale: string;
   onClickDeleteResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => void;
   onMount?: (props: Props) => void;
@@ -77,14 +75,17 @@ export function ResourceList(props: Props) {
           </TableRow>
         </TableHead>
         <tbody>
-          {props.resources.data.map((resource: ResourceWithAllLocalesShape) => (
-            <ResourceListItem
-              key={resource.id}
-              resource={resource}
-              locale={props.locale}
-              onClickDeleteResourceButton={props.onClickDeleteResourceButton}
-            />
-          ))}
+          {Object.keys(props.resources.data).map((resourceId: string) => {
+            const resource: ResourceWithAllLocalesShapeWithRelations = props.resources.data[resourceId];
+            return (
+              <ResourceListItem
+                key={resource.id}
+                resource={resource}
+                locale={props.locale}
+                onClickDeleteResourceButton={props.onClickDeleteResourceButton}
+              />
+            );
+          })}
         </tbody>
       </Table>
     </Wrapper>

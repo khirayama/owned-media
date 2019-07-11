@@ -7,35 +7,16 @@ import { Resource as ResourceService } from '../services/Resource';
 import { setResource } from '../actions';
 import { fetchResource } from '../usecases';
 import { loadConfig } from '../../utils';
-import { ResourceShape, ResourceWithAllLocalesShape } from '../../types';
+import { ResourceShape } from '../../types';
 import { State } from '../reducers';
 import {
-  createLocaleObj,
+  createDefaultResource,
   mergeDeep,
   resourceWithAllLocalesToResource,
   resourceToPartialResourceWithAllLocales,
 } from '../../utils';
 
 const config = loadConfig();
-
-const defaultResource: ResourceWithAllLocalesShape = {
-  id: '',
-  type: config.resourceTypes[0].type,
-  key: '',
-  body: createLocaleObj(config.locales),
-  bodyPath: createLocaleObj(config.locales),
-  imageUrl: createLocaleObj(config.locales),
-  name: createLocaleObj(config.locales),
-  page: {
-    title: createLocaleObj(config.locales),
-    description: createLocaleObj(config.locales),
-    imageUrl: createLocaleObj(config.locales),
-    keywords: createLocaleObj(config.locales),
-  },
-  attributes: {},
-  createdAt: '',
-  updatedAt: '',
-};
 
 interface Props {
   resourceId: string | null;
@@ -44,7 +25,7 @@ interface Props {
 const mapStateToProps = (state: State, props: Props) => {
   return {
     resourceId: props.resourceId,
-    resource: state.resource.data || defaultResource,
+    resource: state.app.resource,
     locale: state.ui.resourceLocale,
   };
 };
@@ -54,8 +35,9 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
     onMount: (props: ResourceFormProps) => {
       if (props.resourceId) {
         dispatch(fetchResource(props.resourceId, { locale: 'all' }));
+        ResourceService.fetchRelations(props.resourceId, { locale: 'all' });
       } else {
-        dispatch(setResource(defaultResource));
+        dispatch(setResource(createDefaultResource()));
       }
     },
     onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>, props: ResourceFormProps) => {
