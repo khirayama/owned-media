@@ -5,16 +5,9 @@ import { connect } from 'react-redux';
 import { Props as ResourceFormProps, ResourceForm as Component } from '../presentations/components/ResourceForm';
 import { Resource as ResourceService } from '../services/Resource';
 import { setResource } from '../actions';
-import { fetchResource } from '../usecases';
-import { loadConfig } from '../../utils';
-import { ResourceShape } from '../../types';
+import { createResource, fetchResource, updateResource } from '../usecases';
 import { State } from '../reducers';
-import {
-  createDefaultResource,
-  mergeDeep,
-  resourceWithAllLocalesToResource,
-  resourceToPartialResourceWithAllLocales,
-} from '../../utils';
+import { loadConfig, createDefaultResource } from '../../utils';
 
 const config = loadConfig();
 
@@ -90,38 +83,9 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
       const resourceId = resource ? resource.id : null;
 
       if (resource && resourceId) {
-        Promise.all(
-          config.locales.map((locale: string) => {
-            return ResourceService.update(resourceId, resourceWithAllLocalesToResource(resource, locale), { locale });
-          }),
-        ).then(res => {
-          for (let i = 0; i < config.locales.length; i += 1) {
-            const locale = config.locales[i];
-            const tmpResource: ResourceShape = res[i] as ResourceShape;
-            setResource(mergeDeep({}, resource, resourceToPartialResourceWithAllLocales(tmpResource, locale)));
-          }
-        });
+        dispatch(updateResource(resourceId, resource));
       } else if (resource) {
-        const firstLocale = config.locales[0];
-        const otherLocales = config.locales.slice(1, config.locales.length);
-        ResourceService.create(resourceWithAllLocalesToResource(resource, firstLocale), { locale: firstLocale }).then(
-          (newResource: ResourceShape) => {
-            setResource(mergeDeep({}, resource, resourceToPartialResourceWithAllLocales(newResource, firstLocale)));
-            Promise.all(
-              otherLocales.map((locale: string) => {
-                return ResourceService.update(newResource.id, resourceWithAllLocalesToResource(resource, locale), {
-                  locale,
-                });
-              }),
-            ).then(res => {
-              for (let i = 0; i < otherLocales.length; i += 1) {
-                const locale = otherLocales[i];
-                const tmpResource: ResourceShape = res[i] as ResourceShape;
-                setResource(mergeDeep({}, resource, resourceToPartialResourceWithAllLocales(tmpResource, locale)));
-              }
-            });
-          },
-        );
+        dispatch(createResource(resource));
       }
     },
   };
