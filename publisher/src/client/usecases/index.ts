@@ -70,6 +70,24 @@ export const fetchResource = (resourceId: string, options?) => {
   };
 };
 
+export const updateResource = (resourceId: string, resource: ResourceWithAllLocalesShape) => {
+  return (dispatch: ThunkDispatch<{}, {}, Action>) => {
+    dispatch(changeIsFetchingResources(true));
+    return Promise.all(
+      config.locales.map((locale: string) => {
+        return ResourceService.update(resourceId, resourceWithAllLocalesToResource(resource, locale), { locale });
+      }),
+    ).then(res => {
+      for (let i = 0; i < config.locales.length; i += 1) {
+        const locale = config.locales[i];
+        const tmpResource: ResourceShape = res[i] as ResourceShape;
+        setResource(mergeDeep({}, resource, resourceToPartialResourceWithAllLocales(tmpResource, locale)));
+        dispatch(changeIsFetchingResources(false));
+      }
+    });
+  };
+};
+
 export const deleteResource = (resourceId: string) => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
     dispatch(changeIsFetchingResources(true));
