@@ -275,3 +275,24 @@ export function resourceToPartialResourceWithAllLocales(
     updatedAt: resource.updatedAt,
   };
 }
+
+export function createDefaultResource(): ResourceWithAllLocalesShape {
+  return {
+    id: '',
+    type: config.resourceTypes[0].type,
+    key: '',
+    body: createLocaleObj(config.locales),
+    bodyPath: createLocaleObj(config.locales),
+    imageUrl: createLocaleObj(config.locales),
+    name: createLocaleObj(config.locales),
+    page: {
+      title: createLocaleObj(config.locales),
+      description: createLocaleObj(config.locales),
+      imageUrl: createLocaleObj(config.locales),
+      keywords: createLocaleObj(config.locales),
+    },
+    attributes: {},
+    createdAt: '',
+    updatedAt: '',
+  };
+}
