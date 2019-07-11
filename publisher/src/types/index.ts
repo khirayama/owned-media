@@ -121,3 +121,11 @@ export type ResourceWithAllLocalesShape = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ResourceShapeWithRelations = ResourceShape & {
+  relations: string[];
+};
+
+export type ResourceWithAllLocalesShapeWithRelations = ResourceWithAllLocalesShape & {
+  relations: string[];
+};
