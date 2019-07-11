@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { injectIntl, FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 
@@ -19,7 +20,12 @@ const Wrapper = styled.div`
   }
 `;
 
-export const Resource = injectIntl(function(props: any) {
+interface Props extends RouteComponentProps {
+  match: any;
+  intl: any;
+}
+
+export const Resource = injectIntl(function(props: Props) {
   const resourceId = props.match.params.id || null;
   const title: string = props.intl.formatMessage({ id: 'Resource.Title' });
   const description: string = props.intl.formatMessage({
@@ -32,7 +38,7 @@ export const Resource = injectIntl(function(props: any) {
       <LocaleBar />
       <FormattedMessage tagName="h2" id="Resource.Heading" />
       <FlatLink to="/">TO RESOURCE INDEX</FlatLink>
-      <ResourceForm resourceId={resourceId} />
+      <ResourceForm resourceId={resourceId} history={props.history} />
     </Wrapper>
   );
 });
