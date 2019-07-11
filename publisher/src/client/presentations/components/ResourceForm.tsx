@@ -12,6 +12,7 @@ export interface Props {
   resource: ResourceWithAllLocalesShape;
   locale: string;
   onMount?: (props: Props) => void;
+  onUpdate?: (props: Props) => void;
   onChange?: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>, props: Props) => void;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>, props: Props) => void;
 }
@@ -68,6 +69,11 @@ export function ResourceForm(props: Props) {
       props.onMount(props);
     }
   }, []);
+  React.useEffect(() => {
+    if (props.onUpdate) {
+      props.onUpdate(props);
+    }
+  });
 
   const resource = props.resource;
 

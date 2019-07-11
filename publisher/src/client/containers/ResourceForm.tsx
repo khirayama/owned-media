@@ -1,6 +1,7 @@
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
 
 import { Props as ResourceFormProps, ResourceForm as Component } from '../presentations/components/ResourceForm';
 import { Resource as ResourceService } from '../services/Resource';
@@ -13,24 +14,30 @@ const config = loadConfig();
 
 interface Props {
   resourceId: string | null;
+  history: RouteComponentProps['history'];
 }
 
 const mapStateToProps = (state: State, props: Props) => {
   return {
-    resourceId: props.resourceId,
+    resourceId: state.app.resource.id || props.resourceId,
     resource: state.app.resource,
     locale: state.ui.resourceLocale,
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>, props: Props) => {
   return {
-    onMount: (props: ResourceFormProps) => {
-      if (props.resourceId) {
-        dispatch(fetchResource(props.resourceId, { locale: 'all' }));
-        ResourceService.fetchRelations(props.resourceId, { locale: 'all' });
+    onMount: (resourceFormProps: ResourceFormProps) => {
+      if (resourceFormProps.resourceId) {
+        dispatch(fetchResource(resourceFormProps.resourceId, { locale: 'all' }));
+        ResourceService.fetchRelations(resourceFormProps.resourceId, { locale: 'all' });
       } else {
         dispatch(setResource(createDefaultResource()));
+      }
+    },
+    onUpdate: (resourceFormProps: ResourceFormProps) => {
+      if (props.resourceId === null && resourceFormProps.resourceId) {
+        props.history.replace(`/resources/${resourceFormProps.resourceId}`);
       }
     },
     onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>, props: ResourceFormProps) => {
