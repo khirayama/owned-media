@@ -1,17 +1,16 @@
-import { ResourceWithAllLocalesShape } from '../../types';
+import { createDefaultResource } from '../../utils';
+import { ResourceWithAllLocalesShapeWithRelations, ResourceWithAllLocalesShape } from '../../types';
 
 export interface State {
   resources: {
     isFetching: boolean[];
-    data: ResourceWithAllLocalesShape[];
-  };
-  resource: {
-    isFetching: boolean[];
-    data: ResourceWithAllLocalesShape | null;
-    relatedResources: {
-      isFetching: boolean[];
-      data: ResourceWithAllLocalesShape[];
+    data: {
+      [key: string]: ResourceWithAllLocalesShapeWithRelations;
     };
+  };
+  app: {
+    resource: ResourceWithAllLocalesShape;
+    relations: string[];
   };
   ui: {
     locale: string;
@@ -22,15 +21,11 @@ export interface State {
 export const initialState: State = {
   resources: {
     isFetching: [],
-    data: [],
+    data: {},
   },
-  resource: {
-    isFetching: [],
-    data: null,
-    relatedResources: {
-      isFetching: [],
-      data: [],
-    },
+  app: {
+    resource: createDefaultResource(),
+    relations: [],
   },
   ui: {
     locale: 'en',
@@ -40,9 +35,9 @@ export const initialState: State = {
 
 export function reducer(state: State = initialState, action: any): State {
   const payload = action.payload;
-  console.log(state, action);
 
   switch (action.type) {
+    // resources
     case 'CHANGE_IS_FETCHING_RESOURCES': {
       if (payload.isFetching) {
         state.resources.isFetching.push(true);
@@ -68,23 +63,23 @@ export function reducer(state: State = initialState, action: any): State {
         },
       };
     }
-    case 'SET_RESOURCE': {
-      return {
-        ...state,
-        resource: {
-          ...state.resource,
-          data: payload.resource,
-        },
-      };
-    }
     case 'REMOVE_RESOURCE': {
+      delete state.resources.data[payload.resourceId];
       return {
         ...state,
         resources: {
           ...state.resources,
-          data: state.resources.data.filter(
-            (resource: ResourceWithAllLocalesShape) => resource.id !== payload.resourceId,
-          ),
+          data: state.resources.data,
+        },
+      };
+    }
+    // app
+    case 'SET_RESOURCE': {
+      return {
+        ...state,
+        app: {
+          ...state.app,
+          resource: payload.resource,
         },
       };
     }
