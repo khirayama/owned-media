@@ -30,25 +30,25 @@ export const createResource = (resource: ResourceWithAllLocalesShape) => {
       relations: [],
     };
 
-    ResourceService.create(resourceWithAllLocalesToResource(resource, firstLocale), { locale: firstLocale }).then(
-      (newResource: ResourceShape) => {
-        result = mergeDeep({}, result, resourceToPartialResourceWithAllLocales(newResource, firstLocale));
-        Promise.all(
-          otherLocales.map((locale: string) => {
-            return ResourceService.update(newResource.id, resourceWithAllLocalesToResource(resource, locale), {
-              locale,
-            });
-          }),
-        ).then(res => {
-          for (let i = 0; i < otherLocales.length; i += 1) {
-            const locale = otherLocales[i];
-            const tmpResource: ResourceShape = res[i] as ResourceShape;
-            result = mergeDeep({}, result, resourceToPartialResourceWithAllLocales(tmpResource, locale));
-          }
-          dispatch(setResource(result));
-        });
-      },
-    );
+    return ResourceService.create(resourceWithAllLocalesToResource(resource, firstLocale), {
+      locale: firstLocale,
+    }).then((newResource: ResourceShape) => {
+      result = mergeDeep({}, result, resourceToPartialResourceWithAllLocales(newResource, firstLocale));
+      return Promise.all(
+        otherLocales.map((locale: string) => {
+          return ResourceService.update(newResource.id, resourceWithAllLocalesToResource(resource, locale), {
+            locale,
+          });
+        }),
+      ).then(res => {
+        for (let i = 0; i < otherLocales.length; i += 1) {
+          const locale = otherLocales[i];
+          const tmpResource: ResourceShape = res[i] as ResourceShape;
+          result = mergeDeep({}, result, resourceToPartialResourceWithAllLocales(tmpResource, locale));
+        }
+        return dispatch(setResource(result));
+      });
+    });
   };
 };
 
@@ -87,8 +87,14 @@ export const fetchResource = (resourceId: string) => {
     dispatch(changeIsFetchingResource(true));
     return ResourceService.find(resourceId, { locale: 'all' }).then(
       (resource: ResourceShape | ResourceWithAllLocalesShape) => {
-        dispatch(setResource(resource as ResourceWithAllLocalesShapeWithRelations));
-        dispatch(changeIsFetchingResource(false));
+        ResourceService.fetchRelations(resource.id).then((res: (ResourceShape | ResourceWithAllLocalesShape)[]) => {
+          const result: ResourceWithAllLocalesShapeWithRelations = {
+            ...(resource as ResourceWithAllLocalesShape),
+            relations: res.map((r: ResourceShape | ResourceWithAllLocalesShape) => r.id),
+          };
+          dispatch(setResource(result));
+          dispatch(changeIsFetchingResource(false));
+        });
       },
     );
   };
@@ -118,6 +124,28 @@ export const deleteResource = (resourceId: string) => {
     return ResourceService.delete(resourceId).then(() => {
       dispatch(removeResource(resourceId));
       dispatch(changeIsFetchingResources(false));
+    });
+  };
+};
+
+export const createRelations = (resourceId: string, relatedResourceIds: string[]) => {
+  return (dispatch: ThunkDispatch<{}, {}, Action>) => {
+    dispatch(changeIsFetchingResources(true));
+    return ResourceService.createRelations(resourceId, relatedResourceIds).then(() => {
+      dispatch(fetchResource(resourceId)).then(() => {
+        dispatch(changeIsFetchingResources(false));
+      });
+    });
+  };
+};
+
+export const deleteRelations = (resourceId: string, relatedResourceIds: string[]) => {
+  return (dispatch: ThunkDispatch<{}, {}, Action>) => {
+    dispatch(changeIsFetchingResources(true));
+    return ResourceService.deleteRelations(resourceId, relatedResourceIds).then(() => {
+      dispatch(fetchResource(resourceId)).then(() => {
+        dispatch(changeIsFetchingResources(false));
+      });
     });
   };
 };
