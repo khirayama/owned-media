@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import {
   ResourceWithAllLocalesShape,
+  ResourceWithAllLocalesShapeWithRelations,
   ResourceShape,
   ResourceRequest,
   ResourceWithAllLocalesResponse,
@@ -276,7 +277,7 @@ export function resourceToPartialResourceWithAllLocales(
   };
 }
 
-export function createDefaultResource(): ResourceWithAllLocalesShape {
+export function createDefaultResource(): ResourceWithAllLocalesShapeWithRelations {
   const now = new Date();
 
   return {
@@ -294,6 +295,7 @@ export function createDefaultResource(): ResourceWithAllLocalesShape {
       keywords: createLocaleObj(config.locales),
     },
     attributes: {},
+    relations: [],
     createdAt: now.toString(),
     updatedAt: now.toString(),
   };
