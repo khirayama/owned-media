@@ -3,20 +3,21 @@ import { FormattedMessage, IntlProvider } from 'react-intl';
 
 import { loadConfig } from '../../../utils';
 import { chooseLocale } from '../locales';
-import { ResourceWithAllLocalesShape } from '../../../types';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 import { FlatButton, FlatLink } from '../components/Button';
 import { TableRow, TableCell } from '../components/Table';
 
 const config = loadConfig();
 
 export interface Props {
-  resource: ResourceWithAllLocalesShape;
+  resource: ResourceWithAllLocalesShapeWithRelations;
+  resources: { [key: string]: ResourceWithAllLocalesShapeWithRelations };
   locale: string;
   onClickDeleteResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: Props) => void;
 }
 
 export function ResourceListItem(props: Props) {
-  const resource: ResourceWithAllLocalesShape = props.resource;
+  const resource = props.resource;
   const locale: string = props.locale;
   const targetLocales = locale === 'all' ? config.locales : [locale];
 
@@ -55,7 +56,13 @@ export function ResourceListItem(props: Props) {
                   </div>
                 </TableCell>
               </IntlProvider>
-              <TableCell rowSpan={targetLocales.length} />
+              <TableCell>
+                {resource.relations
+                  .map((resourceId: string) => {
+                    return props.resources[resourceId].name[targetLocale];
+                  })
+                  .join(',')}
+              </TableCell>
               <TableCell rowSpan={targetLocales.length}>
                 <FlatLink to={`/resources/${resource.id}`}>EDIT</FlatLink>
                 <br />
@@ -65,24 +72,33 @@ export function ResourceListItem(props: Props) {
           );
         } else {
           contents = (
-            <IntlProvider locale={targetLocale} messages={chooseLocale(targetLocale)}>
+            <>
+              <IntlProvider locale={targetLocale} messages={chooseLocale(targetLocale)}>
+                <TableCell>
+                  <div>
+                    <p>{resource.name[targetLocale] || <FormattedMessage id="ResourceListItem.NoName" />}</p>
+                    <small>
+                      {resource.page.title[targetLocale] || <FormattedMessage id="ResourceListItem.NoTitle" />}
+                    </small>
+                    <small>
+                      {resource.page.description[targetLocale] || (
+                        <FormattedMessage id="ResourceListItem.NoDescription" />
+                      )}
+                    </small>
+                    <small>
+                      {resource.page.keywords[targetLocale] || <FormattedMessage id="ResourceListItem.NoKeywords" />}
+                    </small>
+                  </div>
+                </TableCell>
+              </IntlProvider>
               <TableCell>
-                <div>
-                  <p>{resource.name[targetLocale] || <FormattedMessage id="ResourceListItem.NoName" />}</p>
-                  <small>
-                    {resource.page.title[targetLocale] || <FormattedMessage id="ResourceListItem.NoTitle" />}
-                  </small>
-                  <small>
-                    {resource.page.description[targetLocale] || (
-                      <FormattedMessage id="ResourceListItem.NoDescription" />
-                    )}
-                  </small>
-                  <small>
-                    {resource.page.keywords[targetLocale] || <FormattedMessage id="ResourceListItem.NoKeywords" />}
-                  </small>
-                </div>
+                {resource.relations
+                  .map((resourceId: string) => {
+                    return props.resources[resourceId].name[targetLocale];
+                  })
+                  .join(',')}
               </TableCell>
-            </IntlProvider>
+            </>
           );
         }
 

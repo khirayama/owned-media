@@ -1,8 +1,9 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ResourceWithAllLocalesShape } from '../../../types';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 import { loadConfig } from '../../../utils';
+import { Props as RelationLabelProps, RelationLabel } from '../components/RelationLabel';
 
 const config = loadConfig();
 
@@ -17,9 +18,13 @@ const Wrapper = styled.div`
 `;
 
 interface Props {
-  resource: ResourceWithAllLocalesShape;
+  resource: ResourceWithAllLocalesShapeWithRelations;
+  resources: {
+    [key: string]: ResourceWithAllLocalesShapeWithRelations;
+  };
   locale: string;
   onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  onClickRelationLabel?: (event: React.MouseEvent<HTMLButtonElement>, props: RelationLabelProps) => void;
 }
 
 export function ResourceTypeAttributeInput(props: any) {
@@ -259,6 +264,26 @@ export function ResourceInfo(props: Props) {
                 })
               : null;
           })}
+          <tr>
+            <th>Relations</th>
+            <td colSpan={targetLocales.length}>
+              {props.resource.id
+                ? Object.keys(props.resources).map((resourceId: string) => {
+                    const targetResource: ResourceWithAllLocalesShapeWithRelations = props.resources[resourceId];
+                    return targetResource ? (
+                      <RelationLabel
+                        key={resourceId}
+                        resource={targetResource}
+                        locales={targetLocales}
+                        selected={resource.relations.indexOf(targetResource.id) !== -1}
+                        disabled={targetResource.id === props.resource.id}
+                        onClick={props.onClickRelationLabel}
+                      />
+                    ) : null;
+                  })
+                : 'Create resource first.'}
+            </td>
+          </tr>
         </tbody>
       </table>
     </Wrapper>

@@ -5,16 +5,20 @@ import styled from 'styled-components';
 import { styles } from '../styles/vars';
 import { ResourceInfo } from '../components/ResourceInfo';
 import { FloatButton } from '../components/Button';
-import { ResourceWithAllLocalesShape } from '../../../types';
+import { Props as RelationLabelProps } from '../components/RelationLabel';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 
 export interface Props {
   resourceId: string | null;
-  resource: ResourceWithAllLocalesShape;
+  resource: ResourceWithAllLocalesShapeWithRelations;
+  resources: {
+    [key: string]: ResourceWithAllLocalesShapeWithRelations;
+  };
   locale: string;
   onMount?: (props: Props) => void;
-  onUpdate?: (props: Props) => void;
   onChange?: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>, props: Props) => void;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>, props: Props) => void;
+  onClickRelationLabel?: (event: React.MouseEvent<HTMLButtonElement>, props: RelationLabelProps) => void;
 }
 
 const Wrapper = styled.div`
@@ -69,11 +73,6 @@ export function ResourceForm(props: Props) {
       props.onMount(props);
     }
   }, []);
-  React.useEffect(() => {
-    if (props.onUpdate) {
-      props.onUpdate(props);
-    }
-  });
 
   const resource = props.resource;
 
@@ -92,7 +91,13 @@ export function ResourceForm(props: Props) {
   return (
     <Wrapper>
       <form onSubmit={onSubmit}>
-        <ResourceInfo resource={resource} locale={props.locale} onChange={onChange} />
+        <ResourceInfo
+          resource={resource}
+          resources={props.resources}
+          locale={props.locale}
+          onChange={onChange}
+          onClickRelationLabel={props.onClickRelationLabel}
+        />
         <FloatButton>SUBMIT</FloatButton>
       </form>
     </Wrapper>

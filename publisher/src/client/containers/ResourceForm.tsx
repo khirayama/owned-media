@@ -4,8 +4,16 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { Props as ResourceFormProps, ResourceForm as Component } from '../presentations/components/ResourceForm';
+import { Props as RelationLabelProps } from '../presentations/components/RelationLabel';
 import { setResource } from '../actions';
-import { createResource, fetchResource, updateResource } from '../usecases';
+import {
+  createResource,
+  fetchResource,
+  fetchResources,
+  updateResource,
+  createRelations,
+  deleteRelations,
+} from '../usecases';
 import { State } from '../reducers';
 import { loadConfig, createDefaultResource } from '../../utils';
 
@@ -18,8 +26,9 @@ interface Props {
 
 const mapStateToProps = (state: State, props: Props) => {
   return {
-    resourceId: state.app.resource.id || props.resourceId,
+    resourceId: props.resourceId,
     resource: state.app.resource,
+    resources: state.resources.data,
     locale: state.ui.resourceLocale,
   };
 };
@@ -27,15 +36,11 @@ const mapStateToProps = (state: State, props: Props) => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>, props: Props) => {
   return {
     onMount: (resourceFormProps: ResourceFormProps) => {
+      dispatch(fetchResources());
       if (resourceFormProps.resourceId) {
         dispatch(fetchResource(resourceFormProps.resourceId));
       } else {
         dispatch(setResource(createDefaultResource()));
-      }
-    },
-    onUpdate: (resourceFormProps: ResourceFormProps) => {
-      if (props.resourceId === null && resourceFormProps.resourceId) {
-        props.history.replace(`/resources/${resourceFormProps.resourceId}`);
       }
     },
     onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>, props: ResourceFormProps) => {
@@ -82,15 +87,27 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>, props: Prop
 
       dispatch(setResource(setValue(currentResource, name, value)));
     },
-    onSubmit(event: React.FormEvent<HTMLFormElement>, props: ResourceFormProps) {
+    onSubmit(event: React.FormEvent<HTMLFormElement>, resourceFormProps: ResourceFormProps) {
       event.preventDefault();
-      const resource = props.resource;
+      const resource = resourceFormProps.resource;
       const resourceId = resource ? resource.id : null;
 
       if (resource && resourceId) {
         dispatch(updateResource(resourceId, resource));
       } else if (resource) {
-        dispatch(createResource(resource));
+        dispatch(createResource(resource)).then((action: any) => {
+          props.history.replace(`/resources/${action.payload.resource.id}`);
+        });
+      }
+    },
+    onClickRelationLabel(event: React.MouseEvent<HTMLButtonElement>, relationLabelProps: RelationLabelProps) {
+      event.preventDefault();
+      if (props.resourceId && relationLabelProps.resource.id !== props.resourceId) {
+        if (relationLabelProps.selected) {
+          dispatch(deleteRelations(props.resourceId, [relationLabelProps.resource.id]));
+        } else {
+          dispatch(createRelations(props.resourceId, [relationLabelProps.resource.id]));
+        }
       }
     },
   };

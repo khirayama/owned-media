@@ -97,5 +97,6 @@ export const ResetStyle = styled.createGlobalStyle`
   select {
     font-size: inherit;
     color: inherit;
+    background: transparent;
   }
 `;

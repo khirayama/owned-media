@@ -81,6 +81,7 @@ export function ResourceList(props: Props) {
               <ResourceListItem
                 key={resource.id}
                 resource={resource}
+                resources={props.resources.data}
                 locale={props.locale}
                 onClickDeleteResourceButton={props.onClickDeleteResourceButton}
               />
