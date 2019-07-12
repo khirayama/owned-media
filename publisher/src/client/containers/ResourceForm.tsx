@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { Props as ResourceFormProps, ResourceForm as Component } from '../presentations/components/ResourceForm';
-import { Resource as ResourceService } from '../services/Resource';
 import { setResource } from '../actions';
 import { createResource, fetchResource, updateResource } from '../usecases';
 import { State } from '../reducers';
@@ -29,8 +28,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>, props: Prop
   return {
     onMount: (resourceFormProps: ResourceFormProps) => {
       if (resourceFormProps.resourceId) {
-        dispatch(fetchResource(resourceFormProps.resourceId, { locale: 'all' }));
-        ResourceService.fetchRelations(resourceFormProps.resourceId, { locale: 'all' });
+        dispatch(fetchResource(resourceFormProps.resourceId));
       } else {
         dispatch(setResource(createDefaultResource()));
       }

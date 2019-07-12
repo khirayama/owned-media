@@ -17,7 +17,7 @@ const mapStateToProps = (state: State) => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
   return {
     onMount: () => {
-      dispatch(fetchResources({ locale: 'all' }));
+      dispatch(fetchResources());
     },
     onClickDeleteResourceButton: (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => {
       const isDelete = window.confirm('Delete this resource?');
