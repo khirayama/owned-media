@@ -2,7 +2,7 @@
   "name": "publisher",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": "11.14.0",
     "npm": "6.7.0"
