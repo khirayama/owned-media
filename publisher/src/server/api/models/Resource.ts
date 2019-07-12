@@ -352,7 +352,7 @@ export class Resource {
     if (resource.attributes) {
       for (let key of Object.keys(resource.attributes)) {
         const lastResourceAttributeRow = this.rows.resourceAttributes[this.rows.resourceAttributes.length - 1];
-        const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : '0';
+        const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : '1';
         this.rows.resourceAttributes.push({
           id: resourceAttributeId,
           resource_id: resourceId,
@@ -395,25 +395,25 @@ export class Resource {
     );
 
     // For resources
-    if (resource.type) {
+    if (resource.type !== undefined) {
       resourceRow.type = resource.type;
       resourceRow.updated_at = now.toString();
     }
-    if (resource.key) {
+    if (resource.key !== undefined) {
       resourceRow.key = resource.key;
       resourceRow.updated_at = now.toString();
     }
     // For resource_contents
-    if (resourceContentRow) {
+    if (resourceContentRow !== undefined) {
       if (resource.name) {
         resourceContentRow.name = resource.name;
         resourceContentRow.updated_at = now.toString();
       }
-      if (resource.bodyPath) {
+      if (resource.bodyPath !== undefined) {
         resourceContentRow.body_path = resource.bodyPath;
         resourceContentRow.updated_at = now.toString();
       }
-      if (resource.imageUrl) {
+      if (resource.imageUrl !== undefined) {
         resourceContentRow.image_url = resource.imageUrl;
         resourceContentRow.updated_at = now.toString();
       }
@@ -423,19 +423,19 @@ export class Resource {
     // For pages
     if (resource.page) {
       if (pageRow) {
-        if (resource.page.title) {
+        if (resource.page.title !== undefined) {
           pageRow.title = resource.page.title;
           pageRow.updated_at = now.toString();
         }
-        if (resource.page.description) {
+        if (resource.page.description !== undefined) {
           pageRow.description = resource.page.description;
           pageRow.updated_at = now.toString();
         }
-        if (resource.page.keywords) {
+        if (resource.page.keywords !== undefined) {
           pageRow.keywords = resource.page.keywords;
           pageRow.updated_at = now.toString();
         }
-        if (resource.page.imageUrl) {
+        if (resource.page.imageUrl !== undefined) {
           pageRow.image_url = resource.page.imageUrl;
           pageRow.updated_at = now.toString();
         }
@@ -456,7 +456,7 @@ export class Resource {
         }
         if (!isExisting) {
           const lastResourceAttributeRow = this.rows.resourceAttributes[this.rows.resourceAttributes.length - 1];
-          const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : '0';
+          const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : '1';
           this.rows.resourceAttributes.push({
             id: resourceAttributeId,
             resource_id: resourceId,
@@ -501,7 +501,7 @@ export class Resource {
   private static createContent(resourceId: string, resource: Partial<ResourceShape>, locale: string) {
     const now = new Date();
     const lastResourceContentRow = this.rows.resourceContents[this.rows.resourceContents.length - 1];
-    const resourceContentId = lastResourceContentRow ? String(Number(lastResourceContentRow.id) + 1) : '0';
+    const resourceContentId = lastResourceContentRow ? String(Number(lastResourceContentRow.id) + 1) : '1';
     const resourceName = resource.name || '';
     const resourceImageUrl = resource.imageUrl || '';
 
@@ -528,7 +528,7 @@ export class Resource {
   private static createPage(resourceId: string, page: Partial<ResourceShape['page']>, locale: string) {
     const now = new Date();
     const lastPageRow = this.rows.pages[this.rows.pages.length - 1];
-    const pageId = lastPageRow ? String(Number(lastPageRow.id) + 1) : '0';
+    const pageId = lastPageRow ? String(Number(lastPageRow.id) + 1) : '1';
     const pageTitle = page.title || '';
     const pageDescription = page.description || '';
     const pageImageUrl = page.imageUrl || '';
@@ -546,14 +546,76 @@ export class Resource {
     });
   }
 
+  public static createRelations(resourceId: string, relatedResourceIds: string[]) {
+    const now = new Date();
+    for (let i = 0; i < relatedResourceIds.length; i += 1) {
+      const lastRelationRow = this.rows.relations[this.rows.relations.length - 1];
+      const relationId = lastRelationRow ? String(Number(lastRelationRow.id) + 1) : '1';
+      const relatedResourceId = relatedResourceIds[i];
+
+      if (resourceId === relatedResourceId) {
+        continue;
+      }
+
+      let isExisting = false;
+
+      for (let j = 0; j < this.rows.relations.length; j += 1) {
+        const row = this.rows.relations[j];
+        if (
+          (row.resource1_id === resourceId && row.resource2_id === relatedResourceId) ||
+          (row.resource1_id === relatedResourceId && row.resource2_id === resourceId)
+        ) {
+          isExisting = true;
+          row.updated_at = now.toString();
+        }
+      }
+
+      if (!isExisting) {
+        this.rows.relations.push({
+          id: relationId,
+          resource1_id: resourceId,
+          resource2_id: relatedResourceId,
+          created_at: now.toString(),
+          updated_at: now.toString(),
+        });
+      }
+    }
+
+    this.save();
+  }
+
+  public static deleteRelations(resourceId: string, relatedResourceIds: string[]) {
+    for (let i = 0; i < relatedResourceIds.length; i += 1) {
+      const relatedResourceId = relatedResourceIds[i];
+
+      if (resourceId === relatedResourceId) {
+        continue;
+      }
+
+      for (let j = 0; j < this.rows.relations.length; j += 1) {
+        const row = this.rows.relations[j];
+        if (
+          (row.resource1_id === resourceId && row.resource2_id === relatedResourceId) ||
+          (row.resource1_id === relatedResourceId && row.resource2_id === resourceId)
+        ) {
+          this.rows.relations.splice(j, 1);
+        }
+      }
+    }
+
+    this.save();
+  }
+
   public static save() {
     const resourcesString = csvStringify(this.rows.resources, this.columns.resources);
     const resourceContentsString = csvStringify(this.rows.resourceContents, this.columns.resourceContents);
     const resourceAttributesString = csvStringify(this.rows.resourceAttributes, this.columns.resourceAttributes);
     const pagesString = csvStringify(this.rows.pages, this.columns.pages);
+    const relationsString = csvStringify(this.rows.relations, this.columns.relations);
     fs.writeFileSync(path.join(DATA_PATH, 'resources.csv'), resourcesString);
     fs.writeFileSync(path.join(DATA_PATH, 'resource_contents.csv'), resourceContentsString);
     fs.writeFileSync(path.join(DATA_PATH, 'resource_attributes.csv'), resourceAttributesString);
     fs.writeFileSync(path.join(DATA_PATH, 'pages.csv'), pagesString);
+    fs.writeFileSync(path.join(DATA_PATH, 'relations.csv'), relationsString);
   }
 }
