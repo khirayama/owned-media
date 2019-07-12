@@ -10,13 +10,13 @@ export const routes = [
     exact: true,
     path: '/',
     component: Resources,
-    initializer: () => fetchResources({ locale: 'all' }),
+    initializer: () => fetchResources(),
   },
   {
     exact: true,
     path: `/resources`,
     component: Resources,
-    initializer: () => fetchResources({ locale: 'all' }),
+    initializer: () => fetchResources(),
   },
   {
     exact: true,
@@ -28,7 +28,7 @@ export const routes = [
     exact: true,
     path: `/resources/:id`,
     component: Resource,
-    initializer: params => fetchResource(params.id, { locale: 'all' }),
+    initializer: params => fetchResource(params.id),
   },
 ];
 
