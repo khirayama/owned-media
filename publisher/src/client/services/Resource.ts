@@ -81,4 +81,24 @@ export class Resource {
       });
     });
   }
+
+  public static createRelations(resourceId: string, relatedResourceIds: string[]): Promise<any> {
+    const url = `/api/resources/${resourceId}/relations?id=${relatedResourceIds.join(',')}`;
+
+    return new Promise((resolve: (res: ResourceShape) => void) => {
+      req.post(url).then(res => {
+        resolve(res.data);
+      });
+    });
+  }
+
+  public static deleteRelations(resourceId: string, relatedResourceIds: string[]): Promise<any> {
+    const url = `/api/resources/${resourceId}/relations?id=${relatedResourceIds.join(',')}`;
+
+    return new Promise((resolve: (res: ResourceShape) => void) => {
+      req.delete(url).then(res => {
+        resolve(res.data);
+      });
+    });
+  }
 }
