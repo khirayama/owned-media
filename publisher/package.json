@@ -47,6 +47,7 @@
     "@typescript-eslint/eslint-plugin": "1.10.2",
     "@typescript-eslint/parser": "1.10.2",
     "concurrently": "4.1.0",
+    "csv-stringify": "5.3.0",
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.3.0",
     "eslint-plugin-jest": "22.6.4",
@@ -68,6 +69,7 @@
   "dependencies": {
     "@loadable/component": "5.10.1",
     "axios": "0.19.0",
+    "csv-parse": "4.4.3",
     "express": "4.17.1",
     "history": "4.9.0",
     "marked": "0.6.2",
