@@ -65,3 +65,23 @@ export function fetchRelatedResources(req: express.Request, res: express.Respons
   const resources = Resource.find({ id: Resource.relation([params.id]) }, options);
   res.json(resources);
 }
+
+export function createRelations(req: express.Request, res: express.Response) {
+  const query = req.query;
+  const resourceId = req.params.id;
+  const relatedResourceIds = query.id.split(',');
+
+  Resource.createRelations(resourceId, relatedResourceIds);
+
+  res.json(query);
+}
+
+export function deleteRelations(req: express.Request, res: express.Response) {
+  const query = req.query;
+  const resourceId = req.params.id;
+  const relatedResourceIds = query.id.split(',');
+
+  Resource.deleteRelations(resourceId, relatedResourceIds);
+
+  res.json(query);
+}
