@@ -1,5 +1,5 @@
 import { createDefaultResource } from '../../utils';
-import { ResourceWithAllLocalesShapeWithRelations, ResourceWithAllLocalesShape } from '../../types';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../types';
 
 export interface State {
   resources: {
@@ -9,8 +9,7 @@ export interface State {
     };
   };
   app: {
-    resource: ResourceWithAllLocalesShape;
-    relations: string[];
+    resource: ResourceWithAllLocalesShapeWithRelations;
   };
   ui: {
     locale: string;
@@ -25,7 +24,6 @@ export const initialState: State = {
   },
   app: {
     resource: createDefaultResource(),
-    relations: [],
   },
   ui: {
     locale: 'en',
