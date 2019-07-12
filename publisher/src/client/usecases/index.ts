@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { ResourceShape, ResourceWithAllLocalesShape } from '../../types';
+import { ResourceShape, ResourceWithAllLocalesShape, ResourceWithAllLocalesShapeWithRelations } from '../../types';
 import {
   changeIsFetchingResources,
   setResources,
@@ -25,7 +25,10 @@ export const createResource = (resource: ResourceWithAllLocalesShape) => {
 
     const firstLocale = config.locales[0];
     const otherLocales = config.locales.slice(1, config.locales.length);
-    let result: ResourceWithAllLocalesShape = resource;
+    let result: ResourceWithAllLocalesShapeWithRelations = {
+      ...resource,
+      relations: [],
+    };
 
     ResourceService.create(resourceWithAllLocalesToResource(resource, firstLocale), { locale: firstLocale }).then(
       (newResource: ResourceShape) => {
@@ -49,23 +52,45 @@ export const createResource = (resource: ResourceWithAllLocalesShape) => {
   };
 };
 
-export const fetchResources = (options?) => {
+export const fetchResources = () => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
     dispatch(changeIsFetchingResources(true));
-    return ResourceService.fetch(options).then((resources: (ResourceShape | ResourceWithAllLocalesShape)[]) => {
-      dispatch(setResources(resources as ResourceWithAllLocalesShape[]));
-      dispatch(changeIsFetchingResources(false));
-    });
+    return ResourceService.fetch({ locale: 'all' }).then(
+      (resources: (ResourceShape | ResourceWithAllLocalesShape)[]) => {
+        const newResources: { [key: string]: ResourceWithAllLocalesShapeWithRelations } = {};
+
+        Promise.all(
+          resources.map((resource: ResourceShape | ResourceWithAllLocalesShape) =>
+            ResourceService.fetchRelations(resource.id),
+          ),
+        ).then(res => {
+          for (let i = 0; i < resources.length; i += 1) {
+            const resource = resources[i] as ResourceWithAllLocalesShape;
+            const relations = res[i] as ResourceShape[];
+            const newResource: ResourceWithAllLocalesShapeWithRelations = {
+              ...resource,
+              relations: relations.map((relation: ResourceShape) => relation.id),
+            };
+            newResources[newResource.id] = newResource;
+          }
+
+          dispatch(setResources(newResources));
+          dispatch(changeIsFetchingResources(false));
+        });
+      },
+    );
   };
 };
 
-export const fetchResource = (resourceId: string, options?) => {
+export const fetchResource = (resourceId: string) => {
   return (dispatch: ThunkDispatch<{}, {}, Action>) => {
     dispatch(changeIsFetchingResource(true));
-    return ResourceService.find(resourceId, options).then((resource: ResourceShape | ResourceWithAllLocalesShape) => {
-      dispatch(setResource(resource as ResourceWithAllLocalesShape));
-      dispatch(changeIsFetchingResource(false));
-    });
+    return ResourceService.find(resourceId, { locale: 'all' }).then(
+      (resource: ResourceShape | ResourceWithAllLocalesShape) => {
+        dispatch(setResource(resource as ResourceWithAllLocalesShapeWithRelations));
+        dispatch(changeIsFetchingResource(false));
+      },
+    );
   };
 };
 
