@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import * as path from 'path';
 
+import npmCsvParse from 'csv-parse/lib/sync';
+import npmCdvStringify from 'csv-stringify/lib/sync';
+
 import {
   ResourceWithAllLocalesShape,
   ResourceWithAllLocalesShapeWithRelations,
@@ -66,37 +69,20 @@ export function extractColumns(csv: string) {
 }
 
 export function csvStringify(data: any[], columns: string[]) {
-  let csv: any[] = [];
-  csv.push(columns.join(','));
+  const csvString = npmCdvStringify(data, {
+    header: true,
+    columns: columns,
+  });
 
-  for (let d of data) {
-    const row: any[] = [];
-    for (let column of columns) {
-      row.push(d[column]);
-    }
-
-    csv.push(row.join(','));
-  }
-
-  return csv.filter(row => !!row).join('\n');
+  return csvString;
 }
 
 export function csvParse(csvString: string): any {
-  const values: any[] = [];
-  const rows = csvString.split('\n').filter(s => !!s);
-  const columns = rows[0].split(',');
-
-  for (let i = 1; i < rows.length; i += 1) {
-    const row = rows[i].split(',');
-    const value = {};
-
-    for (let j = 0; j < columns.length; j += 1) {
-      value[columns[j]] = row[j];
-    }
-
-    values.push(value);
-  }
-  return values;
+  const records = npmCsvParse(csvString, {
+    columns: true,
+    skip_empty_lines: true,
+  });
+  return records;
 }
 
 // Strings
