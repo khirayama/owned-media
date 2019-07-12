@@ -33,64 +33,70 @@ export const initialState: State = {
 
 export function reducer(state: State = initialState, action: any): State {
   const payload = action.payload;
+  let nextState = state;
 
   switch (action.type) {
     // resources
     case 'CHANGE_IS_FETCHING_RESOURCES': {
       if (payload.isFetching) {
-        state.resources.isFetching.push(true);
+        nextState.resources.isFetching.push(true);
       } else {
-        state.resources.isFetching.shift();
+        nextState.resources.isFetching.shift();
       }
-      return state;
+      break;
     }
     case 'CHANGE_IS_FETCHING_RESOURCE': {
       if (payload.isFetching) {
-        state.resources.isFetching.push(true);
+        nextState.resources.isFetching.push(true);
       } else {
-        state.resources.isFetching.shift();
+        nextState.resources.isFetching.shift();
       }
-      return state;
+      break;
     }
     case 'SET_RESOURCES': {
-      return {
+      nextState = {
         ...state,
         resources: {
           ...state.resources,
           data: payload.resources,
         },
       };
+      break;
     }
     case 'REMOVE_RESOURCE': {
-      delete state.resources.data[payload.resourceId];
-      return {
+      delete nextState.resources.data[payload.resourceId];
+      nextState = {
         ...state,
         resources: {
           ...state.resources,
           data: state.resources.data,
         },
       };
+      break;
     }
     // app
     case 'SET_RESOURCE': {
-      return {
+      nextState = {
         ...state,
         app: {
           ...state.app,
           resource: payload.resource,
         },
       };
+      break;
     }
     case 'CHANGE_LOCALE': {
-      return {
+      nextState = {
         ...state,
         ui: {
           ...state.ui,
           locale: action.payload.locale,
         },
       };
+      break;
     }
     default:
   }
-  return state;
+
+  return nextState;
 }
