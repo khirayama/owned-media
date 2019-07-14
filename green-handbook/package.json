@@ -1,15 +1,14 @@
 {
   "name": "green-handbook",
   "version": "1.0.0",
-  "description": "観葉植物についての情報発信。",
+  "description": "緑色手帖",
   "main": "index.js",
   "scripts": {
-    "link": "(cd ../publisher && npm run build && npm link)",
-    "build": "rm -rf dist && npm link publisher && NODE_OPTIONS='--max-old-space-size=8192' webpack --mode production",
-    "dev": "rm -rf dist && npm link publisher && static -p 8000 ./dist & NODE_OPTIONS='--max-old-space-size=8192' webpack -w --mode development",
-    "dev:publisher": "(cd ../publisher && npm link) && nodemon -w ../publisher/dist -x publisher",
-    "sample": "npm link publisher && node index.js",
-    "start": "npm link publisher && publisher"
+    "pre": "(cd ../publisher && npm run build)",
+    "link": "(cd ../publisher && npm link)",
+    "dev": "rm -rf dist && npm run link && static -p 8000 ./dist & NODE_OPTIONS='--max-old-space-size=8192' webpack -w --mode development",
+    "build": "rm -rf dist && npm run link && NODE_OPTIONS='--max-old-space-size=8192' webpack --mode production",
+    "publisher": "npm run link && nodemon -w ../publisher/dist -x publisher"
   },
   "keywords": [],
   "author": "",
