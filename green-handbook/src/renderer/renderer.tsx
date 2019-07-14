@@ -15,10 +15,10 @@ import { GlobalStyle } from '../presentations/styles/GlobalStyle';
 import { Intl } from '../containers/Intl';
 
 const assets = (() => {
-  // eslint-disable-next-line node/no-unpublished-require
-  const manifest: { [key: string]: string } = require('../../dist/manifest');
   const entryPoints: string[] = [];
 
+  // eslint-disable-next-line node/no-unpublished-require
+  const manifest: { [key: string]: string } = require('../../dist/manifest');
   for (const [key, value] of Object.entries(manifest)) {
     if (/^index|^vendors|^commons/.test(key)) {
       entryPoints.push(value);

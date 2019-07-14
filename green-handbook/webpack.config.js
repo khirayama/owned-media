@@ -6,12 +6,14 @@ const WebpackManifestPlugin = require('webpack-manifest-plugin');
 const publisherConfig = require('./config');
 
 module.exports = (env, argv) => {
+  const isProd = argv.mode === 'production';
+
   const config = {
     entry: {
       index: './src/index.tsx',
     },
     output: {
-      filename: '[name].[hash].js',
+      filename: isProd ? '[name].[hash].js' : '[name].js',
       publicPath: '/',
     },
     resolve: {
@@ -33,6 +35,10 @@ module.exports = (env, argv) => {
         },
       ],
     },
+    optimization: {
+      minimize: isProd,
+    },
+    devtool: isProd ? null : 'inline-source-map',
   };
 
   return config;

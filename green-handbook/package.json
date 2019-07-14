@@ -6,7 +6,7 @@
   "scripts": {
     "pre": "(cd ../publisher && npm run build)",
     "link": "(cd ../publisher && npm link) && npm link publisher",
-    "dev": "rm -rf dist && npm run link &&  NODE_OPTIONS='--max-old-space-size=8192' concurrently 'npm run server' 'webpack -w --mode development'",
+    "dev": "rm -rf dist && npm run link && webpack --mode development && concurrently 'ts-node ./cli/dev.ts' 'webpack -w --mode development'",
     "build": "rm -rf dist && npm run link && webpack --mode production && ts-node ./cli/build.ts",
     "publisher": "npm run link && nodemon -w ../publisher/dist -x publisher",
     "server": "static -p 8000 ./dist"
@@ -26,6 +26,7 @@
     "@types/redux-thunk": "2.1.0",
     "@types/styled-components": "4.1.18",
     "concurrently": "4.1.1",
+    "express": "4.17.1",
     "fs-extra": "8.1.0",
     "node-static": "0.7.11",
     "nodemon": "1.19.1",
