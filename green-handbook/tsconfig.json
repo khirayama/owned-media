@@ -4,7 +4,7 @@
     "declaration": false,
     "jsx": "react",
     "lib": ["es2017", "dom"],
-    "types": ["react"],
+    "types": ["node", "react"],
     "module": "commonjs",
     "moduleResolution": "node",
     "allowJs": true,
