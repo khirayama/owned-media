@@ -1,5 +1,6 @@
 const name = {
   ja: '緑色手帖',
+  en: 'GREEN HANDBOOK',
 };
 
 const resourceTypes = [
@@ -86,13 +87,15 @@ const resourceTypes = [
 ];
 
 const config = {
-  locales: ['ja'],
+  locales: ['ja', 'en'],
   name,
   tagline: {
     ja: `${name.ja} - インドアグリーン、観葉植物の育て方や知識を入門から楽しむまで`,
+    en: `${name.en} - Knowledge for beginner to senior of indeer plants`,
   },
   description: {
     ja: `インドアグリーン、観葉植物の育て方や知識を入門から楽しむまで`,
+    en: `Knowledge for beginner to senior of indeer plants`,
   },
   resourceTypes,
 };
