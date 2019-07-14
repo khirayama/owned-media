@@ -22,7 +22,7 @@ module.exports = (env, argv) => {
     plugins: getEntrypoints(publisherConfig).map((entrypoint) => {
       return new HtmlWebpackPlugin({
         template: './src/renderer.tsx',
-        filename: `.${entrypoint === '/' ? '' : entrypoint}/index.html`,
+        filename: entrypoint,
         inject: false,
       });
     }),
