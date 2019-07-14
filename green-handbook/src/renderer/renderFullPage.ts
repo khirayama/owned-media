@@ -5,10 +5,9 @@ type Params = {
   body: string;
   style: string;
   preloadedState: string;
-  beforeClosingBodyContent: string;
 };
 
-const escapeHTML = (str: string) => {
+export const escapeHTML = (str: string) => {
   return str
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
@@ -17,7 +16,7 @@ const escapeHTML = (str: string) => {
     .replace(/>/g, '&gt;');
 };
 
-export const renderFullPage = ({ locale, meta, assets, body, style, preloadedState, beforeClosingBodyContent }: Params) => {
+export const renderFullPage = ({ locale, meta, assets, body, style, preloadedState }: Params) => {
   return `<!DOCTYPE html>
     <html lang=${locale}>
       <head>
@@ -28,7 +27,6 @@ export const renderFullPage = ({ locale, meta, assets, body, style, preloadedSta
       <body>
         <div id="root">${body}</div>
         <script id="initial-data" type="text/plain" data-json="${escapeHTML(preloadedState)}"></script>
-        ${beforeClosingBodyContent}
       </body>
     </html>
   `.trim();
