@@ -1,15 +1,20 @@
+import * as path from 'path';
+
+import * as fsExtra from 'fs-extra';
+import { renderer } from '../src/renderer/renderer';
+
 const { Resource } = require('publisher');
+const publisherConfig = require('../config');
 
 Resource.init();
 
 // options
 // - locale
 // - use key
-function getEntrypoints(config) {
-  const entrypoints = [];
+function getEntrypoints(config): string[] {
+  const entrypoints: string[] = [];
 
-  const localeUrls = ['/'];
-
+  const localeUrls: string[] = ['/'];
   if (config.locales.length > 1) {
     for (let i = 0; i < config.locales.length; i += 1) {
       const locale = config.locales[i];
@@ -17,9 +22,7 @@ function getEntrypoints(config) {
     }
   }
 
-  for (let i = 0; i < localeUrls.length; i += 1) {
-    const baseUrl = localeUrls[i];
-
+  for (const baseUrl of localeUrls) {
     entrypoints.push(baseUrl);
 
     for (let j = 0; j < config.resourceTypes.length; j += 1) {
@@ -38,4 +41,14 @@ function getEntrypoints(config) {
   return entrypoints.map((entrypoint) => `.${entrypoint === '/' ? '' : entrypoint}/index.html`);
 }
 
-module.exports = getEntrypoints;
+function build() {
+  getEntrypoints(publisherConfig).forEach((entrypoint) => {
+    const location = entrypoint.replace(/^\./, '').replace(/index.html$/, '');
+    const fullPageHTML = renderer(location);
+
+    console.log(`Builing ${entrypoint}.`);
+    fsExtra.outputFile(path.resolve('dist', entrypoint), fullPageHTML);
+  });
+}
+
+build();
