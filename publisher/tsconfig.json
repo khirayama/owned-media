@@ -7,7 +7,7 @@
     "types": ["react", "jest"],
     "module": "commonjs",
     "moduleResolution": "node",
-    "allowJs": true,
+    "allowJs": false,
     "noImplicitAny": false,
     "sourceMap": true,
     "removeComments": false,
