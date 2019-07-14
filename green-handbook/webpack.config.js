@@ -1,9 +1,10 @@
 const path = require('path');
 
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const publisherConfig = require('./config');
-const generateHtmlWebpackPlugins = require('./helpers/generateHtmlWebpackPlugins');
+const getEntrypoints = require('./helpers/getEntrypoints');
 const pagePath = path.resolve(process.cwd(), 'src', 'index.ts');
 
 module.exports = (env, argv) => {
@@ -18,7 +19,13 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json'],
     },
-    plugins: generateHtmlWebpackPlugins(publisherConfig, './src/renderer.tsx'),
+    plugins: getEntrypoints(publisherConfig).map((entrypoint) => {
+      return new HtmlWebpackPlugin({
+        template: './src/renderer.tsx',
+        filename: `.${entrypoint === '/' ? '' : entrypoint}/index.html`,
+        inject: false,
+      });
+    }),
     module: {
       rules: [
         {

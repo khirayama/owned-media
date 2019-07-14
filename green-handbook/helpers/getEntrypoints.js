@@ -1,5 +1,3 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
 const { Resource } = require('publisher');
 
 Resource.init();
@@ -7,9 +5,8 @@ Resource.init();
 // options
 // - locale
 // - use key
-function generateHtmlWebpackPlugins(config, template) {
+function getEntrypoints(config) {
   const entrypoints = [];
-  const plugins = [];
 
   const localeUrls = ['/'];
 
@@ -38,13 +35,7 @@ function generateHtmlWebpackPlugins(config, template) {
     }
   }
 
-  return entrypoints.map((entrypoint) => {
-    return new HtmlWebpackPlugin({
-      template,
-      filename: `.${entrypoint === '/' ? '' : entrypoint}/index.html`,
-      inject: false,
-    });
-  });
+  return entrypoints.map((entrypoint) => `.${entrypoint === '/' ? '' : entrypoint}/index.html`);
 }
 
-module.exports = generateHtmlWebpackPlugins;
+module.exports = getEntrypoints;
