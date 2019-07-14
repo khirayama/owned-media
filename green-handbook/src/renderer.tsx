@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 
-const escape = (str: string) => {
+const escapeHTML = (str: string) => {
   return str
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
@@ -18,9 +18,9 @@ const renderer = (config) => {
   const isDebugging = false;
   const debugTag = `
     <h3>webpack config</h3>
-    <pre>${escape(JSON.stringify(webpack, null, 2))}</pre>
+    <pre>${escapeHTML(JSON.stringify(webpack, null, 2))}</pre>
     <h3>html-webpack-plugin config</h3>
-    <pre>${escape(JSON.stringify(htmlWebpackPlugin, null, 2))}</pre>
+    <pre>${escapeHTML(JSON.stringify(htmlWebpackPlugin, null, 2))}</pre>
   `;
 
   return (`<!DOCTYPE html>

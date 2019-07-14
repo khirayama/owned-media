@@ -7,7 +7,7 @@ Resource.init();
 // options
 // - locale
 // - use key
-function generateHtmlWebpackPlugins(config) {
+function generateHtmlWebpackPlugins(config, template) {
   const entrypoints = [];
   const plugins = [];
 
@@ -40,7 +40,7 @@ function generateHtmlWebpackPlugins(config) {
 
   return entrypoints.map((entrypoint) => {
     return new HtmlWebpackPlugin({
-      template: './helpers/renderer.tsx',
+      template,
       filename: `.${entrypoint === '/' ? '' : entrypoint}/index.html`,
       inject: false,
     });

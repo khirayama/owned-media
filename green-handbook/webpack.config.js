@@ -18,7 +18,7 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json'],
     },
-    plugins: generateHtmlWebpackPlugins(publisherConfig),
+    plugins: generateHtmlWebpackPlugins(publisherConfig, './src/renderer.tsx'),
     module: {
       rules: [
         {
