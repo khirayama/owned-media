@@ -1,6 +1,10 @@
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 
+import { renderFullPage } from './renderFullPage';
+
+const publisherConfig = require('../config');
+
 const escapeHTML = (str: string) => {
   return str
     .replace(/&/g, '&amp;')
@@ -13,7 +17,6 @@ const escapeHTML = (str: string) => {
 const renderer = (config) => {
   const webpack = config.webpack;
   const htmlWebpackPlugin = config.htmlWebpackPlugin;
-  const scriptTags = htmlWebpackPlugin.files.js.map((src) => `<script src=${src} defer></script>`);
 
   const isDebugging = false;
   const debugTag = `
@@ -23,19 +26,15 @@ const renderer = (config) => {
     <pre>${escapeHTML(JSON.stringify(htmlWebpackPlugin, null, 2))}</pre>
   `;
 
-  return (`<!DOCTYPE html>
-<html>
-  <head>
-    <title>Page</title>
-    ${scriptTags}
-  </head>
-  <body>
-    <div id="page">
-      <h1>Page</h1>
-      ${isDebugging ? debugTag : ''}
-    </div>
-  </body>
-</html>`);
+  return renderFullPage({
+    locale: publisherConfig.locales[0],
+    meta: '',
+    assets: htmlWebpackPlugin.files.js,
+    body: '',
+    style: '',
+    preloadedState: JSON.stringify({}),
+    beforeClosingBodyContent: isDebugging ? debugTag : '',
+  });
 };
 
 export default renderer;
