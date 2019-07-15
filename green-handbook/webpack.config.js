@@ -38,7 +38,7 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: isProd,
     },
-    devtool: isProd ? null : 'inline-source-map',
+    devtool: isProd ? false : 'inline-source-map',
   };
 
   return config;
