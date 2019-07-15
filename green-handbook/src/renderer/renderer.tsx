@@ -7,7 +7,7 @@ import ReactHelmet from 'react-helmet';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
-import { renderFullPage, escapeHTML } from './renderFullPage';
+import { renderFullPage } from './renderFullPage';
 import { reducer } from '../reducers';
 import { Routes } from '../presentations/routes/Routes';
 import { ResetStyle } from '../presentations/styles/ResetStyle';
