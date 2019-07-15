@@ -1,9 +1,5 @@
-const path = require('path');
-
-const webpack = require('webpack');
+// eslint-disable-next-line node/no-unpublished-require
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
-
-const publisherConfig = require('./config');
 
 module.exports = (env, argv) => {
   const isProd = argv.mode === 'production';
@@ -19,9 +15,7 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json'],
     },
-    plugins: [
-      new WebpackManifestPlugin(),
-    ],
+    plugins: [new WebpackManifestPlugin()],
     module: {
       rules: [
         {
