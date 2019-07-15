@@ -9,7 +9,10 @@
     "dev": "rm -rf dist && npm run link && webpack --mode development && concurrently 'ts-node ./cli/dev.ts' 'webpack -w --mode development'",
     "build": "rm -rf dist && npm run link && webpack --mode production && ts-node ./cli/build.ts",
     "publisher": "npm run link && nodemon -w ../publisher/dist -x publisher",
-    "server": "static -p 8000 ./dist"
+    "server": "static -p 8000 ./dist",
+    "lint": "eslint '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
+    "lint:fix": "eslint --fix '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
+    "check": "npx npm-check-updates"
   },
   "keywords": [],
   "author": "",
