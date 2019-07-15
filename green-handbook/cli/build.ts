@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as fsExtra from 'fs-extra';
 import { renderer } from '../src/renderer/renderer';
 
+// eslint-disable-next-line node/no-missing-require
 const { Resource } = require('publisher');
 const publisherConfig = require('../config');
 
@@ -38,11 +39,11 @@ function getEntrypoints(config): string[] {
     }
   }
 
-  return entrypoints.map((entrypoint) => `.${entrypoint === '/' ? '' : entrypoint}/index.html`);
+  return entrypoints.map(entrypoint => `.${entrypoint === '/' ? '' : entrypoint}/index.html`);
 }
 
 function build() {
-  getEntrypoints(publisherConfig).forEach((entrypoint) => {
+  getEntrypoints(publisherConfig).forEach(entrypoint => {
     const location = entrypoint.replace(/^\./, '').replace(/index.html$/, '');
     const fullPageHTML = renderer(location);
 
