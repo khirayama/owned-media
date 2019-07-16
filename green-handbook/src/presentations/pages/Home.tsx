@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 
-import { Counter } from '../../containers/Counter';
 import { Head } from '../../presentations/head/Head';
 import { Application } from '../../presentations/templates/Application';
 
@@ -21,7 +20,6 @@ export const Home = injectIntl(function(props) {
       <Head title={title} description={description} />
       <Wrapper>
         <h2>Home</h2>
-        <Counter />
       </Wrapper>
     </Application>
   );

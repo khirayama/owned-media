@@ -1,72 +1,32 @@
+import { ResourceShape } from 'publisher';
+
+declare var window: any;
+
 export interface State {
-  count: {
-    isFetching: boolean[];
-    value: number;
+  resources: {
+    [key: string]: ResourceShape;
   };
   ui: {
-    locale: 'en' | 'ja';
+    locale: string;
   };
 }
 
 export const initialState: State = {
-  count: {
-    isFetching: [],
-    value: 1,
-  },
+  resources: {},
   ui: {
     locale: 'en',
   },
 };
 
 export function reducer(state = initialState, action: any) {
+  const newState = { ...state };
+
   switch (action.type) {
-    case 'FETCHING_COUNT': {
-      state.count.isFetching.push(true);
-      return {
-        count: {
-          isFetching: state.count.isFetching,
-          value: state.count.value,
-        },
-        ui: state.ui,
-      };
-    }
-    case 'FETCHED_COUNT': {
-      state.count.isFetching.shift();
-      return {
-        count: {
-          isFetching: state.count.isFetching,
-          value: state.count.value,
-        },
-        ui: state.ui,
-      };
-    }
-    case 'INCREMENT': {
-      return {
-        count: {
-          isFetching: state.count.isFetching,
-          value: state.count.value + 1,
-        },
-        ui: state.ui,
-      };
-    }
-    case 'DECREMENT': {
-      return {
-        count: {
-          isFetching: state.count.isFetching,
-          value: state.count.value - 1,
-        },
-        ui: state.ui,
-      };
-    }
     case 'CHANGE_LOCALE': {
-      return {
-        count: state.count,
-        ui: {
-          locale: action.payload.locale,
-        },
-      };
+      newState.ui.locale = action.payload.locale;
+      break;
     }
     default:
   }
-  return state;
+  return newState;
 }

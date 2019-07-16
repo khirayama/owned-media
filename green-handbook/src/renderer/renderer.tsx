@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter, matchPath } from 'react-router-dom';
 import * as styled from 'styled-components';
 import ReactHelmet from 'react-helmet';
 import { Provider } from 'react-redux';
@@ -9,7 +9,7 @@ import { createStore } from 'redux';
 
 import { renderFullPage } from './renderFullPage';
 import { reducer } from '../reducers';
-import { Routes } from '../presentations/routes/Routes';
+import { Routes, routes } from '../presentations/routes/Routes';
 import { ResetStyle } from '../presentations/styles/ResetStyle';
 import { GlobalStyle } from '../presentations/styles/GlobalStyle';
 import { Intl } from '../containers/Intl';
@@ -28,15 +28,14 @@ const assets = (() => {
   return entryPoints;
 })();
 
-export const renderer = (location: string) => {
+const generateParams = (url: string, store: any) => {
   const context = {};
-  const store = createStore(reducer);
   const preloadedState = store.getState();
   const sheet = new styled.ServerStyleSheet();
   const locale = preloadedState.ui.locale;
   const body = ReactDOMServer.renderToString(
     sheet.collectStyles(
-      <StaticRouter location={location} context={context}>
+      <StaticRouter location={url} context={context}>
         <ResetStyle />
         <GlobalStyle />
         <Provider store={store}>
@@ -55,14 +54,38 @@ export const renderer = (location: string) => {
     `.trim();
   const style = sheet.getStyleTags();
 
-  const fullPageHTML = renderFullPage({
+  return {
     locale,
     meta,
     assets,
     body,
     style,
     preloadedState: JSON.stringify(preloadedState),
-  });
+  };
+};
 
-  return fullPageHTML;
+export const renderer = (location: string): Promise<string> => {
+  return new Promise((resolve: (result: string) => void) => {
+    const store = createStore(reducer);
+
+    let initializer: any = null;
+    let params: any = null;
+    for (let i = 0; i < routes.length; i += 1) {
+      const route = routes[i];
+      const match = matchPath(location, route);
+      if (match) {
+        initializer = route.initializer;
+        params = match.params;
+        break;
+      }
+    }
+
+    if (initializer) {
+      store.dispatch(initializer(params)).then(() => {
+        resolve(renderFullPage(generateParams(location, store)));
+      });
+    } else {
+      resolve(renderFullPage(generateParams(location, store)));
+    }
+  });
 };
