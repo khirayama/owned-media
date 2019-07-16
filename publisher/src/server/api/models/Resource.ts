@@ -2,8 +2,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import marked from 'marked';
-
 import { ResourceShape, ResourceWithAllLocalesShape } from '../../../types';
 import { resourceWithAllLocalesToResource, extractColumns, csvStringify, csvParse, loadConfig } from '../../../utils';
 
@@ -228,13 +226,9 @@ export class Resource {
       for (const resourceContentRow of resourceContentRows) {
         if (resourceContentRow.resource_id === resourceRow.id) {
           const locale: string = resourceContentRow.locale;
-          let html = '';
+          let markdown = '';
           try {
-            const markdown = fs.readFileSync(
-              path.join(DATA_PATH, '..', path.join(resourceContentRow['body_path'])),
-              'utf8',
-            );
-            html = marked(markdown);
+            markdown = fs.readFileSync(path.join(DATA_PATH, '..', path.join(resourceContentRow['body_path'])), 'utf8');
           } catch (e) {
             // noop
           }
@@ -242,7 +236,7 @@ export class Resource {
           resource.name[locale] = resourceContentRow.name;
           resource.imageUrl[locale] = resourceContentRow.image_url;
           resource.bodyPath[locale] = resourceContentRow.body_path;
-          resource.body[locale] = html;
+          resource.body[locale] = markdown;
         }
       }
 
