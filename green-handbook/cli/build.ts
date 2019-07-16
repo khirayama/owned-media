@@ -49,4 +49,18 @@ function build() {
   });
 }
 
+function buildJSON() {
+  publisherConfig.locales.forEach((locale: string) => {
+    const resources = Resource.find(null, { locale });
+    fsExtra.outputFile(path.resolve('dist', locale, 'resources.json'), JSON.stringify(resources));
+    resources.forEach(resource => {
+      fsExtra.outputFile(
+        path.resolve('dist', locale, 'resources', `${resource.key || resource.id}.json`),
+        JSON.stringify(resource),
+      );
+    });
+  });
+}
+
 build();
+buildJSON();
