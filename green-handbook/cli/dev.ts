@@ -19,7 +19,7 @@ app
     res.json(resources);
   })
   .get('/:locale/resources/:key.json', (req: express.Request, res: express.Response) => {
-    const resource = Resource.find({ key: [req.params.key] }, { locale: req.params.locale });
+    const resource = Resource.find({ key: [req.params.key] }, { locale: req.params.locale })[0];
     res.json(resource);
   });
 
