@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Home } from '../../presentations/pages/Home';
 import { About } from '../../presentations/pages/About';
 import { Users } from '../../presentations/pages/Users';
+import { fetchResource } from '../../usecases';
 
 export const routes = [
   {
@@ -14,9 +15,9 @@ export const routes = [
   },
   {
     exact: true,
-    path: `/users`,
+    path: `/:resourceType/:key`,
     component: Users,
-    initializer: null,
+    initializer: params => fetchResource(params.key),
   },
   {
     exact: true,
