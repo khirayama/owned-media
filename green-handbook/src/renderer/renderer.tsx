@@ -5,7 +5,8 @@ import { StaticRouter, matchPath } from 'react-router-dom';
 import * as styled from 'styled-components';
 import ReactHelmet from 'react-helmet';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
 
 import { renderFullPage } from './renderFullPage';
 import { reducer } from '../reducers';
@@ -66,7 +67,7 @@ const generateParams = (url: string, store: any) => {
 
 export const renderer = (location: string): Promise<string> => {
   return new Promise((resolve: (result: string) => void) => {
-    const store = createStore(reducer);
+    const store = createStore(reducer, applyMiddleware(reduxThunk));
 
     let initializer: any = null;
     let params: any = null;
