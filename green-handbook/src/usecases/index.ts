@@ -1,25 +1,14 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { fetchingCount, fetchedCount, increment, decrement } from '../actions';
-import { ExampleAPI } from '../services';
+import { setResource } from '../actions';
+import { Resource } from '../services';
 
-export const asyncIncrement = () => {
-  return (dispatch: ThunkDispatch<{}, {}, Action>) => {
-    dispatch(fetchingCount());
-    ExampleAPI.call().then(() => {
-      dispatch(increment());
-      dispatch(fetchedCount());
-    });
-  };
-};
-
-export const asyncDecrement = () => {
-  return (dispatch: ThunkDispatch<{}, {}, Action>) => {
-    dispatch(fetchingCount());
-    ExampleAPI.call().then(() => {
-      dispatch(decrement());
-      dispatch(fetchedCount());
+export const fetchResource = (key: string) => {
+  return (dispatch: ThunkDispatch<{}, {}, Action>, getState) => {
+    const state = getState();
+    return Resource.find(key, state.ui.locale).then(resource => {
+      dispatch(setResource(resource));
     });
   };
 };
