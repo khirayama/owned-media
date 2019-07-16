@@ -1,34 +1,20 @@
 import { Action } from 'redux';
 
-export interface FetchingCount extends Action<'FETCHING_COUNT'> {}
+// eslint-disable-next-line node/no-missing-import, node/no-extraneous-import
+import { ResourceShape } from 'publisher';
 
-export const fetchingCount = (): FetchingCount => {
-  return {
-    type: 'FETCHING_COUNT',
+export interface SetResource extends Action<'SET_RESOURCE'> {
+  payload: {
+    resource: ResourceShape;
   };
-};
+}
 
-export interface FetchedCount extends Action<'FETCHED_COUNT'> {}
-
-export const fetchedCount = (): FetchedCount => {
+export const setResource = (resource): SetResource => {
   return {
-    type: 'FETCHED_COUNT',
-  };
-};
-
-export interface Increment extends Action<'INCREMENT'> {}
-
-export const increment = (): Increment => {
-  return {
-    type: 'INCREMENT',
-  };
-};
-
-export interface Decrement extends Action<'DECREMENT'> {}
-
-export const decrement = (): Decrement => {
-  return {
-    type: 'DECREMENT',
+    type: 'SET_RESOURCE',
+    payload: {
+      resource,
+    },
   };
 };
 
