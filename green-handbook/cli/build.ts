@@ -3,15 +3,12 @@ import * as path from 'path';
 import * as fsExtra from 'fs-extra';
 import { renderer } from '../src/renderer/renderer';
 
-// eslint-disable-next-line node/no-missing-require
+// eslint-disable-next-line node/no-missing-require, node/no-extraneous-require
 const { Resource } = require('publisher');
 const publisherConfig = require('../config');
 
 Resource.init();
 
-// options
-// - locale
-// - use key
 function getEntrypoints(config): string[] {
   const entrypoints: string[] = [];
 
@@ -44,11 +41,11 @@ function getEntrypoints(config): string[] {
 
 function build() {
   getEntrypoints(publisherConfig).forEach(entrypoint => {
-    const location = entrypoint.replace(/^\./, '').replace(/index.html$/, '');
-    const fullPageHTML = renderer(location);
-
     console.log(`Builing ${entrypoint}.`);
-    fsExtra.outputFile(path.resolve('dist', entrypoint), fullPageHTML);
+    const location = entrypoint.replace(/^\./, '').replace(/index.html$/, '');
+    renderer(location).then((fullPageHTML: string) => {
+      fsExtra.outputFile(path.resolve('dist', entrypoint), fullPageHTML);
+    });
   });
 }
 
