@@ -7,7 +7,7 @@
     "clean": "rm -rf dist",
     "pre": "(cd ../publisher && npm run build)",
     "link": "(cd ../publisher && npm link) && npm link publisher",
-    "dev": "npm run clean && npm run link && webpack --mode development && concurrently 'ts-node ./cli/dev.ts' 'webpack -w --mode development'",
+    "dev": "npm run clean && npm run link && webpack --mode development && concurrently 'nodemon -e .ts,.tsx -w ./src -x ts-node ./cli/dev.ts' 'webpack -w --mode development'",
     "build": "npm run clean && npm run link && webpack --mode production && ts-node ./cli/build.ts",
     "publisher": "npm run link && nodemon -w ../publisher/dist -x publisher",
     "lint": "eslint '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
