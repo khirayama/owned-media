@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { reducer } from './reducers';
 import { Routes } from './presentations/routes/Routes';
@@ -17,15 +18,11 @@ function extractInitialState() {
     const initialDataString = initialDataElement.getAttribute('data-json');
     if (initialDataString) {
       return JSON.parse(initialDataString);
-    } else {
-      return {
-        count: 0,
-      };
     }
   }
 }
 
-const store = createStore(reducer, extractInitialState(), applyMiddleware(reduxThunk));
+const store = createStore(reducer, extractInitialState(), composeWithDevTools(applyMiddleware(reduxThunk)));
 
 window.addEventListener('DOMContentLoaded', () => {
   ReactDOM.hydrate(
