@@ -14,7 +14,7 @@ function getEntrypoints(config): string[] {
 
   const localeUrls: string[] = ['/'];
   if (config.locales.length > 1) {
-    for (let i = 0; i < config.locales.length; i += 1) {
+    for (let i = 1; i < config.locales.length; i += 1) {
       const locale = config.locales[i];
       localeUrls.push(`/${locale}`);
     }
