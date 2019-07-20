@@ -1,16 +1,17 @@
-import { Dispatch } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
 import { connect } from 'react-redux';
 
 import { LocaleBar as Component } from '../presentations/components/LocaleBar';
-import { changeLocale } from '../actions';
+import { moveTo } from '../usecases';
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
   return {
     onEnglishLocaleClick: () => {
-      dispatch(changeLocale('en'));
+      dispatch(moveTo('en'));
     },
     onJapaneseLocaleClick: () => {
-      dispatch(changeLocale('ja'));
+      dispatch(moveTo('ja'));
     },
   };
 };
