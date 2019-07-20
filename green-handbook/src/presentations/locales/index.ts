@@ -5,6 +5,8 @@ import jaLocaleData from 'react-intl/locale-data/ja';
 addLocaleData(enLocaleData);
 addLocaleData(jaLocaleData);
 
+const publisherConfig = require('../../../config');
+
 const dic = {
   Home: {
     Title: {
@@ -16,30 +18,14 @@ const dic = {
       en: 'This is Home page!',
     },
   },
-  About: {
+  Resource: {
     Title: {
-      ja: 'やぁ、アバウト',
-      en: 'Hi, About!',
+      ja: `ja {title} | ${publisherConfig.name.ja}`,
+      en: `en {title} | ${publisherConfig.name.en}`,
     },
     Description: {
-      ja: 'ここはアバウトページです',
-      en: 'This is About page!',
-    },
-  },
-  Users: {
-    Title: {
-      ja: 'やぁ、ユーザーズ',
-      en: 'Hi, Users!',
-    },
-    Description: {
-      ja: 'ここはユーザーズページです',
-      en: 'This is Users page!',
-    },
-  },
-  Counter: {
-    Label: {
-      ja: '{name}さんのカウント数: ',
-      en: 'Counted by {name}: ',
+      ja: `ja {description} | ${publisherConfig.name.ja}`,
+      en: `en {description} | ${publisherConfig.name.en}`,
     },
   },
 };
@@ -73,7 +59,7 @@ function generateLocals(data, locale, result = {}, prefix?) {
       if (typeof value === 'object') {
         generateLocals(value, locale, result, prefix ? [prefix, key].join('.') : key);
       } else if (typeof value === 'string') {
-        result[prefix] = value;
+        result[prefix] = data[locale];
       }
     }
   }
