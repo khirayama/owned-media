@@ -2,9 +2,9 @@
   "name": "publisher",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "module": "./src/index.ts",
   "bin": "./dist/bin.js",
-  "module": "dist/index.ts",
   "engines": {
     "node": "11.14.0",
     "npm": "6.7.0"
