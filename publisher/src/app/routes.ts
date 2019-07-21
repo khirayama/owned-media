@@ -4,7 +4,7 @@ import express from 'express';
 
 import * as renderer from './server/renderer';
 
-const STATIC_PATH = path.join(__dirname, '..', 'public');
+const STATIC_PATH = path.join(__dirname, 'public');
 
 export const staticRouter = express.static(STATIC_PATH);
 
