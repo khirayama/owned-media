@@ -2,7 +2,13 @@ import express from 'express';
 
 import { Resource } from './models/Resource';
 import { ResourceWithAllLocalesShape, ResourceShape, ResourceRequest } from '../types';
-import { requestToPartialResource } from '../utils';
+import { requestToPartialResource, loadConfig } from '../utils';
+
+const config = loadConfig();
+
+export function fetchConfig(req: express.Request, res: express.Response) {
+  res.json(config);
+}
 
 export function fetchResources(req: express.Request, res: express.Response) {
   const query = req.query;
