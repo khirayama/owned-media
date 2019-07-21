@@ -10,12 +10,12 @@ module.exports = (env, argv) => {
 
   const config = {
     entry: {
-      index: path.resolve('src', 'client', 'index.tsx'),
+      index: path.resolve('src', 'app', 'client', 'index.tsx'),
     },
     output: {
       filename: '[name].[contenthash].bundle.js',
       chunkFilename: '[name].[contenthash].chunk.js',
-      path: path.resolve('dist', 'public'),
+      path: path.resolve('dist', 'app', 'public'),
       publicPath: '/public/',
     },
     resolve: {
@@ -34,7 +34,7 @@ module.exports = (env, argv) => {
       splitChunks: {
         minSize: 100000,
         maxSize: 1500000,
-        name: 'dist/public/commons',
+        name: 'dist/public/app/commons',
         chunks: 'all',
         cacheGroups: {
           vendors: {
