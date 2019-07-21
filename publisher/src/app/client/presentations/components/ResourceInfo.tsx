@@ -1,11 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
-import { loadConfig } from '../../../utils';
+import { ResourceWithAllLocalesShapeWithRelations, ResourceType } from '../../../../types';
 import { Props as RelationLabelProps, RelationLabel } from '../components/RelationLabel';
-
-const config = loadConfig();
 
 const Wrapper = styled.div`
   & > p {
@@ -23,6 +20,8 @@ interface Props {
     [key: string]: ResourceWithAllLocalesShapeWithRelations;
   };
   locale: string;
+  locales: string[];
+  resourceTypes: ResourceType[];
   onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) => void;
   onClickRelationLabel?: (event: React.MouseEvent<HTMLButtonElement>, props: RelationLabelProps) => void;
 }
@@ -59,7 +58,7 @@ export function ResourceInfo(props: Props) {
   const createdAt = resource.createdAt ? new Date(resource.createdAt) : null;
   const updatedAt = resource.updatedAt ? new Date(resource.updatedAt) : null;
 
-  const targetLocales = locale === 'all' ? config.locales : [locale];
+  const targetLocales = locale === 'all' ? props.locales : [locale];
 
   function format(date: Date) {
     function zeroPadding(s: string) {
@@ -76,7 +75,7 @@ export function ResourceInfo(props: Props) {
       <p>
         Resource Type:{' '}
         <select value={resource.type} name="type" onChange={props.onChange}>
-          {config.resourceTypes.map((resourceType: any) => {
+          {props.resourceTypes.map((resourceType: any) => {
             return (
               <option key={resourceType.type} value={resourceType.type}>
                 {resourceType.name}
@@ -246,7 +245,7 @@ export function ResourceInfo(props: Props) {
               );
             })}
           </tr>
-          {config.resourceTypes.map(resourceType => {
+          {props.resourceTypes.map(resourceType => {
             return resourceType.attributes && resourceType.type === resource.type
               ? resourceType.attributes.map(attr => {
                   return (

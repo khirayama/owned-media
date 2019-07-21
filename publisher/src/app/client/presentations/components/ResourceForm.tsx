@@ -6,15 +6,17 @@ import { styles } from '../styles/vars';
 import { ResourceInfo } from '../components/ResourceInfo';
 import { FloatButton } from '../components/Button';
 import { Props as RelationLabelProps } from '../components/RelationLabel';
-import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
+import { ResourceType, ResourceWithAllLocalesShapeWithRelations } from '../../../../types';
 
 export interface Props {
   resourceId: string | null;
-  resource: ResourceWithAllLocalesShapeWithRelations;
+  resource: ResourceWithAllLocalesShapeWithRelations | null;
   resources: {
     [key: string]: ResourceWithAllLocalesShapeWithRelations;
   };
   locale: string;
+  locales: string[];
+  resourceTypes: ResourceType[];
   onMount?: (props: Props) => void;
   onChange?: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>, props: Props) => void;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>, props: Props) => void;
@@ -88,18 +90,20 @@ export function ResourceForm(props: Props) {
     }
   };
 
-  return (
+  return resource ? (
     <Wrapper>
       <form onSubmit={onSubmit}>
         <ResourceInfo
           resource={resource}
           resources={props.resources}
           locale={props.locale}
+          locales={props.locales}
+          resourceTypes={props.resourceTypes}
           onChange={onChange}
           onClickRelationLabel={props.onClickRelationLabel}
         />
         <FloatButton>SUBMIT</FloatButton>
       </form>
     </Wrapper>
-  );
+  ) : null;
 }

@@ -1,25 +1,23 @@
 import * as React from 'react';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 
-import { loadConfig } from '../../../utils';
 import { chooseLocale } from '../locales';
-import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../../types';
 import { FlatButton, FlatLink } from '../components/Button';
 import { TableRow, TableCell } from '../components/Table';
-
-const config = loadConfig();
 
 export interface Props {
   resource: ResourceWithAllLocalesShapeWithRelations;
   resources: { [key: string]: ResourceWithAllLocalesShapeWithRelations };
   locale: string;
+  locales: string[];
   onClickDeleteResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: Props) => void;
 }
 
 export function ResourceListItem(props: Props) {
   const resource = props.resource;
   const locale: string = props.locale;
-  const targetLocales = locale === 'all' ? config.locales : [locale];
+  const targetLocales = locale === 'all' ? props.locales : [locale];
 
   const onClickDeleteResourceButton = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();

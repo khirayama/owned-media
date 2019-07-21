@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../../types';
 import { ResourceListItem, Props as ResourceListItemProps } from '../components/ResourceListItem';
 import { Table, TableRow, TableHead, TableHeadCell } from '../components/Table';
 import { State } from '../../reducers';
@@ -9,6 +9,7 @@ import { State } from '../../reducers';
 export interface Props {
   resources: State['resources'];
   locale: string;
+  locales: string[];
   onClickDeleteResourceButton?: (event: React.MouseEvent<HTMLButtonElement>, props: ResourceListItemProps) => void;
   onMount?: (props: Props) => void;
 }
@@ -83,6 +84,7 @@ export function ResourceList(props: Props) {
                 resource={resource}
                 resources={props.resources.data}
                 locale={props.locale}
+                locales={props.locales}
                 onClickDeleteResourceButton={props.onClickDeleteResourceButton}
               />
             );

@@ -11,6 +11,7 @@ const mapStateToProps = (state: State) => {
   return {
     resources: state.resources,
     locale: state.ui.resourceLocale,
+    locales: state.config ? state.config.locales : [],
   };
 };
 

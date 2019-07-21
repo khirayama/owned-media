@@ -12,23 +12,9 @@ import {
   ResourceWithAllLocalesResponse,
   ResourceResponse,
   Config,
-} from '../types';
+} from '../../types';
 
 declare var window: any;
-
-export function loadConfig(): Config {
-  let conf;
-
-  if (typeof window === 'object') {
-    conf = window.config as Config;
-  } else {
-    const CONFIG_PATH = path.join(process.cwd(), 'config');
-    conf = require(CONFIG_PATH) as Config;
-  }
-
-  return conf;
-}
-const config = loadConfig();
 
 export function createLocaleObj(locales: string[]) {
   const obj = {};
@@ -200,7 +186,7 @@ export function resourceWithAllLocalesToResource(
   locale: string,
   options?: { defaultLocale: string },
 ) {
-  const defaultLocale = options ? options.defaultLocale || config.locales[0] : config.locales[0];
+  const defaultLocale = options ? options.defaultLocale : '';
 
   return {
     id: resourceWithAllLocales.id,
@@ -263,7 +249,7 @@ export function resourceToPartialResourceWithAllLocales(
   };
 }
 
-export function createDefaultResource(): ResourceWithAllLocalesShapeWithRelations {
+export function createDefaultResource(config: Config): ResourceWithAllLocalesShapeWithRelations {
   const now = new Date();
 
   return {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import { fetchResources, fetchResource } from '../../usecases';
+import { initializeResources, initializeNewResource, initializeResource } from '../../usecases';
 import { Resources } from '../pages/Resources';
 import { Resource } from '../pages/Resource';
 
@@ -10,25 +10,25 @@ export const routes = [
     exact: true,
     path: '/',
     component: Resources,
-    initializer: () => fetchResources(),
+    initializer: () => initializeResources(),
   },
   {
     exact: true,
     path: `/resources`,
     component: Resources,
-    initializer: () => fetchResources(),
+    initializer: () => initializeResources(),
   },
   {
     exact: true,
     path: `/resources/new`,
     component: Resource,
-    initializer: null,
+    initializer: () => initializeNewResource(),
   },
   {
     exact: true,
     path: `/resources/:id`,
     component: Resource,
-    initializer: params => fetchResource(params.id),
+    initializer: params => initializeResource(params.id),
   },
 ];
 

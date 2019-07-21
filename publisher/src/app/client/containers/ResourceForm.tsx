@@ -6,6 +6,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Props as ResourceFormProps, ResourceForm as Component } from '../presentations/components/ResourceForm';
 import { Props as RelationLabelProps } from '../presentations/components/RelationLabel';
 import { setResource } from '../actions';
+import { Config } from '../../../types';
 import {
   createResource,
   fetchResource,
@@ -15,9 +16,7 @@ import {
   deleteRelations,
 } from '../usecases';
 import { State } from '../reducers';
-import { loadConfig, createDefaultResource } from '../../utils';
-
-const config = loadConfig();
+import { createDefaultResource } from '../../utils';
 
 interface Props {
   resourceId: string | null;
@@ -30,17 +29,23 @@ const mapStateToProps = (state: State, props: Props) => {
     resource: state.app.resource,
     resources: state.resources.data,
     locale: state.ui.resourceLocale,
+    locales: state.config ? state.config.locales : [],
+    resourceTypes: state.config ? state.config.resourceTypes : [],
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>, props: Props) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, void, Action>, props: Props) => {
   return {
     onMount: (resourceFormProps: ResourceFormProps) => {
       dispatch(fetchResources());
       if (resourceFormProps.resourceId) {
         dispatch(fetchResource(resourceFormProps.resourceId));
       } else {
-        dispatch(setResource(createDefaultResource()));
+        // TODO
+        const config: Config | null = null;
+        if (config) {
+          dispatch(setResource(createDefaultResource(config)));
+        }
       }
     },
     onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>, props: ResourceFormProps) => {
@@ -50,22 +55,27 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>, props: Prop
 
       if (name === 'type') {
         currentResource.attributes = {};
-        const resourceType = config.resourceTypes.filter((tmp: any) => tmp.type === value)[0];
-        if (resourceType && resourceType.attributes) {
-          for (let attr of resourceType.attributes) {
-            switch (attr.inputType) {
-              case 'select': {
-                currentResource.attributes[attr.key] = (attr as any).options[0].value;
-                break;
-              }
-              case 'number': {
-                currentResource.attributes[attr.key] = 0;
-                break;
-              }
-              case 'date': {
-                const now = new Date();
-                currentResource.attributes[attr.key] = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
-                break;
+        // TODO
+        const config: any = null;
+
+        if (config) {
+          const resourceType = config.resourceTypes.filter((tmp: any) => tmp.type === value)[0];
+          if (resourceType && resourceType.attributes) {
+            for (let attr of resourceType.attributes) {
+              switch (attr.inputType) {
+                case 'select': {
+                  currentResource.attributes[attr.key] = (attr as any).options[0].value;
+                  break;
+                }
+                case 'number': {
+                  currentResource.attributes[attr.key] = 0;
+                  break;
+                }
+                case 'date': {
+                  const now = new Date();
+                  currentResource.attributes[attr.key] = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+                  break;
+                }
               }
             }
           }

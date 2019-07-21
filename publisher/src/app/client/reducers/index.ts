@@ -1,7 +1,7 @@
-import { createDefaultResource } from '../../utils';
-import { ResourceWithAllLocalesShapeWithRelations } from '../../types';
+import { ResourceWithAllLocalesShapeWithRelations, Config } from '../../../types';
 
 export interface State {
+  config: Config | null;
   resources: {
     isFetching: boolean[];
     data: {
@@ -9,7 +9,7 @@ export interface State {
     };
   };
   app: {
-    resource: ResourceWithAllLocalesShapeWithRelations;
+    resource: ResourceWithAllLocalesShapeWithRelations | null;
   };
   ui: {
     locale: string;
@@ -18,12 +18,13 @@ export interface State {
 }
 
 export const initialState: State = {
+  config: null,
   resources: {
     isFetching: [],
     data: {},
   },
   app: {
-    resource: createDefaultResource(),
+    resource: null,
   },
   ui: {
     locale: 'en',
@@ -36,6 +37,11 @@ export function reducer(state: State = initialState, action: any): State {
   let nextState = state;
 
   switch (action.type) {
+    // config
+    case 'SET_CONFIG': {
+      nextState.config = action.payload.config;
+      break;
+    }
     // resources
     case 'CHANGE_IS_FETCHING_RESOURCES': {
       if (payload.isFetching) {

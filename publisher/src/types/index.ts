@@ -2,23 +2,25 @@ export type LocaleObject = {
   [key: string]: string;
 };
 
+export type ResourceType = {
+  name: string;
+  type: string;
+  attributes?: {
+    key: string;
+    inputType: string;
+    options?: {
+      name: string;
+      value: string | number;
+    }[];
+  }[];
+};
+
 export type Config = {
   locales: string[];
   name: LocaleObject;
   tagline: LocaleObject;
   description: LocaleObject;
-  resourceTypes: {
-    name: string;
-    type: string;
-    attributes?: {
-      key: string;
-      inputType: string;
-      options?: {
-        name: string;
-        value: string | number;
-      }[];
-    }[];
-  }[];
+  resourceTypes: ResourceType[];
 };
 
 export type ResourceRequest = {
