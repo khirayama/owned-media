@@ -14,9 +14,6 @@ import { Routes, routes } from '../client/presentations/routes/Routes';
 import { ResetStyle } from '../client/presentations/styles/ResetStyle';
 import { GlobalStyle } from '../client/presentations/styles/GlobalStyle';
 import { Intl } from '../client/containers/Intl';
-import { loadConfig } from '../utils';
-
-const config = loadConfig();
 
 const assets = (() => {
   // eslint-disable-next-line node/no-unpublished-require, node/no-missing-require
@@ -59,7 +56,6 @@ const generateParams = (url: string, store: any) => {
   const style = sheet.getStyleTags();
 
   return {
-    config,
     locale,
     meta,
     assets,
