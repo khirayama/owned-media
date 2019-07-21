@@ -3,30 +3,20 @@ import * as http from 'http';
 import * as path from 'path';
 
 import express from 'express';
-import * as bodyParser from 'body-parser';
 
-import { api } from './api/routes';
-import { Resource } from './api/models/Resource';
-import * as renderer from './renderer';
-import { loadConfig } from '../utils';
+import { apiRouter, adminRouter } from './api';
+import { staticRouter, appRouter } from './app';
 
 const STATIC_PATH = path.join(__dirname, '..', 'public');
-const config = loadConfig();
-
-Resource.init();
-Resource.defaultLocale = config.locales[0];
 
 export function runServer() {
   const PORT = process.env.PORT || 3000;
   const app: express.Application = express();
 
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
-
-  app.use('/public', express.static(STATIC_PATH));
-
-  app.use('/api', api);
-  app.get('*', renderer.get);
+  app
+    .use('/public', staticRouter)
+    .use('/api', apiRouter, adminRouter)
+    .use('*', appRouter);
 
   const server = http.createServer(app);
 
