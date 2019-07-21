@@ -1,13 +1,10 @@
 /* eslint-disable no-console, no-process-exit */
 import * as http from 'http';
-import * as path from 'path';
 
 import express from 'express';
 
 import { apiRouter, adminRouter } from './api';
 import { staticRouter, appRouter } from './app';
-
-const STATIC_PATH = path.join(__dirname, '..', 'public');
 
 export function runServer() {
   const PORT = process.env.PORT || 3000;
