@@ -1,6 +1,6 @@
 import { ResourceWithAllLocalesShape, ResourceRequest, ResourceShape } from '../../types';
 
-import { loadConfig } from './index';
+import { loadConfig } from './loadConfig';
 
 const config = loadConfig();
 
