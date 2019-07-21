@@ -13,11 +13,10 @@ const req =
       });
 
 export class Resource {
-  public static baseURL: string = '';
+  public static baseURL: string = '/api';
 
-  public static fetchConfig(options?: { locale: string }) {
+  public static fetchConfig() {
     return new Promise((resolve: (res: Config) => void) => {
-      const locale = options ? options.locale : null;
       const url = `${this.baseURL}/config`;
 
       req.get(url).then(res => {
