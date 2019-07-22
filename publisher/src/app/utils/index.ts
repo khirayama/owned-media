@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import * as path from 'path';
-
 import npmCsvParse from 'csv-parse/lib/sync';
 import npmCdvStringify from 'csv-stringify/lib/sync';
 
