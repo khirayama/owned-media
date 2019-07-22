@@ -13,7 +13,7 @@ const req =
       });
 
 export class Resource {
-  public static baseURL: string = '/api';
+  public static baseURL: string = '';
 
   public static fetchConfig() {
     return new Promise((resolve: (res: Config) => void) => {

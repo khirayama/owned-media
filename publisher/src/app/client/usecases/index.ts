@@ -24,6 +24,8 @@ import {
   resourceToPartialResourceWithAllLocales,
 } from '../../utils';
 
+ResourceService.baseURL = '/api';
+
 export const initializeResources = () => {
   return (dispatch: ThunkDispatch<State, void, Action>) => {
     return dispatch(fetchConfig()).then(() => {
