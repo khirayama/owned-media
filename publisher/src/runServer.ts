@@ -4,7 +4,7 @@ import * as http from 'http';
 import express from 'express';
 
 import { apiRouter, adminRouter } from './api';
-import { staticRouter, appRouter } from './app';
+import { appRouter } from './app';
 
 export function runServer() {
   const PORT = process.env.PORT || 3000;
