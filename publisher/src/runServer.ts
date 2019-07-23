@@ -10,10 +10,7 @@ export function runServer() {
   const PORT = process.env.PORT || 3000;
   const app: express.Application = express();
 
-  app
-    .use('/public', staticRouter)
-    .use('/api', apiRouter, adminRouter)
-    .use('*', appRouter);
+  app.use('/api', apiRouter, adminRouter).use('/ui', appRouter);
 
   const server = http.createServer(app);
 
