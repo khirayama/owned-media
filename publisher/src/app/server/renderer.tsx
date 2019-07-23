@@ -29,7 +29,7 @@ const assets = (() => {
   return entryPoints;
 })();
 
-const generateParams = (url: string, store: any) => {
+const generateParams = (url: string, store: any, baseUrl: string) => {
   const context = {};
   const preloadedState = store.getState();
   const sheet = new styled.ServerStyleSheet();
@@ -56,6 +56,7 @@ const generateParams = (url: string, store: any) => {
   const style = sheet.getStyleTags();
 
   return {
+    baseUrl,
     locale,
     meta,
     assets,
@@ -82,9 +83,9 @@ export function get(req: express.Request, res: express.Response) {
 
   if (initializer) {
     store.dispatch(initializer(params)).then(() => {
-      res.send(renderFullPage(generateParams(req.url, store)));
+      res.send(renderFullPage(generateParams(req.url, store, req.baseUrl)));
     });
   } else {
-    res.send(renderFullPage(generateParams(req.url, store)));
+    res.send(renderFullPage(generateParams(req.url, store, req.baseUrl)));
   }
 }
