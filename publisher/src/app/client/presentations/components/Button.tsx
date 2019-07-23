@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 import { styles } from '../styles/vars';
+import { AppLink } from '../../containers/AppLink';
 
 export const FlatButton = styled.button`
   display: inline-block;
@@ -10,7 +10,7 @@ export const FlatButton = styled.button`
   cursor: pointer;
 `;
 
-export const FlatLink = styled(Link)`
+export const FlatLink = styled(AppLink)`
   display: inline-block;
   padding: 8px 0;
   font-weight: bold;
