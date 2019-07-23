@@ -11,30 +11,36 @@ export interface State {
   app: {
     resource: ResourceWithAllLocalesShapeWithRelations | null;
   };
+  settings: {
+    baseUrl: string;
+  };
   ui: {
     locale: string;
     resourceLocale: string;
-    baseUrl: string;
   };
 }
 
-export const initialState: State = {
-  config: null,
-  resources: {
-    isFetching: [],
-    data: {},
-  },
-  app: {
-    resource: null,
-  },
-  ui: {
-    locale: 'en',
-    resourceLocale: 'all',
-    baseUrl: '',
-  },
-};
+export function createInitialState(locale, baseUrl): State {
+  return {
+    config: null,
+    resources: {
+      isFetching: [],
+      data: {},
+    },
+    app: {
+      resource: null,
+    },
+    settings: {
+      baseUrl,
+    },
+    ui: {
+      locale,
+      resourceLocale: 'all',
+    },
+  };
+}
 
-export function reducer(state: State = initialState, action: any): State {
+export function reducer(state: State = createInitialState('en', '/'), action: any): State {
   const payload = action.payload;
   let nextState = state;
 

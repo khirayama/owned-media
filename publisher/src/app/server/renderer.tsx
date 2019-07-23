@@ -9,7 +9,7 @@ import { createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 
 import { renderFullPage } from './renderFullPage';
-import { reducer } from '../client/reducers';
+import { reducer, createInitialState } from '../client/reducers';
 import { Routes, routes } from '../client/presentations/routes/Routes';
 import { ResetStyle } from '../client/presentations/styles/ResetStyle';
 import { GlobalStyle } from '../client/presentations/styles/GlobalStyle';
@@ -67,7 +67,7 @@ const generateParams = (url: string, store: any, baseUrl: string) => {
 };
 
 export function get(req: express.Request, res: express.Response) {
-  const store = createStore(reducer, applyMiddleware(reduxThunk));
+  const store = createStore(reducer, createInitialState('en', req.baseUrl), applyMiddleware(reduxThunk));
 
   let initializer: any = null;
   let params: any = null;
