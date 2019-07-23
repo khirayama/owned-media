@@ -14,6 +14,7 @@ export interface State {
   ui: {
     locale: string;
     resourceLocale: string;
+    baseUrl: string;
   };
 }
 
@@ -29,6 +30,7 @@ export const initialState: State = {
   ui: {
     locale: 'en',
     resourceLocale: 'all',
+    baseUrl: '',
   },
 };
 
