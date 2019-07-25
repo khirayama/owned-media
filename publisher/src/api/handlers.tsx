@@ -2,7 +2,7 @@ import express from 'express';
 
 import { Resource } from './models/Resource';
 import { ResourceWithAllLocalesShape, ResourceShape, ResourceRequest } from '../types';
-import { requestToPartialResource, loadConfig } from '../utils';
+import { requestToPartialResource, loadConfig } from './utils';
 
 const config = loadConfig();
 
