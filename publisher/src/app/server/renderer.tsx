@@ -56,10 +56,9 @@ const generateParams = (url: string, store: any, baseUrl: string) => {
   const style = sheet.getStyleTags();
 
   return {
-    baseUrl,
     locale,
     meta,
-    assets,
+    assets: assets.map(asset => `${baseUrl}/${asset}`),
     body,
     style,
     preloadedState: JSON.stringify(preloadedState),
@@ -67,9 +66,8 @@ const generateParams = (url: string, store: any, baseUrl: string) => {
 };
 
 export function get(req: express.Request, res: express.Response) {
-  const store = createStore(reducer, createInitialState('en', req.baseUrl), applyMiddleware(reduxThunk));
-
   const path = `${req.baseUrl}${req.url}`;
+  const store = createStore(reducer, createInitialState('en', req.baseUrl), applyMiddleware(reduxThunk));
 
   let initializer: any = null;
   let params: any = null;
