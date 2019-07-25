@@ -15,6 +15,7 @@
     "clean": "rm -rf dist",
     "dev": "npm run clean && npm run build && concurrently 'npm run build:scripts:watch' 'npm run bundle:scripts:watch' 'npm run server:watch'",
     "build": "npm run clean && npm run build:scripts && NODE_ENV=production npm run bundle:scripts",
+    "build:watch": "npm run clean && concurrently 'npm run build:scripts:watch' 'npm run bundle:scripts:watch'",
     "build:scripts": "tsc -p tsconfig.prod.json",
     "build:scripts:watch": "tsc -w -p tsconfig.json",
     "bundle:scripts": "webpack --mode production",
