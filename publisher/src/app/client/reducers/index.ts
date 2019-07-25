@@ -1,7 +1,9 @@
+import clone from 'rfdc';
+
 import { ResourceWithAllLocalesShapeWithRelations, Config } from '../../../types';
 
 export interface State {
-  config: Config | null;
+  config: Config;
   resources: {
     isFetching: boolean[];
     data: {
@@ -11,18 +13,16 @@ export interface State {
   app: {
     resource: ResourceWithAllLocalesShapeWithRelations | null;
   };
-  settings: {
-    baseUrl: string;
-  };
   ui: {
     locale: string;
     resourceLocale: string;
+    baseUrl: string;
   };
 }
 
-export function createInitialState(locale, baseUrl): State {
+export function createInitialState(config: Config, locale: string, baseUrl: string): State {
   return {
-    config: null,
+    config,
     resources: {
       isFetching: [],
       data: {},
@@ -30,45 +30,42 @@ export function createInitialState(locale, baseUrl): State {
     app: {
       resource: null,
     },
-    settings: {
-      baseUrl,
-    },
     ui: {
       locale,
       resourceLocale: 'all',
+      baseUrl,
     },
   };
 }
 
-export function reducer(state: State = createInitialState('en', '/'), action: any): State {
+export function reducer(state: State | null = null, action: any): State | null {
+  if (!state) {
+    return state;
+  }
+
   const payload = action.payload;
-  let nextState = state;
+  let newState: State = clone()(state);
 
   switch (action.type) {
-    // config
-    case 'SET_CONFIG': {
-      nextState.config = action.payload.config;
-      break;
-    }
     // resources
     case 'CHANGE_IS_FETCHING_RESOURCES': {
       if (payload.isFetching) {
-        nextState.resources.isFetching.push(true);
+        newState.resources.isFetching.push(true);
       } else {
-        nextState.resources.isFetching.shift();
+        newState.resources.isFetching.shift();
       }
       break;
     }
     case 'CHANGE_IS_FETCHING_RESOURCE': {
       if (payload.isFetching) {
-        nextState.resources.isFetching.push(true);
+        newState.resources.isFetching.push(true);
       } else {
-        nextState.resources.isFetching.shift();
+        newState.resources.isFetching.shift();
       }
       break;
     }
     case 'SET_RESOURCES': {
-      nextState = {
+      newState = {
         ...state,
         resources: {
           ...state.resources,
@@ -78,8 +75,8 @@ export function reducer(state: State = createInitialState('en', '/'), action: an
       break;
     }
     case 'REMOVE_RESOURCE': {
-      delete nextState.resources.data[payload.resourceId];
-      nextState = {
+      delete newState.resources.data[payload.resourceId];
+      newState = {
         ...state,
         resources: {
           ...state.resources,
@@ -90,7 +87,7 @@ export function reducer(state: State = createInitialState('en', '/'), action: an
     }
     // app
     case 'SET_RESOURCE': {
-      nextState = {
+      newState = {
         ...state,
         app: {
           ...state.app,
@@ -100,7 +97,7 @@ export function reducer(state: State = createInitialState('en', '/'), action: an
       break;
     }
     case 'CHANGE_LOCALE': {
-      nextState = {
+      newState = {
         ...state,
         ui: {
           ...state.ui,
@@ -112,5 +109,5 @@ export function reducer(state: State = createInitialState('en', '/'), action: an
     default:
   }
 
-  return nextState;
+  return newState;
 }
