@@ -3,10 +3,12 @@ import * as http from 'http';
 
 import express from 'express';
 
-import { apiRouter, adminRouter } from './api';
+import { apiRouter, adminRouter, initialize } from './api';
 import { appRouter } from './app';
 
 export function runServer() {
+  initialize();
+
   const PORT = process.env.PORT || 3000;
   const app: express.Application = express();
 
