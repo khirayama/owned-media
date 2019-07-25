@@ -66,8 +66,10 @@ const generateParams = (url: string, store: any, baseUrl: string) => {
 };
 
 export function get(req: express.Request, res: express.Response) {
+  // TODO: Extract locale
+  const locale = 'en';
   const path = `${req.baseUrl}${req.url}`;
-  const store = createStore(reducer, createInitialState('en', req.baseUrl), applyMiddleware(reduxThunk));
+  const store = createStore(reducer, createInitialState(locale, req.baseUrl), applyMiddleware(reduxThunk));
 
   let initializer: any = null;
   let params: any = null;
