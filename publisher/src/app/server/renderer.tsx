@@ -69,11 +69,13 @@ const generateParams = (url: string, store: any, baseUrl: string) => {
 export function get(req: express.Request, res: express.Response) {
   const store = createStore(reducer, createInitialState('en', req.baseUrl), applyMiddleware(reduxThunk));
 
+  const path = `${req.baseUrl}${req.url}`;
+
   let initializer: any = null;
   let params: any = null;
   for (let i = 0; i < routes.length; i += 1) {
     const route = routes[i];
-    const match = matchPath(req.url, route);
+    const match = matchPath(path, route);
     if (match) {
       initializer = route.initializer;
       params = match.params;
