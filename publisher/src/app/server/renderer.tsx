@@ -36,12 +36,12 @@ const generateParams = (url: string, store: any, baseUrl: string) => {
   const locale = preloadedState.ui.locale;
   const body = ReactDOMServer.renderToString(
     sheet.collectStyles(
-      <StaticRouter location={url} context={context}>
+      <StaticRouter location={`${baseUrl}${url}`} context={context}>
         <ResetStyle />
         <GlobalStyle />
         <Provider store={store}>
           <Intl>
-            <Routes />
+            <Routes baseUrl={baseUrl} />
           </Intl>
         </Provider>
       </StaticRouter>,

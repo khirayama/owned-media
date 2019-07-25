@@ -5,6 +5,10 @@ import { initializeResources, initializeNewResource, initializeResource } from '
 import { Resources } from '../pages/Resources';
 import { Resource } from '../pages/Resource';
 
+interface Props {
+  baseUrl: string;
+}
+
 export const routes = [
   {
     exact: true,
@@ -14,29 +18,29 @@ export const routes = [
   },
   {
     exact: true,
-    path: `/resources`,
+    path: '/resources',
     component: Resources,
     initializer: () => initializeResources(),
   },
   {
     exact: true,
-    path: `/resources/new`,
+    path: '/resources/new',
     component: Resource,
     initializer: () => initializeNewResource(),
   },
   {
     exact: true,
-    path: `/resources/:id`,
+    path: '/resources/:id',
     component: Resource,
     initializer: params => initializeResource(params.id),
   },
 ];
 
-export function Routes() {
+export function Routes(props: Props) {
   return (
     <Switch>
       {routes.map(route => (
-        <Route key={route.path} exact={route.exact} path={route.path} component={route.component} />
+        <Route key={route.path} exact={route.exact} path={props.baseUrl + route.path} component={route.component} />
       ))}
     </Switch>
   );

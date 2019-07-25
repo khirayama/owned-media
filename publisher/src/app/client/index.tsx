@@ -28,13 +28,15 @@ function extractInitialState() {
 const store = createStore(reducer, extractInitialState(), applyMiddleware(reduxThunk));
 
 window.addEventListener('DOMContentLoaded', () => {
+  const state = store.getState();
+
   ReactDOM.hydrate(
     <BrowserRouter>
       <ResetStyle />
       <GlobalStyle />
       <Provider store={store}>
         <Intl>
-          <Routes />
+          <Routes baseUrl={state.settings.baseUrl} />
         </Intl>
       </Provider>
     </BrowserRouter>,
