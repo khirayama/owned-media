@@ -1,21 +1,6 @@
 import { Action } from 'redux';
 
-import { Config, ResourceWithAllLocalesShapeWithRelations } from '../../../types';
-
-export interface SetConfig extends Action<'SET_CONFIG'> {
-  payload: {
-    config: Config;
-  };
-}
-
-export const setConfig = (config: Config): SetConfig => {
-  return {
-    type: 'SET_CONFIG',
-    payload: {
-      config,
-    },
-  };
-};
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 
 export interface ChangeIsFetchingResources extends Action<'CHANGE_IS_FETCHING_RESOURCES'> {
   payload: {
