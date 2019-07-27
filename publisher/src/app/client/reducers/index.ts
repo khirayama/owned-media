@@ -109,7 +109,10 @@ export function reducer(state: State | null = null, action: any): State | null {
     default:
   }
 
+  /* eslint-disable no-console */
   console.log('%cAction:', 'color: #76b6c8; font-weight: bold;', action);
   console.log('%cState:', 'color: #2e4551; font-weight: bold;', newState);
+  /* eslint-enable no-console */
+
   return newState;
 }
