@@ -109,5 +109,7 @@ export function reducer(state: State | null = null, action: any): State | null {
     default:
   }
 
+  console.log('%cAction:', 'color: #76b6c8; font-weight: bold;', action);
+  console.log('%cState:', 'color: #2e4551; font-weight: bold;', newState);
   return newState;
 }
