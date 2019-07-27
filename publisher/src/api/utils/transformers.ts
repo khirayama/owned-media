@@ -1,4 +1,4 @@
-import { ResourceWithAllLocalesShape, ResourceRequest, ResourceShape } from '../../types';
+import { ResourceWithAllLocalesShape, ResourceRequest, ResourceShape } from '../types';
 
 import { loadConfig } from './loadConfig';
 

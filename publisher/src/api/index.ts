@@ -1,6 +1,15 @@
 import { Resource } from './models/Resource';
 
 export {
+  LocaleObject,
+  ResourceType,
+  Config,
+  ResourceShape,
+  ResourceWithAllLocalesShape,
+  ResourceRequest,
+} from './types';
+
+export {
   fetchResources,
   fetchResource,
   createResource,

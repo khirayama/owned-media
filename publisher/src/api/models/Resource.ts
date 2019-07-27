@@ -2,7 +2,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ResourceShape, ResourceWithAllLocalesShape } from '../../types';
+import { ResourceShape, ResourceWithAllLocalesShape } from '../types';
 import { resourceWithAllLocalesToResource, loadConfig, extractColumns, csvStringify, csvParse } from '../utils';
 
 const config = loadConfig();
