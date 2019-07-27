@@ -8,12 +8,14 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 
+import { Config } from '../../types';
 import { renderFullPage } from './renderFullPage';
 import { reducer, createInitialState } from '../client/reducers';
 import { Routes, routes } from '../client/presentations/routes/Routes';
 import { ResetStyle } from '../client/presentations/styles/ResetStyle';
 import { GlobalStyle } from '../client/presentations/styles/GlobalStyle';
 import { Intl } from '../client/containers/Intl';
+import { Resource as ResourceService } from '../client/services/Resource';
 
 const assets = (() => {
   // eslint-disable-next-line node/no-unpublished-require, node/no-missing-require
@@ -65,17 +67,22 @@ const generateParams = (url: string, store: any, baseUrl: string) => {
   };
 };
 
-export function get(req: express.Request, res: express.Response) {
+let config: Config | null = null;
+
+export async function get(req: express.Request, res: express.Response) {
+  if (!config) {
+    config = await ResourceService.fetchConfig();
+  }
   // TODO: Extract locale
   const locale = 'en';
-  const path = `${req.baseUrl}${req.url}`;
-  const store = createStore(reducer, createInitialState(locale, req.baseUrl), applyMiddleware(reduxThunk));
+  const store = createStore(reducer, createInitialState(config, locale, req.baseUrl), applyMiddleware(reduxThunk));
 
   let initializer: any = null;
   let params: any = null;
   for (let i = 0; i < routes.length; i += 1) {
     const route = routes[i];
-    const match = matchPath(path, route);
+    // FYI: When it try to find match path, it has no baseUrl. So, we use req.url.
+    const match = matchPath(req.url, route);
     if (match) {
       initializer = route.initializer;
       params = match.params;
