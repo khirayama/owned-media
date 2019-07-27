@@ -76,7 +76,7 @@ export function ResourceList(props: Props) {
         </TableHead>
         <tbody>
           {Object.keys(props.resources.data).map((resourceId: string) => {
-            const resource: ResourceWithAllLocalesShapeWithRelations = props.resources.data[resourceId];
+            const resource = props.resources.data[resourceId];
             return (
               <ResourceListItem
                 key={resource.id}
