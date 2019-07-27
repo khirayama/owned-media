@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import {
-  ResourceWithAllLocalesShape,
-  ResourceShape,
-  ResourceRequest,
-  ResourceResponse,
-} from '../../types';
+import { ResourceWithAllLocalesShape, ResourceShape, ResourceRequest, ResourceResponse } from '../../types';
 
 export function resourceToRequest(resource: ResourceShape): ResourceRequest {
   return {
