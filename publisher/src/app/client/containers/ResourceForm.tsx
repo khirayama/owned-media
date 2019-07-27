@@ -31,6 +31,7 @@ const mapStateToProps = (state: State, props: Props) => {
     locale: state.ui.resourceLocale,
     locales: state.config ? state.config.locales : [],
     resourceTypes: state.config ? state.config.resourceTypes : [],
+    baseUrl: state.ui.baseUrl,
   };
 };
 
@@ -41,11 +42,9 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<State, void, Action>, props:
       if (resourceFormProps.resourceId) {
         dispatch(fetchResource(resourceFormProps.resourceId));
       } else {
-        // TODO
-        const config: Config | null = null;
-        if (config) {
-          dispatch(setResource(createDefaultResource(config)));
-        }
+        dispatch(
+          setResource(createDefaultResource(resourceFormProps.resourceTypes[0].type, resourceFormProps.locales)),
+        );
       }
     },
     onChange: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>, props: ResourceFormProps) => {
@@ -106,7 +105,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<State, void, Action>, props:
         dispatch(updateResource(resourceId, resource));
       } else if (resource) {
         dispatch(createResource(resource)).then((action: any) => {
-          props.history.replace(`/resources/${action.payload.resource.id}`);
+          props.history.replace(`${resourceFormProps.baseUrl}/resources/${action.payload.resource.id}`);
         });
       }
     },

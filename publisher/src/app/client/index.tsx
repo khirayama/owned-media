@@ -36,7 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
       <GlobalStyle />
       <Provider store={store}>
         <Intl>
-          <Routes baseUrl={state.settings.baseUrl} />
+          <Routes baseUrl={state.ui.baseUrl} />
         </Intl>
       </Provider>
     </BrowserRouter>,

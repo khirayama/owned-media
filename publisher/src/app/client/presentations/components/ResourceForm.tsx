@@ -17,6 +17,7 @@ export interface Props {
   locale: string;
   locales: string[];
   resourceTypes: ResourceType[];
+  baseUrl: string;
   onMount?: (props: Props) => void;
   onChange?: (event: React.FormEvent<HTMLInputElement | HTMLSelectElement>, props: Props) => void;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>, props: Props) => void;

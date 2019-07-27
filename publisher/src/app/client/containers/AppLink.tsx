@@ -15,7 +15,7 @@ function Component(props: Props) {
 }
 
 const mapStateToProps = (state: State) => {
-  const baseUrl = state.settings.baseUrl;
+  const baseUrl = state.ui.baseUrl;
 
   return {
     baseUrl,
