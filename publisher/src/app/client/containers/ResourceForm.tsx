@@ -6,7 +6,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Props as ResourceFormProps, ResourceForm as Component } from '../presentations/components/ResourceForm';
 import { Props as RelationLabelProps } from '../presentations/components/RelationLabel';
 import { setResource } from '../actions';
-import { Config } from '../../../types';
 import {
   createResource,
   fetchResource,

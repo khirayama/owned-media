@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ResourceWithAllLocalesShapeWithRelations } from '../../../../types';
 import { ResourceListItem, Props as ResourceListItemProps } from '../components/ResourceListItem';
 import { Table, TableRow, TableHead, TableHeadCell } from '../components/Table';
 import { State } from '../../reducers';
