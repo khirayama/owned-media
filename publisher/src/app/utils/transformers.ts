@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { ResourceWithAllLocalesShape, ResourceShape, ResourceRequest, ResourceResponse } from '../../types';
+import { ResourceWithAllLocalesShape, ResourceShape, ResourceRequest } from '../../api';
 
 export function resourceToRequest(resource: ResourceShape): ResourceRequest {
   return {
@@ -14,27 +14,6 @@ export function resourceToRequest(resource: ResourceShape): ResourceRequest {
       keywords: resource.page.keywords,
     },
     attributes: resource.attributes,
-  };
-}
-
-export function responseToResource(resourceResponse: ResourceResponse): ResourceShape {
-  return {
-    id: resourceResponse.id,
-    type: resourceResponse.type,
-    key: resourceResponse.key,
-    name: resourceResponse.name,
-    imageUrl: resourceResponse.image_url,
-    bodyPath: resourceResponse.body_path,
-    body: resourceResponse.body,
-    page: {
-      title: resourceResponse.page.title,
-      description: resourceResponse.page.description,
-      keywords: resourceResponse.page.keywords,
-      imageUrl: resourceResponse.page.image_url,
-    },
-    attributes: resourceResponse.attributes,
-    createdAt: resourceResponse.created_at,
-    updatedAt: resourceResponse.updated_at,
   };
 }
 
