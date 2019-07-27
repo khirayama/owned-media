@@ -1,72 +1,27 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import {
-  Config,
-  ResourceShape,
-  ResourceWithAllLocalesShape,
-  ResourceWithAllLocalesShapeWithRelations,
-} from '../../../types';
+import { ResourceShape, ResourceWithAllLocalesShape, ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 import {
   changeIsFetchingResources,
   setResources,
   changeIsFetchingResource,
   setResource,
   removeResource,
-  setConfig,
 } from '../actions';
 import { State } from '../reducers';
 import { Resource as ResourceService } from '../services/Resource';
 import {
-  createDefaultResource,
   resourceWithAllLocalesToResource,
   mergeDeep,
   resourceToPartialResourceWithAllLocales,
+  createDefaultResource,
 } from '../../utils';
 
 ResourceService.baseURL = '/api';
 
-export const initializeResources = () => {
-  return (dispatch: ThunkDispatch<State, void, Action>) => {
-    return dispatch(fetchConfig()).then(() => {
-      return dispatch(fetchResources());
-    });
-  };
-};
-
-export const initializeNewResource = () => {
-  return (dispatch: ThunkDispatch<State, void, Action>, getState: () => State) => {
-    return dispatch(fetchConfig()).then(() => {
-      const state = getState();
-      if (state.config) {
-        const defaultResource = createDefaultResource(state.config);
-        dispatch(setResource(defaultResource));
-      }
-    });
-  };
-};
-
-export const initializeResource = (resourceId: string) => {
-  return (dispatch: ThunkDispatch<State, void, Action>, getState: () => State) => {
-    return dispatch(fetchConfig()).then(() => {
-      const state = getState();
-      if (state.config) {
-        dispatch(fetchResource(resourceId));
-      }
-    });
-  };
-};
-
-export const fetchConfig = () => {
-  return (dispatch: ThunkDispatch<State, void, Action>) => {
-    return ResourceService.fetchConfig().then((config: Config) => {
-      dispatch(setConfig(config));
-    });
-  };
-};
-
 export const createResource = (resource: ResourceWithAllLocalesShape) => {
-  return (dispatch: ThunkDispatch<State, void, Action>, getState: () => State) => {
+  return (dispatch: ThunkDispatch<State, void, Action>, getState: () => State): Promise<any> => {
     const state: State = getState();
     dispatch(changeIsFetchingResources(true));
 
@@ -95,12 +50,12 @@ export const createResource = (resource: ResourceWithAllLocalesShape) => {
             const tmpResource: ResourceShape = res[i] as ResourceShape;
             result = mergeDeep({}, result, resourceToPartialResourceWithAllLocales(tmpResource, locale));
           }
-          dispatch(setResource(result));
+          return dispatch(setResource(result));
         });
       });
     } else {
       return new Promise(resolve => resolve()).then(() => {
-        dispatch(changeIsFetchingResources(false));
+        return dispatch(changeIsFetchingResources(false));
       });
     }
   };
@@ -113,7 +68,7 @@ export const fetchResources = () => {
       (resources: (ResourceShape | ResourceWithAllLocalesShape)[]) => {
         const newResources: { [key: string]: ResourceWithAllLocalesShapeWithRelations } = {};
 
-        Promise.all(
+        return Promise.all(
           resources.map((resource: ResourceShape | ResourceWithAllLocalesShape) =>
             ResourceService.fetchRelations(resource.id),
           ),
@@ -137,7 +92,7 @@ export const fetchResources = () => {
 };
 
 export const fetchResource = (resourceId: string) => {
-  return (dispatch: ThunkDispatch<State, void, Action>) => {
+  return (dispatch: ThunkDispatch<State, void, Action>, getState: () => State) => {
     dispatch(changeIsFetchingResource(true));
     return ResourceService.find(resourceId, { locale: 'all' }).then(
       (resource: ResourceShape | ResourceWithAllLocalesShape) => {
@@ -146,7 +101,9 @@ export const fetchResource = (resourceId: string) => {
             ...(resource as ResourceWithAllLocalesShape),
             relations: res.map((r: ResourceShape | ResourceWithAllLocalesShape) => r.id),
           };
-          dispatch(setResource(result));
+          const state = getState();
+          const defaultResource = createDefaultResource(state.config.resourceTypes[0].type, state.config.locales);
+          dispatch(setResource(mergeDeep(defaultResource, result)));
           dispatch(changeIsFetchingResource(false));
         });
       },
