@@ -1,5 +1,7 @@
 import { Resource } from './models/Resource';
 
+export { loadConfig } from './utils';
+
 export {
   LocaleObject,
   ResourceType,

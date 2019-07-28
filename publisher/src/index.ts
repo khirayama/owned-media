@@ -18,4 +18,5 @@ export {
   apiRouter,
   adminRouter,
   initialize,
+  loadConfig,
 } from './api';
