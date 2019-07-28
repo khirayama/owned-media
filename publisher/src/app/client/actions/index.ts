@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../types';
 
 export interface ChangeIsFetchingResources extends Action<'CHANGE_IS_FETCHING_RESOURCES'> {
   payload: {

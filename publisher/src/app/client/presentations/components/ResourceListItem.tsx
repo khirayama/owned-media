@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 import { chooseLocale } from '../locales';
-import { ResourceWithAllLocalesShapeWithRelations } from '../../../../types';
 import { FlatButton, FlatLink } from '../components/Button';
 import { TableRow, TableCell } from '../components/Table';
 

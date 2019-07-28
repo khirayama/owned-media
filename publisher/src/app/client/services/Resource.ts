@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { ResourceShape, ResourceWithAllLocalesShape, Config } from '../../../types';
+import { ResourceShape, ResourceWithAllLocalesShape, Config } from '../../../api';
 import { resourceToRequest } from '../../utils';
 
 const PORT = process.env.PORT || 3000;

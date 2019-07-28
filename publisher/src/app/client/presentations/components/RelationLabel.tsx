@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ResourceWithAllLocalesShapeWithRelations } from '../../../../types';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 
 const Wrapper = styled.button<{ selected: boolean; disabled: boolean }>`
   display: inline-block;

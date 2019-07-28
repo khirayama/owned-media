@@ -6,7 +6,8 @@ import { styles } from '../styles/vars';
 import { ResourceInfo } from '../components/ResourceInfo';
 import { FloatButton } from '../components/Button';
 import { Props as RelationLabelProps } from '../components/RelationLabel';
-import { ResourceType, ResourceWithAllLocalesShapeWithRelations } from '../../../../types';
+import { ResourceType } from '../../../../api';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 
 export interface Props {
   resourceId: string | null;

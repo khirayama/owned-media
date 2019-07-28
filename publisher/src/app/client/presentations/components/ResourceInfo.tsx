@@ -1,7 +1,8 @@
 import * as React from 'react';
 import styled from 'styled-components';
 
-import { ResourceWithAllLocalesShapeWithRelations, ResourceType } from '../../../../types';
+import { ResourceType } from '../../../../api';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../../types';
 import { Props as RelationLabelProps, RelationLabel } from '../components/RelationLabel';
 
 const Wrapper = styled.div`

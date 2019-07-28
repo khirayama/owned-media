@@ -1,4 +1,4 @@
-import { ResourceWithAllLocalesShapeWithRelations } from '../../types';
+import { ResourceWithAllLocalesShapeWithRelations } from '../types';
 
 function createLocaleObj(locales: string[]) {
   const obj = {};

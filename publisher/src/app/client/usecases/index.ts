@@ -1,7 +1,8 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { ResourceShape, ResourceWithAllLocalesShape, ResourceWithAllLocalesShapeWithRelations } from '../../../types';
+import { ResourceShape, ResourceWithAllLocalesShape } from '../../../api';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../types';
 import {
   changeIsFetchingResources,
   setResources,

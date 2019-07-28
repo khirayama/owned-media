@@ -1,6 +1,7 @@
 import clone from 'rfdc';
 
-import { ResourceWithAllLocalesShapeWithRelations, Config } from '../../../types';
+import { Config } from '../../../api';
+import { ResourceWithAllLocalesShapeWithRelations } from '../../types';
 
 export interface State {
   config: Config;

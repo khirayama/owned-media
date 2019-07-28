@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 
-import { Config } from '../../types';
+import { Config } from '../../api';
 import { renderFullPage } from './renderFullPage';
 import { reducer, createInitialState } from '../client/reducers';
 import { Routes, routes } from '../client/presentations/routes/Routes';
