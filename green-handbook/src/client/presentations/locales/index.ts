@@ -5,7 +5,7 @@ import jaLocaleData from 'react-intl/locale-data/ja';
 addLocaleData(enLocaleData);
 addLocaleData(jaLocaleData);
 
-const publisherConfig = require('../../../config');
+const config = require('../../../../config');
 
 const dic = {
   Home: {
@@ -20,12 +20,12 @@ const dic = {
   },
   Resource: {
     Title: {
-      ja: `ja {title} | ${publisherConfig.name.ja}`,
-      en: `en {title} | ${publisherConfig.name.en}`,
+      ja: `ja {title} | ${config.name.ja}`,
+      en: `en {title} | ${config.name.en}`,
     },
     Description: {
-      ja: `ja {description} | ${publisherConfig.name.ja}`,
-      en: `en {description} | ${publisherConfig.name.en}`,
+      ja: `ja {description} | ${config.name.ja}`,
+      en: `en {description} | ${config.name.en}`,
     },
   },
 };
@@ -51,7 +51,7 @@ export const ja = {
   'Counter.Label': '{name}さんのカウント数: ',
 };
 ********************/
-function generateLocals(data, locale, result = {}, prefix?) {
+function generateLocals(data: object | string, locale: string, result = {}, prefix: string = '') {
   if (typeof data === 'object') {
     const keys = Object.keys(data);
     for (let key of keys) {

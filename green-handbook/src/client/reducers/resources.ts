@@ -22,13 +22,15 @@ export function reducer(state = initialState, action: Actions): State {
   switch (action.type) {
     case 'SET_RESOURCE': {
       const resource = action.payload.resource;
-      if (newState[resource.key || resource.id]) {
-        newState[resource.key || resource.id].data = resource;
-      } else {
-        newState[resource.key || resource.id] = {
-          isFetching: [],
-          data: resource,
-        };
+      if (resource) {
+        if (newState[resource.key || resource.id]) {
+          newState[resource.key || resource.id].data = resource;
+        } else {
+          newState[resource.key || resource.id] = {
+            isFetching: [],
+            data: resource,
+          };
+        }
       }
       break;
     }

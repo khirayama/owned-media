@@ -16,7 +16,7 @@ export const routes = [
     exact: true,
     path: `/:resourceType/:key`,
     component: Resource,
-    initializer: params => fetchResource(params.key),
+    initializer: (params: any) => fetchResource(params.key),
   },
 ];
 

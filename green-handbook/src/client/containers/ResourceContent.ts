@@ -19,7 +19,7 @@ const mapStateToProps = (state: State, props: Props) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>, props: Props) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<State, {}, Action>, props: Props) => {
   return {
     onUpdate: (resourceContentProps: ResourceContentProps) => {
       if (resourceContentProps.resource === null && props.resourceId) {

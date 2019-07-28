@@ -20,7 +20,7 @@ export function ResourceContent(props: Props) {
     contents = <div>Loading</div>;
   } else if (props.resource.data === null && !props.resource.isFetching.length) {
     contents = <div>404</div>;
-  } else {
+  } else if (props.resource.data) {
     contents = <div>{props.resource.data.body}</div>;
   }
 

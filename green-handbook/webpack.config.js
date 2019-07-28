@@ -1,3 +1,5 @@
+const path = require('path');
+
 // eslint-disable-next-line node/no-unpublished-require
 const WebpackManifestPlugin = require('webpack-manifest-plugin');
 
@@ -6,11 +8,12 @@ module.exports = (env, argv) => {
 
   const config = {
     entry: {
-      index: './src/index.tsx',
+      index: './src/client/index.tsx',
     },
     output: {
       filename: isProd ? '[name].[hash].js' : '[name].js',
-      publicPath: '/',
+      path: path.resolve('dist', 'public'),
+      publicPath: '/public/',
     },
     resolve: {
       extensions: ['.ts', '.tsx', '.js', '.json'],

@@ -11,7 +11,7 @@ export interface SetResource extends Action<'SET_RESOURCE'> {
   };
 }
 
-export const setResource = (resource): SetResource => {
+export const setResource = (resource: ResourceShape): SetResource => {
   return {
     type: 'SET_RESOURCE',
     payload: {

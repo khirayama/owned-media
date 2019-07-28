@@ -7,7 +7,7 @@ type Params = {
   preloadedState: string;
 };
 
-export const escapeHTML = (str: string) => {
+const escape = (str: string) => {
   return str
     .replace(/&/g, '&amp;')
     .replace(/"/g, '&quot;')
@@ -22,11 +22,11 @@ export const renderFullPage = ({ locale, meta, assets, body, style, preloadedSta
       <head>
         ${meta}
         ${style}
-        ${assets.map(asset => `<script src=${asset} defer></script>`).join('\n')}
       </head>
       <body>
         <div id="root">${body}</div>
-        <script id="initial-data" type="text/plain" data-json="${escapeHTML(preloadedState)}"></script>
+        <script id="initial-data" type="text/plain" data-json="${escape(preloadedState)}"></script>
+        ${assets.map(asset => `<script src=${asset}></script>`).join('\n')}
       </body>
     </html>
   `.trim();
