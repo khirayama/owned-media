@@ -8,15 +8,15 @@ import { fetchResource } from '../../usecases';
 export const routes = [
   {
     exact: true,
-    path: '/',
+    path: '/:locale?',
     component: Home,
     initializer: null,
   },
   {
     exact: true,
-    path: `/:resourceType/:key`,
+    path: `/:locale?/:resourceType/:key`,
     component: Resource,
-    initializer: (params: any) => fetchResource(params.key),
+    initializer: (params: { locale?: string; resourceType: string; key: string }) => fetchResource(params.key),
   },
 ];
 
