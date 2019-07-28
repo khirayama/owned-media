@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import * as fs from 'fs';
 import * as path from 'path';
 
+import * as fsExtra from 'fs-extra';
+
 import { ResourceShape, ResourceWithAllLocalesShape } from '../types';
-import { resourceWithAllLocalesToResource, loadConfig, extractColumns, csvStringify, csvParse } from '../utils';
+import { resourceWithAllLocalesToResource, loadConfig, csvStringify, csvParse } from '../utils';
 
 const config = loadConfig();
 
@@ -131,18 +132,20 @@ type FindCondition = {
 export class Resource {
   public static defaultLocale: string = config.locales[0];
 
-  private static columns: {
-    resources: string[];
-    resourceContents: string[];
-    resourceAttributes: string[];
-    pages: string[];
-    relations: string[];
-  } = {
-    resources: [],
-    resourceContents: [],
-    resourceAttributes: [],
-    pages: [],
-    relations: [],
+  private static columns = {
+    resources: ['id', 'type', 'key', 'created_at', 'updated_at'],
+    resourceContents: ['id', 'resource_id', 'locale', 'name', 'image_url', 'body_path', 'created_at', 'updated_at'],
+    resourceAttributes: ['id', 'resource_id', 'key', 'value', 'created_at', 'updated_at'],
+    pages: ['id', 'resource_id', 'locale', 'title', 'description', 'image_url', 'keywords', 'created_at', 'updated_at'],
+    relations: ['id', 'resource1_id', 'resource2_id', 'created_at', 'updated_at'],
+  };
+
+  private static filePaths = {
+    resources: path.join(DATA_PATH, 'resources.csv'),
+    resourceContents: path.join(DATA_PATH, 'resource_contents.csv'),
+    resourceAttributes: path.join(DATA_PATH, 'resource_attributes.csv'),
+    pages: path.join(DATA_PATH, 'pages.csv'),
+    relations: path.join(DATA_PATH, 'relations.csv'),
   };
 
   private static rows: {
@@ -172,26 +175,23 @@ export class Resource {
   }
 
   private static load() {
-    const resourcesCSV = fs.readFileSync(path.join(DATA_PATH, 'resources.csv'), 'utf8');
-    const resourceContentsCSV = fs.readFileSync(path.join(DATA_PATH, 'resource_contents.csv'), 'utf8');
-    const resourceAttributesCSV = fs.readFileSync(path.join(DATA_PATH, 'resource_attributes.csv'), 'utf8');
-    const pagesCSV = fs.readFileSync(path.join(DATA_PATH, 'pages.csv'), 'utf8');
-    const relationsCSV = fs.readFileSync(path.join(DATA_PATH, 'relations.csv'), 'utf8');
+    try {
+      const resourcesCSV = fsExtra.readFileSync(this.filePaths.resources, 'utf8');
+      const resourceContentsCSV = fsExtra.readFileSync(this.filePaths.resourceContents, 'utf8');
+      const resourceAttributesCSV = fsExtra.readFileSync(this.filePaths.resourceAttributes, 'utf8');
+      const pagesCSV = fsExtra.readFileSync(this.filePaths.pages, 'utf8');
+      const relationsCSV = fsExtra.readFileSync(this.filePaths.relations, 'utf8');
 
-    this.columns = {
-      resources: extractColumns(resourcesCSV),
-      resourceContents: extractColumns(resourceContentsCSV),
-      resourceAttributes: extractColumns(resourceAttributesCSV),
-      pages: extractColumns(pagesCSV),
-      relations: extractColumns(relationsCSV),
-    };
-    this.rows = {
-      resources: csvParse(resourcesCSV),
-      resourceContents: csvParse(resourceContentsCSV),
-      resourceAttributes: csvParse(resourceAttributesCSV),
-      pages: csvParse(pagesCSV),
-      relations: csvParse(relationsCSV),
-    };
+      this.rows = {
+        resources: csvParse(resourcesCSV),
+        resourceContents: csvParse(resourceContentsCSV),
+        resourceAttributes: csvParse(resourceAttributesCSV),
+        pages: csvParse(pagesCSV),
+        relations: csvParse(relationsCSV),
+      };
+    } catch (e) {
+      // noop
+    }
   }
 
   private static buildResource(
@@ -227,7 +227,7 @@ export class Resource {
           const locale: string = resourceContentRow.locale;
           let markdown = '';
           try {
-            markdown = fs.readFileSync(path.join(DATA_PATH, '..', path.join(resourceContentRow['body_path'])), 'utf8');
+            markdown = fsExtra.readFileSync(path.join(DATA_PATH, '..', path.join(resourceContentRow['body_path'])), 'utf8');
           } catch (e) {
             // noop
           }
@@ -502,8 +502,8 @@ export class Resource {
     const RESOURCE_CONTENTS_FULLPATH = [ROOT_PATH, 'resources', resourceId, 'resource_contents'].join('/');
     const fileName = `${resourceContentId}.md`;
 
-    fs.mkdirSync(RESOURCE_CONTENTS_FULLPATH, { recursive: true });
-    fs.closeSync(fs.openSync(path.join(RESOURCE_CONTENTS_FULLPATH, fileName), 'w'));
+    fsExtra.mkdirSync(RESOURCE_CONTENTS_FULLPATH, { recursive: true });
+    fsExtra.closeSync(fsExtra.openSync(path.join(RESOURCE_CONTENTS_FULLPATH, fileName), 'w'));
 
     const resourceBodyPath = '/' + path.join(RESOURCE_CONTENTS_PATH, fileName);
     this.rows.resourceContents.push({
@@ -605,10 +605,11 @@ export class Resource {
     const resourceAttributesString = csvStringify(this.rows.resourceAttributes, this.columns.resourceAttributes);
     const pagesString = csvStringify(this.rows.pages, this.columns.pages);
     const relationsString = csvStringify(this.rows.relations, this.columns.relations);
-    fs.writeFileSync(path.join(DATA_PATH, 'resources.csv'), resourcesString);
-    fs.writeFileSync(path.join(DATA_PATH, 'resource_contents.csv'), resourceContentsString);
-    fs.writeFileSync(path.join(DATA_PATH, 'resource_attributes.csv'), resourceAttributesString);
-    fs.writeFileSync(path.join(DATA_PATH, 'pages.csv'), pagesString);
-    fs.writeFileSync(path.join(DATA_PATH, 'relations.csv'), relationsString);
+
+    fsExtra.outputFile(this.filePaths.relations, resourcesString);
+    fsExtra.outputFile(this.filePaths.resourceContents, resourceContentsString);
+    fsExtra.outputFile(this.filePaths.resourceAttributes, resourceAttributesString);
+    fsExtra.outputFile(this.filePaths.pages, pagesString);
+    fsExtra.outputFile(this.filePaths.relations, relationsString);
   }
 }
