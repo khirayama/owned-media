@@ -17,6 +17,7 @@ import { ResetStyle } from '../client/presentations/styles/ResetStyle';
 import { GlobalStyle } from '../client/presentations/styles/GlobalStyle';
 import { Intl } from '../client/containers/Intl';
 import { Resource } from '../client/services';
+import { initializePage } from '../client/usecases';
 
 const assets = (() => {
   // eslint-disable-next-line node/no-unpublished-require, node/no-missing-require
@@ -89,11 +90,13 @@ export async function get(req: express.Request, res: express.Response) {
     }
   }
 
-  if (initializer) {
-    store.dispatch(initializer(params)).then(() => {
+  store.dispatch(initializePage((params ? params.locale : null) || config.locales[0], config) as any).then(() => {
+    if (initializer) {
+      store.dispatch(initializer(params)).then(() => {
+        res.send(renderFullPage(generateParams(req.url, store)));
+      });
+    } else {
       res.send(renderFullPage(generateParams(req.url, store)));
-    });
-  } else {
-    res.send(renderFullPage(generateParams(req.url, store)));
-  }
+    }
+  });
 }
