@@ -3,6 +3,8 @@ import * as http from 'http';
 
 import express from 'express';
 
+import { apiRouter } from 'publisher';
+
 import * as renderer from './renderer';
 
 export function runServer() {
@@ -12,6 +14,7 @@ export function runServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  app.use('/api', apiRouter);
   app.use('/public', express.static('dist/public'));
   app.get('*', renderer.get);
 

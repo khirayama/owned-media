@@ -1,21 +1,25 @@
 import express from 'express';
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom';
+import { StaticRouter, matchPath } from 'react-router-dom';
 import * as styled from 'styled-components';
 import ReactHelmet from 'react-helmet';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
+
+import { Config } from 'publisher';
 
 import { renderFullPage } from './renderFullPage';
 import { reducer } from '../client/reducers';
-import { Routes } from '../client/presentations/routes/Routes';
+import { Routes, routes } from '../client/presentations/routes/Routes';
 import { ResetStyle } from '../client/presentations/styles/ResetStyle';
 import { GlobalStyle } from '../client/presentations/styles/GlobalStyle';
 import { Intl } from '../client/containers/Intl';
+import { Resource } from '../client/services';
 
 const assets = (() => {
-  // eslint-disable-next-line node/no-unpublished-require
+  // eslint-disable-next-line node/no-unpublished-require, node/no-missing-require
   const manifest: { [key: string]: string } = require('../../dist/public/manifest');
   const entryPoints: string[] = [];
 
@@ -28,15 +32,14 @@ const assets = (() => {
   return entryPoints;
 })();
 
-export function get(req: express.Request, res: express.Response) {
+const generateParams = (url: string, store: any) => {
   const context = {};
-  const store = createStore(reducer);
   const preloadedState = store.getState();
   const sheet = new styled.ServerStyleSheet();
   const locale = preloadedState.ui.locale;
   const body = ReactDOMServer.renderToString(
     sheet.collectStyles(
-      <StaticRouter location={req.url} context={context}>
+      <StaticRouter location={url} context={context}>
         <ResetStyle />
         <GlobalStyle />
         <Provider store={store}>
@@ -55,14 +58,42 @@ export function get(req: express.Request, res: express.Response) {
     `.trim();
   const style = sheet.getStyleTags();
 
-  res.send(
-    renderFullPage({
-      locale,
-      meta,
-      assets,
-      body,
-      style,
-      preloadedState: JSON.stringify(preloadedState),
-    }),
-  );
+  return {
+    locale,
+    meta,
+    assets,
+    body,
+    style,
+    preloadedState: JSON.stringify(preloadedState),
+  };
+};
+
+let config: Config | null = null;
+
+export async function get(req: express.Request, res: express.Response) {
+  if (config === null) {
+    // eslint-disable-next-line require-atomic-updates
+    config = await Resource.fetchConfig();
+  }
+  const store = createStore(reducer, applyMiddleware(reduxThunk));
+
+  let initializer: any = null;
+  let params: any = null;
+  for (let i = 0; i < routes.length; i += 1) {
+    const route = routes[i];
+    const match = matchPath(req.url, route);
+    if (match) {
+      initializer = route.initializer;
+      params = match.params;
+      break;
+    }
+  }
+
+  if (initializer) {
+    store.dispatch(initializer(params)).then(() => {
+      res.send(renderFullPage(generateParams(req.url, store)));
+    });
+  } else {
+    res.send(renderFullPage(generateParams(req.url, store)));
+  }
 }
