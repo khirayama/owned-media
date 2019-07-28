@@ -39,7 +39,7 @@ export const routes: RouteObj[] = [
     exact: true,
     path: '/resources/:id',
     component: Resource,
-    initializer: params => fetchResource(params.id),
+    initializer: (params: any) => fetchResource(params.id),
   },
 ];
 
