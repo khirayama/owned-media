@@ -3,9 +3,11 @@ import * as http from 'http';
 
 import express from 'express';
 
-import { apiRouter } from 'publisher';
+import { apiRouter, adminRouter, appRouter, initialize } from 'publisher';
 
 import * as renderer from './renderer';
+
+initialize();
 
 export function runServer() {
   const PORT = process.env.PORT || 3000;
@@ -14,6 +16,9 @@ export function runServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  if (process.env.NODE_ENV !== 'production') {
+    app.use('/api', adminRouter).use('/ui', appRouter);
+  }
   app.use('/api', apiRouter);
   app.use('/public', express.static('dist/public'));
   app.get('*', renderer.get);
