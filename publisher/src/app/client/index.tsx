@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 
-import { reducer } from './reducers';
+import { reducer, State } from './reducers';
 import { Routes } from './presentations/routes/Routes';
 import { ResetStyle } from './presentations/styles/ResetStyle';
 import { GlobalStyle } from './presentations/styles/GlobalStyle';
@@ -28,7 +28,7 @@ function extractInitialState() {
 const store = createStore(reducer, extractInitialState(), applyMiddleware(reduxThunk));
 
 window.addEventListener('DOMContentLoaded', () => {
-  const state = store.getState();
+  const state: State = store.getState() as State;
 
   ReactDOM.hydrate(
     <BrowserRouter>
