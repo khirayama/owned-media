@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { State } from '../reducers';
 
-interface Props {
+export interface Props {
   baseUrl: string;
   to: string;
   children: React.ReactChild;

@@ -5,11 +5,18 @@ import { fetchResources, fetchResource } from '../../usecases';
 import { Resources } from '../pages/Resources';
 import { Resource } from '../pages/Resource';
 
-interface Props {
+export interface Props {
   baseUrl: string;
 }
 
-export const routes = [
+export interface RouteObj {
+  exact: boolean;
+  path: string;
+  component: any;
+  initializer: any;
+}
+
+export const routes: RouteObj[] = [
   {
     exact: true,
     path: '/',
