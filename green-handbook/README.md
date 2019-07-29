@@ -329,3 +329,34 @@ keywords: 観葉植物 / ornamental foliage plant / indoor green / indoor plants
 - [Gratisography - Free High-Resolution Photos](http://gratisography.com/)
 - [フリー素材、無料画像の横断検索サイトNo.1【タダピク】](https://www.tadapic.com/)
 - [魅力的なフリー画像 - Pixabay](https://pixabay.com/ja/)
+
+### 設計
+
+- actions
+  - redux.stateの更新コマンド
+  - 命名時はredux.stateの構造への更新を意識した命名となる
+- usecases
+  - actionsを複数利用するようなapplicationの特性を含んだ更新コマンドの集合
+  - 命名時はユーザが起こしたアクションによる一連の流れを表す命名となる
+- containers
+- presentaions
+  - pages
+    - URLに紐づく処理を行うpresentaion
+      - title
+      - description
+      - lang
+      - locale
+  - components
+    - 純粋なpresentaion
+      - 必要となるevent handlersはcallbackを提供する
+  - head
+    - これはいらないな。pages/Pageに統合
+  - locales
+    - 辞書データ
+  - routes
+    - URLに紐づく処理を行う
+    - templatesを扱うはず
+  - styles
+  - templates
+- reducers
+- services
