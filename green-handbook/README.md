@@ -321,7 +321,7 @@
 - resource.type: plants / products / note / labels
 - plant.attribute: shade_tolerance(number), cold_tolerance(number)
 
-### Photos
+### 写真 / Photos
 
 keywords: 観葉植物 / ornamental foliage plant / indoor green / indoor plants
 - [Beautiful Free Images & Pictures | Unsplash](https://unsplash.com/)
