@@ -330,7 +330,7 @@ keywords: 観葉植物 / ornamental foliage plant / indoor green / indoor plants
 - [フリー素材、無料画像の横断検索サイトNo.1【タダピク】](https://www.tadapic.com/)
 - [魅力的なフリー画像 - Pixabay](https://pixabay.com/ja/)
 
-### 設計
+### 設計 / Design & Architecture
 
 - actions
   - redux.stateの更新コマンド
