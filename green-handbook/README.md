@@ -179,7 +179,7 @@
     - ミニクリエーションF(thing/product)
       - 坂源(organization/group)
 
-## Pages
+## ページ / Pages
 
 - `/` トップ
   - 初めての観葉植物
