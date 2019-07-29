@@ -21,6 +21,7 @@ export function runServer() {
   }
   app.use('/api', apiRouter);
   app.use('/public', express.static('dist/public'));
+  app.use('/favicon.ico', (req, res) => res.status(200).send());
   app.get('*', renderer.get);
 
   const server = http.createServer(app);
