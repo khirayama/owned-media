@@ -339,6 +339,8 @@ keywords: 観葉植物 / ornamental foliage plant / indoor green / indoor plants
   - actionsを複数利用するようなapplicationの特性を含んだ更新コマンドの集合
   - 命名時はユーザが起こしたアクションによる一連の流れを表す命名となる
 - containers
+  - actions / usecasesをimportしてpresentaionsに紐づける
+  - redux.stateをpresentaionsに紐づける
 - presentaions
   - pages
     - URLに紐づく処理を行うpresentaion
@@ -357,6 +359,13 @@ keywords: 観葉植物 / ornamental foliage plant / indoor green / indoor plants
     - URLに紐づく処理を行う
     - templatesを扱うはず
   - styles
+    - 全体に適用するスタイリング
   - templates
+    - URLを跨ぐpresentaion
+    - pagesからのみimportされる
+    - routesに紐づける方法もあるが複雑性が増すのでpageに紐づける [React Router: Declarative Routing for React.js](https://reacttraining.com/react-router/web/example/sidebar)
 - reducers
+  - redux.stateの更新マシン
 - services
+  - WebAPIなど外部サービスを利用する
+  - 基本的に非同期を前提に実装される
