@@ -12,10 +12,7 @@ export function Navigation() {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/about/">About</Link>
-        </li>
-        <li>
-          <Link to="/users/">Users</Link>
+          <Link to="/resources/fundamental-knowledge">Fundamental Knowledge</Link>
         </li>
       </ul>
     </nav>
