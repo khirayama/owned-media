@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { injectIntl } from 'react-intl';
 
-import { Head } from '../../presentations/head/Head';
+import { Page } from '../../presentations/pages/Page';
 import { Application } from '../../presentations/templates/Application';
 import { ResourceContent } from '../../containers/ResourceContent';
 
@@ -11,9 +11,10 @@ export const Resource = injectIntl(function(props: any) {
   const resourceId = props.match.params.key;
 
   return (
-    <Application>
-      <Head title={title} description={description} />
-      <ResourceContent resourceId={resourceId} />
-    </Application>
+    <Page title={title} description={description}>
+      <Application>
+        <ResourceContent resourceId={resourceId} />
+      </Application>
+    </Page>
   );
 });

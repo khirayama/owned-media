@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 
-import { Head } from '../../presentations/head/Head';
+import { Page } from '../../presentations/pages/Page';
 import { Application } from '../../presentations/templates/Application';
 
 const Wrapper = styled.default.div`
@@ -16,11 +16,12 @@ export const Home = injectIntl(function(props) {
   });
 
   return (
-    <Application>
-      <Head title={title} description={description} />
-      <Wrapper>
-        <h2>Home</h2>
-      </Wrapper>
-    </Application>
+    <Page title={title} description={description}>
+      <Application>
+        <Wrapper>
+          <h2>Home</h2>
+        </Wrapper>
+      </Application>
+    </Page>
   );
 });
