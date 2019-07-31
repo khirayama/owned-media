@@ -1,14 +1,24 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import ReactHelmet from 'react-helmet';
 
-interface Props {
+type Props = {
+  title?: string;
+  description?: string;
   children: React.ReactNode;
-}
+};
 
-export function Page(props: Props) {
+export const Page: React.SFC<Props> = (props: Props) => {
   React.useEffect(() => {
-    console.log(props);
+    console.log('update page', props);
   });
 
-  return props.children || null;
-}
+  return (
+    <>
+      <ReactHelmet>
+        <title>{props.title}</title>
+        <meta name="description" content={props.description} />
+      </ReactHelmet>
+      {props.children}
+    </>
+  );
+};
