@@ -15,7 +15,7 @@
     "bundle:scripts": "webpack --mode production",
     "bundle:scripts:watch": "webpack -w --mode development",
     "server": "NODE_PATH=dist node ./dist/server/index.js",
-    "server:dev": "NODE_PATH=dist nodemon -w ./dist -x node ./dist/server/index.js",
+    "server:dev": "NODE_PATH=dist nodemon -w ./dist -w ../publisher/dist -x node ./dist/server/index.js",
     "lint": "eslint '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
     "lint:fix": "eslint --fix '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
     "check": "npx npm-check-updates"
