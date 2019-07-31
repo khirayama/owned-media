@@ -369,3 +369,6 @@ keywords: 観葉植物 / ornamental foliage plant / indoor green / indoor plants
 - services
   - WebAPIなど外部サービスを利用する
   - 基本的に非同期を前提に実装される
+
+- loadable
+  - pageの中で定義する
