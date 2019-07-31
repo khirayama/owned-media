@@ -3,7 +3,7 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { Config, ResourceShape } from 'publisher';
 
-import { setResource, changeIsFetchingResource, resetResource } from '../actions/resources';
+import { changeIsFetchingResource, resetResource, setResource } from '../actions/resources';
 import { changeLocale } from '../actions/ui';
 import { setConfig } from '../actions/config';
 import { State } from '../reducers';

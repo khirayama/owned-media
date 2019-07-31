@@ -5,7 +5,7 @@ import { StaticRouter, matchPath } from 'react-router-dom';
 import * as styled from 'styled-components';
 import ReactHelmet from 'react-helmet';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import reduxThunk from 'redux-thunk';
 
 import { Config } from 'publisher';

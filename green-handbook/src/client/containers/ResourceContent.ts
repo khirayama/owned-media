@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 
 import { State } from '../reducers';
 import {
-  Props as ResourceContentProps,
   ResourceContent as Component,
+  Props as ResourceContentProps,
 } from '../presentations/components/ResourceContent';
 import { fetchResource } from '../usecases';
 

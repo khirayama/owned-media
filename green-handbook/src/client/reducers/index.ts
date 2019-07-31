@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import { Config } from 'publisher';
 
 import { reducer as configReducer } from './config';
-import { reducer as resourcesReducer, State as ResourcesState } from './resources';
+import { State as ResourcesState, reducer as resourcesReducer } from './resources';
 import { reducer as UIReducer, State as UIState } from './ui';
 
 export interface State {
