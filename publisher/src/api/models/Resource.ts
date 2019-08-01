@@ -227,7 +227,10 @@ export class Resource {
           const locale: string = resourceContentRow.locale;
           let markdown = '';
           try {
-            markdown = fsExtra.readFileSync(path.join(DATA_PATH, '..', path.join(resourceContentRow['body_path'])), 'utf8');
+            markdown = fsExtra.readFileSync(
+              path.join(DATA_PATH, '..', path.join(resourceContentRow['body_path'])),
+              'utf8',
+            );
           } catch (e) {
             // noop
           }
