@@ -18,7 +18,8 @@ type Props = {
 };
 
 export const Page = injectIntl(function(props: Props & InjectedIntlProps) {
-  const messages = chooseLocale(props.locale);
+  const locale = props.locale;
+  const messages = chooseLocale(locale);
   const title: string = props.intl.formatMessage({ id: props.title.descriptor }, props.title.values || null);
   const description: string = props.intl.formatMessage(
     { id: props.description.descriptor },
@@ -26,7 +27,7 @@ export const Page = injectIntl(function(props: Props & InjectedIntlProps) {
   );
 
   return (
-    <IntlProvider locale={props.locale} messages={messages}>
+    <IntlProvider locale={locale} messages={messages}>
       <ReactHelmet>
         <title>{title}</title>
         <meta name="description" content={description} />
