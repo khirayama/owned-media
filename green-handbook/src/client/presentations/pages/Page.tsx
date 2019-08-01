@@ -1,24 +1,37 @@
 import * as React from 'react';
 import ReactHelmet from 'react-helmet';
+import { IntlProvider, injectIntl, InjectedIntlProps } from 'react-intl';
+
+import { chooseLocale } from '../../presentations/locales';
 
 type Props = {
-  title?: string;
-  description?: string;
+  locale: string;
+  title: {
+    descriptor: string;
+    values: any;
+  };
+  description: {
+    descriptor: string;
+    values: any;
+  };
   children: React.ReactNode;
 };
 
-export const Page: React.SFC<Props> = (props: Props) => {
-  React.useEffect(() => {
-    console.log('update page', props);
-  });
+export const Page = injectIntl(function(props: Props & InjectedIntlProps) {
+  const messages = chooseLocale(props.locale);
+  const title: string = props.intl.formatMessage({ id: props.title.descriptor }, props.title.values || null);
+  const description: string = props.intl.formatMessage(
+    { id: props.description.descriptor },
+    props.description.values || null,
+  );
 
   return (
-    <>
+    <IntlProvider locale={props.locale} messages={messages}>
       <ReactHelmet>
-        <title>{props.title}</title>
-        <meta name="description" content={props.description} />
+        <title>{title}</title>
+        <meta name="description" content={description} />
       </ReactHelmet>
       {props.children}
-    </>
+    </IntlProvider>
   );
-};
+});
