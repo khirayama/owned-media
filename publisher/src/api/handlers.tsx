@@ -40,8 +40,14 @@ export function fetchResource(req: express.Request, res: express.Response) {
   const params = req.params;
   const query = req.query;
 
-  const options = { locale: query.locale, limit: Number(query.limit), offset: Number(query.offset), sort: query.sort };
-  const resource = Resource.find({ id: params.id }, options)[0] || null;
+  const options = {
+    locale: query.locale,
+    limit: query.limit ? Number(query.limit) : query.limit,
+    offset: query.offset ? Number(query.offset) : query.offset,
+    sort: query.sort,
+  };
+  const resource =
+    Resource.find({ id: [params.id] }, options)[0] || Resource.find({ key: [params.id] }, options)[0] || null;
   res.json(resource);
 }
 
