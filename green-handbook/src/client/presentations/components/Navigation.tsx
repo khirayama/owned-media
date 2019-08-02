@@ -9,6 +9,14 @@ export function Navigation() {
       <LocaleBar />
       <ul>
         <li>
+          <Link to="/ja">日本語</Link>
+        </li>
+        <li>
+          <Link to="/en">English</Link>
+        </li>
+      </ul>
+      <ul>
+        <li>
           <Link to="/">Home</Link>
         </li>
         <li>
