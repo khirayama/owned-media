@@ -32,6 +32,7 @@ const Head = injectIntl(function(props: { title: FormattedMessage; description: 
   );
 });
 
+// FYI: URLに紐づいた処理はcontainer/Pageで行うが、URLに紐づいた表示（タイトルなど）はcomponents/Pageで行う
 export const Page = (props: Props) => {
   React.useEffect(() => {
     props.onUpdate(props);

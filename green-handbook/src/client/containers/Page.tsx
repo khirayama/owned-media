@@ -31,6 +31,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
   };
 };
 
+// FYI: URLに紐づいた処理はcontainer/Pageで行うが、URLに紐づいた表示（タイトルなど）はcomponents/Pageで行う
 export const Page = withRouter(
   connect(
     mapStateToProps,
