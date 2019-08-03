@@ -1,12 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-import { LocaleBar } from '../../containers/LocaleBar';
-
 export function Navigation() {
   return (
     <nav>
-      <LocaleBar />
       <ul>
         <li>
           <Link to="/ja">日本語</Link>
