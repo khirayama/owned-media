@@ -1,32 +1,23 @@
 import * as React from 'react';
 import ReactHelmet from 'react-helmet';
-import { IntlProvider, injectIntl, InjectedIntlProps } from 'react-intl';
+import { IntlProvider, injectIntl } from 'react-intl';
 
 import { chooseLocale } from '../../presentations/locales';
 
+export interface FormattedMessage {
+  descriptor: string;
+  values?: any;
+}
+
 export type Props = {
-  defaultLocale: string;
   locale: string;
-  title: {
-    descriptor: string;
-    values?: any;
-  };
-  description: {
-    descriptor: string;
-    values?: any;
-  };
+  title: FormattedMessage;
+  description: FormattedMessage;
   children: React.ReactNode;
   onUpdate: (props: Props) => void;
 };
 
-// TODO: Use withRouter for path, locale from react-router
-export const Page = injectIntl(function(props: Props & InjectedIntlProps) {
-  React.useEffect(() => {
-    props.onUpdate(props);
-  });
-
-  const locale = props.locale || props.defaultLocale;
-  const messages = chooseLocale(locale);
+const Head = injectIntl(function(props: { title: FormattedMessage; description: FormattedMessage; intl: any }) {
   const title: string = props.intl.formatMessage({ id: props.title.descriptor }, props.title.values || {});
   const description: string = props.intl.formatMessage(
     { id: props.description.descriptor },
@@ -34,14 +25,27 @@ export const Page = injectIntl(function(props: Props & InjectedIntlProps) {
   );
 
   return (
+    <ReactHelmet>
+      <title>{title}</title>;
+      <meta name="description" content={description} />
+    </ReactHelmet>
+  );
+});
+
+export const Page = (props: Props) => {
+  React.useEffect(() => {
+    props.onUpdate(props);
+  });
+
+  const locale = props.locale;
+  const messages = chooseLocale(locale);
+
+  return (
     <IntlProvider locale={locale} messages={messages}>
       <>
-        <ReactHelmet>
-          <title>{title}</title>
-          <meta name="description" content={description} />
-        </ReactHelmet>
+        <Head title={props.title} description={props.description} />
         {props.children}
       </>
     </IntlProvider>
   );
-});
+};
