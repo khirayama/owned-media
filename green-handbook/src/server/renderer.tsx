@@ -15,7 +15,6 @@ import { reducer } from '../client/reducers';
 import { Routes, routes } from '../client/presentations/routes/Routes';
 import { ResetStyle } from '../client/presentations/styles/ResetStyle';
 import { GlobalStyle } from '../client/presentations/styles/GlobalStyle';
-import { Intl } from '../client/containers/Intl';
 import { Resource } from '../client/services';
 import { initializePage } from '../client/usecases';
 
@@ -44,9 +43,7 @@ const generateParams = (url: string, store: any) => {
         <ResetStyle />
         <GlobalStyle />
         <Provider store={store}>
-          <Intl>
-            <Routes />
-          </Intl>
+          <Routes />
         </Provider>
       </StaticRouter>,
     ),

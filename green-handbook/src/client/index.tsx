@@ -10,7 +10,6 @@ import { reducer } from './reducers';
 import { Routes } from './presentations/routes/Routes';
 import { ResetStyle } from './presentations/styles/ResetStyle';
 import { GlobalStyle } from './presentations/styles/GlobalStyle';
-import { Intl } from './containers/Intl';
 
 function extractInitialState() {
   const initialDataElement = window.document.querySelector('#initial-data');
@@ -30,9 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
       <ResetStyle />
       <GlobalStyle />
       <Provider store={store}>
-        <Intl>
-          <Routes />
-        </Intl>
+        <Routes />
       </Provider>
     </BrowserRouter>,
     window.document.querySelector('#root'),
