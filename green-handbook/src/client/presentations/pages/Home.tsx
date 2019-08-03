@@ -1,19 +1,16 @@
 import * as React from 'react';
 import * as styled from 'styled-components';
-import { injectIntl } from 'react-intl';
 
-import { Page } from '../../presentations/pages/Page';
+import { Page, FormattedMessage } from '../../containers/Page';
 import { Application } from '../../presentations/templates/Application';
 
 const Wrapper = styled.default.div`
   color: blue;
 `;
 
-export const Home = injectIntl(function(props) {
-  const title: string = props.intl.formatMessage({ id: 'Home.Title' });
-  const description: string = props.intl.formatMessage({
-    id: 'Home.Description',
-  });
+export const Home = () => {
+  const title: FormattedMessage = { descriptor: 'Home.Title' };
+  const description: FormattedMessage = { descriptor: 'Home.Description' };
 
   return (
     <Page title={title} description={description}>
@@ -24,4 +21,4 @@ export const Home = injectIntl(function(props) {
       </Application>
     </Page>
   );
-});
+};

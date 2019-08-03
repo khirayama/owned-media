@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { injectIntl } from 'react-intl';
 
-import { Page } from '../../presentations/pages/Page';
+import { Page, FormattedMessage } from '../../containers/Page';
 import { Application } from '../../presentations/templates/Application';
 import { ResourceContent } from '../../containers/ResourceContent';
 
-export const Resource = injectIntl(function(props: any) {
-  const title: string = props.intl.formatMessage({ id: 'Resource.Title' }, { title: 'ok' });
-  const description: string = props.intl.formatMessage({ id: 'Resource.Description' }, { description: 'okok' });
+export const Resource = (props: any) => {
   const resourceId = props.match.params.key;
+  const title: FormattedMessage = { descriptor: 'Resource.Title', values: { title: 'Resource Title' } };
+  const description: FormattedMessage = {
+    descriptor: 'Resource.Description',
+    values: { description: 'Resource Title' },
+  };
 
   return (
     <Page title={title} description={description}>
@@ -17,4 +19,4 @@ export const Resource = injectIntl(function(props: any) {
       </Application>
     </Page>
   );
-});
+};
