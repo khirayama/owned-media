@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { Page, FormattedMessage } from '../../containers/Page';
+import { Page } from '../../containers/Page';
+import { FormattedMessage } from '../../presentations/components/Page';
 import { Application } from '../../presentations/templates/Application';
 import { ResourceContent } from '../../containers/ResourceContent';
 

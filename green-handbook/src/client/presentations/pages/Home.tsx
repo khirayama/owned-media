@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as styled from 'styled-components';
 
-import { Page, FormattedMessage } from '../../containers/Page';
+import { Page } from '../../containers/Page';
+import { FormattedMessage } from '../../presentations/components/Page';
 import { Application } from '../../presentations/templates/Application';
 
 const Wrapper = styled.default.div`
