@@ -1,25 +1,23 @@
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import { State } from '../reducers';
-import { Page as Component, Props as PageProps } from '../presentations/components/Page';
+import { Page as Component, Props as PageProps, FormattedMessage } from '../presentations/components/Page';
 import { changeLocale } from '../actions/ui';
 
-type Props = {
-  title: {
-    descriptor: string;
-    values?: any;
-  };
-  description: {
-    descriptor: string;
-    values?: any;
-  };
-};
+export interface Props extends RouteComponentProps<{ locale?: string }> {
+  title: FormattedMessage;
+  description: FormattedMessage;
+}
 
 const mapStateToProps = (state: State, props: Props) => {
+  const defaultLocale = state.config ? state.config.locales[0] : '';
+  const locale = props.match.params.locale || defaultLocale;
+
   return {
-    defaultLocale: state.config ? state.config.locales[0] : '',
+    locale,
     title: props.title,
     description: props.description,
   };
@@ -28,13 +26,14 @@ const mapStateToProps = (state: State, props: Props) => {
 const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
   return {
     onUpdate: (props: PageProps) => {
-      console.log(props);
-      dispatch(changeLocale(props.locale || props.defaultLocale));
+      dispatch(changeLocale(props.locale));
     },
   };
 };
 
-export const Page = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Component);
+export const Page = withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(Component),
+);
