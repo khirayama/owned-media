@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 
 import { ResourceState } from '../../reducers/resources';
+import { AppLink } from '../../containers/AppLink';
 
 export interface Props {
   resource: ResourceState | null;
@@ -28,13 +28,13 @@ export function ResourceContent(props: Props) {
     <>
       <ul>
         <li>
-          <Link to="/notes/fundamental-knowledge">Fundamental Knowledge</Link>
+          <AppLink to="/resources/fundamental-knowledge">Fundamental Knowledge</AppLink>
         </li>
         <li>
-          <Link to="/notes/daily-care">Daily Care</Link>
+          <AppLink to="/resources/daily-care">Daily Care</AppLink>
         </li>
         <li>
-          <Link to="/notes/no-key">404 content</Link>
+          <AppLink to="/resources/no-key">404 content</AppLink>
         </li>
       </ul>
       {contents}

@@ -1,23 +1,25 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+
+import { LocaleLink } from '../../containers/LocaleLink';
+import { AppLink } from '../../containers/AppLink';
 
 export function Navigation() {
   return (
     <nav>
       <ul>
         <li>
-          <Link to="/ja">日本語</Link>
+          <LocaleLink to="/">日本語</LocaleLink>
         </li>
         <li>
-          <Link to="/en">English</Link>
+          <LocaleLink to="/en">English</LocaleLink>
         </li>
       </ul>
       <ul>
         <li>
-          <Link to="/">Home</Link>
+          <AppLink to="/">Home</AppLink>
         </li>
         <li>
-          <Link to="/resources/fundamental-knowledge">Fundamental Knowledge</Link>
+          <AppLink to="/resources/fundamental-knowledge">Fundamental Knowledge</AppLink>
         </li>
       </ul>
     </nav>
