@@ -28,14 +28,10 @@ export type ResourceWithAllLocalesShape = {
   type: string;
   key: string;
   name: LocaleObject;
-  imageUrl: LocaleObject;
   bodyPath: LocaleObject;
   body: LocaleObject;
-  page: {
-    title: LocaleObject;
-    description: LocaleObject;
-    imageUrl: LocaleObject;
-    keywords: LocaleObject;
+  media: {
+    [key: string]: string;
   };
   attributes: {
     [key: string]: string;
@@ -49,14 +45,10 @@ export type ResourceShape = {
   type: string;
   key: string;
   name: string;
-  imageUrl: string;
   bodyPath: string;
   body: string;
-  page: {
-    title: string;
-    description: string;
-    imageUrl: string;
-    keywords: string;
+  media: {
+    [key: string]: string;
   };
   attributes: {
     [key: string]: string;
@@ -69,13 +61,9 @@ export type ResourceRequest = {
   type: string;
   name: string;
   key: string;
-  image_url: string;
   body_path?: string;
-  page: {
-    title: string;
-    description: string;
-    image_url: string;
-    keywords: string;
+  media: {
+    [key: string]: string;
   };
   attributes: {
     [key: string]: string;

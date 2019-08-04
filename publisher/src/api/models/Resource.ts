@@ -41,15 +41,8 @@ const relatedEnResources = Resource.find({
 Resource.create({
   type: 'note',
   name: 'テスト',
-  imageUrl: 'イメージパス',
   attributes: {
     sample: 'サンプル',
-  },
-  page: {
-    title: 'テストタイトル',
-    description: 'テスト説明文',
-    imageUrl: 'イメージパス',
-    keywords: 'キーワード,キーワード',
   },
 }, {
   locale: 'ja',
@@ -57,15 +50,8 @@ Resource.create({
 Resource.update('1', {
   type: 'note',
   name: 'テスト',
-  imageUrl: 'イメージパス',
   attributes: {
     sample: 'サンプル',
-  },
-  page: {
-    title: 'テストタイトル',
-    description: 'テスト説明文',
-    imageUrl: 'イメージパス',
-    keywords: 'キーワード,キーワード',
   },
 }, {
   locale: 'en',
@@ -88,8 +74,16 @@ type ResourceContentRow = {
   resource_id: string;
   locale: string;
   name: string;
-  image_url: string;
   body_path: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type ResourceMediumRow = {
+  id: string;
+  resource_id: string;
+  key: string;
+  url: string;
   created_at: string;
   updated_at: string;
 };
@@ -99,18 +93,6 @@ type ResourceAttributeRow = {
   resource_id: string;
   key: string;
   value: string;
-  created_at: string;
-  updated_at: string;
-};
-
-type PageRow = {
-  id: string;
-  resource_id: string;
-  locale: string;
-  title: string;
-  description: string;
-  image_url: string;
-  keywords: string;
   created_at: string;
   updated_at: string;
 };
@@ -134,31 +116,31 @@ export class Resource {
 
   private static columns = {
     resources: ['id', 'type', 'key', 'created_at', 'updated_at'],
-    resourceContents: ['id', 'resource_id', 'locale', 'name', 'image_url', 'body_path', 'created_at', 'updated_at'],
+    resourceContents: ['id', 'resource_id', 'locale', 'name', 'body_path', 'created_at', 'updated_at'],
+    resourceMedia: ['id', 'resource_id', 'key', 'url', 'created_at', 'updated_at'],
     resourceAttributes: ['id', 'resource_id', 'key', 'value', 'created_at', 'updated_at'],
-    pages: ['id', 'resource_id', 'locale', 'title', 'description', 'image_url', 'keywords', 'created_at', 'updated_at'],
     relations: ['id', 'resource1_id', 'resource2_id', 'created_at', 'updated_at'],
   };
 
   private static filePaths = {
     resources: path.join(DATA_PATH, 'resources.csv'),
     resourceContents: path.join(DATA_PATH, 'resource_contents.csv'),
+    resourceMedia: path.join(DATA_PATH, 'resource_media.csv'),
     resourceAttributes: path.join(DATA_PATH, 'resource_attributes.csv'),
-    pages: path.join(DATA_PATH, 'pages.csv'),
     relations: path.join(DATA_PATH, 'relations.csv'),
   };
 
   private static rows: {
     resources: ResourceRow[];
     resourceContents: ResourceContentRow[];
+    resourceMedia: ResourceMediumRow[];
     resourceAttributes: ResourceAttributeRow[];
-    pages: PageRow[];
     relations: RelationRow[];
   } = {
     resources: [],
     resourceContents: [],
+    resourceMedia: [],
     resourceAttributes: [],
-    pages: [],
     relations: [],
   };
 
@@ -169,8 +151,8 @@ export class Resource {
     this.resources = this.buildResource(
       this.rows.resources,
       this.rows.resourceContents,
+      this.rows.resourceMedia,
       this.rows.resourceAttributes,
-      this.rows.pages,
     );
   }
 
@@ -178,15 +160,15 @@ export class Resource {
     try {
       const resourcesCSV = fsExtra.readFileSync(this.filePaths.resources, 'utf8');
       const resourceContentsCSV = fsExtra.readFileSync(this.filePaths.resourceContents, 'utf8');
+      const resourceMediaCSV = fsExtra.readFileSync(this.filePaths.resourceMedia, 'utf8');
       const resourceAttributesCSV = fsExtra.readFileSync(this.filePaths.resourceAttributes, 'utf8');
-      const pagesCSV = fsExtra.readFileSync(this.filePaths.pages, 'utf8');
       const relationsCSV = fsExtra.readFileSync(this.filePaths.relations, 'utf8');
 
       this.rows = {
         resources: csvParse(resourcesCSV),
         resourceContents: csvParse(resourceContentsCSV),
+        resourceMedia: csvParse(resourceMediaCSV),
         resourceAttributes: csvParse(resourceAttributesCSV),
-        pages: csvParse(pagesCSV),
         relations: csvParse(relationsCSV),
       };
     } catch (e) {
@@ -197,8 +179,8 @@ export class Resource {
   private static buildResource(
     resourceRows: ResourceRow[],
     resourceContentRows: ResourceContentRow[],
+    resourceMediumRows: ResourceMediumRow[],
     resourceAttributeRows: ResourceAttributeRow[],
-    pageRows: PageRow[],
   ): ResourceWithAllLocalesShape[] {
     const resources: ResourceWithAllLocalesShape[] = [];
 
@@ -208,15 +190,9 @@ export class Resource {
         type: resourceRow.type,
         key: resourceRow.key,
         name: {},
-        imageUrl: {},
         bodyPath: {},
         body: {},
-        page: {
-          title: {},
-          description: {},
-          imageUrl: {},
-          keywords: {},
-        },
+        media: {},
         attributes: {},
         createdAt: resourceRow.created_at,
         updatedAt: resourceRow.updated_at,
@@ -236,20 +212,8 @@ export class Resource {
           }
 
           resource.name[locale] = resourceContentRow.name;
-          resource.imageUrl[locale] = resourceContentRow.image_url;
           resource.bodyPath[locale] = resourceContentRow.body_path;
           resource.body[locale] = markdown;
-        }
-      }
-
-      for (const pageRow of pageRows) {
-        if (pageRow.resource_id === resourceRow.id) {
-          const locale: string = pageRow.locale;
-
-          resource.page.title[locale] = pageRow.title;
-          resource.page.description[locale] = pageRow.description;
-          resource.page.keywords[locale] = pageRow.keywords;
-          resource.page.imageUrl[locale] = pageRow.image_url;
         }
       }
 
@@ -340,10 +304,6 @@ export class Resource {
     });
     // For resource_contents
     this.createContent(resourceId, resource, locale);
-    // For pages
-    if (resource.page) {
-      this.createPage(resourceId, resource.page, locale);
-    }
     // For resource_attributes
     if (resource.attributes) {
       for (let key of Object.keys(resource.attributes)) {
@@ -364,8 +324,8 @@ export class Resource {
     this.resources = this.buildResource(
       this.rows.resources,
       this.rows.resourceContents,
+      this.rows.resourceMedia,
       this.rows.resourceAttributes,
-      this.rows.pages,
     );
 
     return this.find({ id: [resourceId] }, { locale })[0];
@@ -382,9 +342,6 @@ export class Resource {
     const resourceRow = this.rows.resources.filter(resourceRow => resourceRow.id === resourceId)[0];
     const resourceContentRow = this.rows.resourceContents.filter(
       resourceContentRow => resourceContentRow.resource_id === resourceId && resourceContentRow.locale === locale,
-    )[0];
-    const pageRow = this.rows.pages.filter(
-      pageRow => pageRow.resource_id === resourceId && pageRow.locale === locale,
     )[0];
     const resourceAttributeRows = this.rows.resourceAttributes.filter(
       resourceAttributeRow => resourceAttributeRow.resource_id === resourceId,
@@ -409,35 +366,8 @@ export class Resource {
         resourceContentRow.body_path = resource.bodyPath;
         resourceContentRow.updated_at = now.toString();
       }
-      if (resource.imageUrl !== undefined) {
-        resourceContentRow.image_url = resource.imageUrl;
-        resourceContentRow.updated_at = now.toString();
-      }
     } else {
       this.createContent(resourceId, resource, locale);
-    }
-    // For pages
-    if (resource.page) {
-      if (pageRow) {
-        if (resource.page.title !== undefined) {
-          pageRow.title = resource.page.title;
-          pageRow.updated_at = now.toString();
-        }
-        if (resource.page.description !== undefined) {
-          pageRow.description = resource.page.description;
-          pageRow.updated_at = now.toString();
-        }
-        if (resource.page.keywords !== undefined) {
-          pageRow.keywords = resource.page.keywords;
-          pageRow.updated_at = now.toString();
-        }
-        if (resource.page.imageUrl !== undefined) {
-          pageRow.image_url = resource.page.imageUrl;
-          pageRow.updated_at = now.toString();
-        }
-      } else {
-        this.createPage(resourceId, resource.page, locale);
-      }
     }
     // For resource_attributes
     if (resource.attributes) {
@@ -469,8 +399,8 @@ export class Resource {
     this.resources = this.buildResource(
       this.rows.resources,
       this.rows.resourceContents,
+      this.rows.resourceMedia,
       this.rows.resourceAttributes,
-      this.rows.pages,
     );
 
     return this.find({ id: [resourceId] }, { locale })[0];
@@ -480,7 +410,6 @@ export class Resource {
     this.rows.resources = this.rows.resources.filter(row => row.id !== resourceId);
     this.rows.resourceContents = this.rows.resourceContents.filter(row => row.resource_id !== resourceId);
     this.rows.resourceAttributes = this.rows.resourceAttributes.filter(row => row.resource_id !== resourceId);
-    this.rows.pages = this.rows.pages.filter(row => row.resource_id !== resourceId);
     this.rows.relations = this.rows.relations.filter(
       row => row.resource1_id !== resourceId && row.resource2_id !== resourceId,
     );
@@ -489,8 +418,8 @@ export class Resource {
     this.resources = this.buildResource(
       this.rows.resources,
       this.rows.resourceContents,
+      this.rows.resourceMedia,
       this.rows.resourceAttributes,
-      this.rows.pages,
     );
   }
 
@@ -499,7 +428,6 @@ export class Resource {
     const lastResourceContentRow = this.rows.resourceContents[this.rows.resourceContents.length - 1];
     const resourceContentId = lastResourceContentRow ? String(Number(lastResourceContentRow.id) + 1) : '1';
     const resourceName = resource.name || '';
-    const resourceImageUrl = resource.imageUrl || '';
 
     const RESOURCE_CONTENTS_PATH = ['resources', resourceId, 'resource_contents'].join('/');
     const RESOURCE_CONTENTS_FULLPATH = [ROOT_PATH, 'resources', resourceId, 'resource_contents'].join('/');
@@ -514,29 +442,7 @@ export class Resource {
       resource_id: resourceId,
       locale,
       name: resourceName,
-      image_url: resourceImageUrl,
       body_path: resourceBodyPath,
-      created_at: now.toString(),
-      updated_at: now.toString(),
-    });
-  }
-
-  private static createPage(resourceId: string, page: Partial<ResourceShape['page']>, locale: string) {
-    const now = new Date();
-    const lastPageRow = this.rows.pages[this.rows.pages.length - 1];
-    const pageId = lastPageRow ? String(Number(lastPageRow.id) + 1) : '1';
-    const pageTitle = page.title || '';
-    const pageDescription = page.description || '';
-    const pageImageUrl = page.imageUrl || '';
-    const pageKeywords = page.keywords || '';
-    this.rows.pages.push({
-      id: pageId,
-      resource_id: resourceId,
-      locale,
-      title: pageTitle,
-      description: pageDescription,
-      image_url: pageImageUrl,
-      keywords: pageKeywords,
       created_at: now.toString(),
       updated_at: now.toString(),
     });
@@ -606,13 +512,11 @@ export class Resource {
     const resourcesString = csvStringify(this.rows.resources, this.columns.resources);
     const resourceContentsString = csvStringify(this.rows.resourceContents, this.columns.resourceContents);
     const resourceAttributesString = csvStringify(this.rows.resourceAttributes, this.columns.resourceAttributes);
-    const pagesString = csvStringify(this.rows.pages, this.columns.pages);
     const relationsString = csvStringify(this.rows.relations, this.columns.relations);
 
     fsExtra.outputFile(this.filePaths.relations, resourcesString);
     fsExtra.outputFile(this.filePaths.resourceContents, resourceContentsString);
     fsExtra.outputFile(this.filePaths.resourceAttributes, resourceAttributesString);
-    fsExtra.outputFile(this.filePaths.pages, pagesString);
     fsExtra.outputFile(this.filePaths.relations, relationsString);
   }
 }
