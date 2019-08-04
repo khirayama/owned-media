@@ -14,7 +14,7 @@ export const routes = [
   },
   {
     exact: true,
-    path: `/:locale?/:resourceType/:key`,
+    path: `/:locale?/resources/:key`,
     component: Resource,
     initializer: (params: { locale?: string; resourceType: string; key: string }) => fetchResource(params.key),
   },
