@@ -1,11 +1,11 @@
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps, matchPath } from 'react-router-dom';
 
 import { State } from '../reducers';
 import { Page as Component, Props as PageProps, FormattedMessage } from '../presentations/components/Page';
-import { changeLocale } from '../actions/ui';
+import { changeLocale, setPathname } from '../actions/ui';
 
 export interface Props extends RouteComponentProps<{ locale?: string }> {
   title: FormattedMessage;
@@ -16,8 +16,16 @@ const mapStateToProps = (state: State, props: Props) => {
   const defaultLocale = state.config ? state.config.locales[0] : '';
   const locale = props.match.params.locale || defaultLocale;
 
+  let pathname = '/';
+  const res = matchPath(props.location.pathname, props.match);
+  if (res) {
+    const regexp = new RegExp(`^/${locale}`);
+    pathname = res.url.replace(regexp, '') || '/';
+  }
+
   return {
     locale,
+    pathname,
     title: props.title,
     description: props.description,
   };
@@ -27,6 +35,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<{}, {}, Action>) => {
   return {
     onUpdate: (props: PageProps) => {
       dispatch(changeLocale(props.locale));
+      dispatch(setPathname(props.pathname));
     },
   };
 };
