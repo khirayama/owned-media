@@ -3,19 +3,37 @@ const name = {
   en: 'GREEN HANDBOOK',
 };
 
+const SEOAttributes = [
+  {
+    key: 'title',
+    inputType: 'text',
+  },
+  {
+    key: 'description',
+    inputType: 'text',
+  },
+  {
+    key: 'keywords',
+    inputType: 'text',
+  },
+];
+
 const resourceTypes = [
   {
     name: 'notes',
     type: 'note',
+    attributes: SEOAttributes,
   },
   {
     name: 'labels',
     type: 'label',
+    attributes: SEOAttributes,
   },
   {
     name: 'plants',
     type: 'plant',
     attributes: [
+      ...SEOAttributes,
       {
         key: 'shadeTolerance',
         inputType: 'select',
@@ -74,6 +92,7 @@ const resourceTypes = [
     name: 'products',
     type: 'product',
     attributes: [
+      ...SEOAttributes,
       {
         key: 'suggestedRetailPrice',
         inputType: 'number',

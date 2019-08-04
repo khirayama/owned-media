@@ -298,8 +298,12 @@
   - resource_id
   - locale
   - name
-  - image_url
   - body_path
+- resource_media
+  - id
+  - resource_id
+  - key
+  - url
 - resource_attributes
   - id
   - resource_id
