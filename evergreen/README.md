@@ -296,14 +296,10 @@
 - resource_contents
   - id
   - resource_id
-  - locale
-  - name
-  - body_path
-- resource_media
-  - id
-  - resource_id
+  - country_code
+  - lang_code
   - key
-  - url
+  - value
 - resource_attributes
   - id
   - resource_id
@@ -313,17 +309,52 @@
   - id
   - resource1_id
   - resource2_id
-- pages
-  - id
-  - resource_id
-  - locale
-  - title
-  - description
-  - image_url
-  - keywords
 
-- resource.type: plants / products / note / labels
-- plant.attribute: shade_tolerance(number), cold_tolerance(number)
+- resource.type: plants / products / notes / labels
+- plants
+  - contents
+    - name(text)
+    - body(markdown)
+    - seo_title(text)
+    - seo_description(text)
+    - seo_keywords(text)
+  - attribute:
+    - image_square(file)
+    - image_rectangle(file)
+    - shade_tolerance(number)
+    - cold_tolerance(number)
+- products
+  - contents
+    - name(text)
+    - body(markdown)
+    - seo_title(text)
+    - seo_description(text)
+    - seo_keywords(text)
+  - attribute:
+    - image_square(file)
+    - image_rectangle(file)
+- notes
+  - contents
+    - name(text)
+    - body(markdown)
+    - seo_title(text)
+    - seo_description(text)
+    - seo_keywords(text)
+  - attribute:
+    - image_square(file)
+    - image_rectangle(file)
+- labels
+  - contents
+    - name(text)
+    - body(markdown)
+    - seo_title(text)
+    - seo_description(text)
+    - seo_keywords(text)
+  - attribute:
+    - image_square(file)
+    - image_rectangle(file)
+
+note: 言語、国によって差異がでるものがcontents。差異がでないものがattributes。
 
 ### 写真 / Photos
 

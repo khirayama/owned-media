@@ -1,6 +1,6 @@
 const name = {
-  ja: '緑色手帖',
-  en: 'GREEN HANDBOOK',
+  ja: 'EVERGREEN',
+  en: 'EVERGREEN',
 };
 
 const SEOAttributes = [

@@ -1,7 +1,7 @@
 {
-  "name": "green-handbook",
+  "name": "evergreen",
   "version": "1.0.0",
-  "description": "緑色手帖",
+  "description": "EVERGREEN",
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist",
