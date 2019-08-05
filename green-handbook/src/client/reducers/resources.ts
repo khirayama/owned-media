@@ -1,7 +1,7 @@
 import clone from 'rfdc';
 
 // eslint-disable-next-line node/no-missing-import, node/no-extraneous-import
-import { ResourceShape } from 'publisher';
+import { ResourceShape } from 'yggdrasil';
 
 import { Actions } from '../actions/resources';
 

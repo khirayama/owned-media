@@ -1,6 +1,6 @@
 import clone from 'rfdc';
 
-import { Config } from 'publisher';
+import { Config } from 'yggdrasil';
 
 import { Actions } from '../actions/config';
 

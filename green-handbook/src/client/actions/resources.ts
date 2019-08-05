@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 
 // eslint-disable-next-line node/no-missing-import, node/no-extraneous-import
-import { ResourceShape } from 'publisher';
+import { ResourceShape } from 'yggdrasil';
 
 export type Actions = SetResource | ChangeIsFetchingResource | ResetResource;
 

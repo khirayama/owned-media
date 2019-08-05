@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { Config, ResourceShape, ResourceWithAllLocalesShape } from 'publisher';
+import { Config, ResourceShape, ResourceWithAllLocalesShape } from 'yggdrasil';
 
 const PORT = process.env.PORT || 3000;
 

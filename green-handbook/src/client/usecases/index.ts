@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { Config, ResourceShape } from 'publisher';
+import { Config, ResourceShape } from 'yggdrasil';
 
 import { changeIsFetchingResource, resetResource, setResource } from '../actions/resources';
 import { changeLocale } from '../actions/ui';

@@ -1,6 +1,6 @@
 import { Action } from 'redux';
 
-import { Config } from 'publisher';
+import { Config } from 'yggdrasil';
 
 export type Actions = SetConfig;
 

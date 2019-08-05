@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import reduxThunk from 'redux-thunk';
 
-import { Config } from 'publisher';
+import { Config } from 'yggdrasil';
 
 import { renderFullPage } from './renderFullPage';
 import { reducer } from '../client/reducers';

@@ -3,7 +3,7 @@ import * as http from 'http';
 
 import express from 'express';
 
-import { adminRouter, apiRouter, appRouter, initialize } from 'publisher';
+import { adminRouter, apiRouter, appRouter, initialize } from 'yggdrasil';
 
 import * as renderer from './renderer';
 

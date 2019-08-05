@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { Config } from 'publisher';
+import { Config } from 'yggdrasil';
 
 import { reducer as configReducer } from './config';
 import { State as ResourcesState, reducer as resourcesReducer } from './resources';
