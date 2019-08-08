@@ -1,4 +1,4 @@
-# Yugdrasil
+# Yuggdrasil
 
 ## Data Structure
 
