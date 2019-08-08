@@ -79,15 +79,6 @@ type ResourceContentRow = {
   updated_at: string;
 };
 
-type ResourceMediumRow = {
-  id: string;
-  resource_id: string;
-  key: string;
-  url: string;
-  created_at: string;
-  updated_at: string;
-};
-
 type ResourceAttributeRow = {
   id: string;
   resource_id: string;
@@ -116,8 +107,7 @@ export class Resource {
 
   private static columns = {
     resources: ['id', 'type', 'key', 'created_at', 'updated_at'],
-    resourceContents: ['id', 'resource_id', 'locale', 'name', 'body_path', 'created_at', 'updated_at'],
-    resourceMedia: ['id', 'resource_id', 'key', 'url', 'created_at', 'updated_at'],
+    resourceContents: ['id', 'resource_id', 'locale', 'key', 'value', 'created_at', 'updated_at'],
     resourceAttributes: ['id', 'resource_id', 'key', 'value', 'created_at', 'updated_at'],
     relations: ['id', 'resource1_id', 'resource2_id', 'created_at', 'updated_at'],
   };
@@ -125,7 +115,6 @@ export class Resource {
   private static filePaths = {
     resources: path.join(DATA_PATH, 'resources.csv'),
     resourceContents: path.join(DATA_PATH, 'resource_contents.csv'),
-    resourceMedia: path.join(DATA_PATH, 'resource_media.csv'),
     resourceAttributes: path.join(DATA_PATH, 'resource_attributes.csv'),
     relations: path.join(DATA_PATH, 'relations.csv'),
   };
@@ -133,13 +122,11 @@ export class Resource {
   private static rows: {
     resources: ResourceRow[];
     resourceContents: ResourceContentRow[];
-    resourceMedia: ResourceMediumRow[];
     resourceAttributes: ResourceAttributeRow[];
     relations: RelationRow[];
   } = {
     resources: [],
     resourceContents: [],
-    resourceMedia: [],
     resourceAttributes: [],
     relations: [],
   };
@@ -151,7 +138,6 @@ export class Resource {
     this.resources = this.buildResource(
       this.rows.resources,
       this.rows.resourceContents,
-      this.rows.resourceMedia,
       this.rows.resourceAttributes,
     );
   }
@@ -160,14 +146,12 @@ export class Resource {
     try {
       const resourcesCSV = fsExtra.readFileSync(this.filePaths.resources, 'utf8');
       const resourceContentsCSV = fsExtra.readFileSync(this.filePaths.resourceContents, 'utf8');
-      const resourceMediaCSV = fsExtra.readFileSync(this.filePaths.resourceMedia, 'utf8');
       const resourceAttributesCSV = fsExtra.readFileSync(this.filePaths.resourceAttributes, 'utf8');
       const relationsCSV = fsExtra.readFileSync(this.filePaths.relations, 'utf8');
 
       this.rows = {
         resources: csvParse(resourcesCSV),
         resourceContents: csvParse(resourceContentsCSV),
-        resourceMedia: csvParse(resourceMediaCSV),
         resourceAttributes: csvParse(resourceAttributesCSV),
         relations: csvParse(relationsCSV),
       };
@@ -179,7 +163,6 @@ export class Resource {
   private static buildResource(
     resourceRows: ResourceRow[],
     resourceContentRows: ResourceContentRow[],
-    resourceMediumRows: ResourceMediumRow[],
     resourceAttributeRows: ResourceAttributeRow[],
   ): ResourceWithAllLocalesShape[] {
     const resources: ResourceWithAllLocalesShape[] = [];
@@ -324,7 +307,6 @@ export class Resource {
     this.resources = this.buildResource(
       this.rows.resources,
       this.rows.resourceContents,
-      this.rows.resourceMedia,
       this.rows.resourceAttributes,
     );
 
@@ -399,7 +381,6 @@ export class Resource {
     this.resources = this.buildResource(
       this.rows.resources,
       this.rows.resourceContents,
-      this.rows.resourceMedia,
       this.rows.resourceAttributes,
     );
 
@@ -418,7 +399,6 @@ export class Resource {
     this.resources = this.buildResource(
       this.rows.resources,
       this.rows.resourceContents,
-      this.rows.resourceMedia,
       this.rows.resourceAttributes,
     );
   }
