@@ -1,8 +1,3 @@
-const name = {
-  ja: 'サンプルネーム',
-  en: 'Sample Name',
-};
-
 const resourceTypes = [
   {
     name: 'notes',
@@ -14,16 +9,24 @@ const resourceTypes = [
   },
 ];
 
+const locales = {
+  jaJP: 'ja_JP',
+  enUS: 'en_US',
+};
+
 const config = {
-  locales: ['ja', 'en'],
-  name,
+  locales: [locales.jaJP, locales.enUS],
+  name: {
+    [locales.jaJP]: 'サンプルネーム',
+    [locales.enUS]: 'Sample Name',
+  },
   tagline: {
-    ja: 'サンプルタグライン',
-    en: 'Sample Tagline',
+    [locales.jaJP]: 'サンプルタグライン',
+    [locales.enUS]: 'Sample Tagline',
   },
   description: {
-    ja: 'サンプル説明文',
-    en: 'Sample Description',
+    [locales.jaJP]: 'サンプル説明文',
+    [locales.enUS]: 'Sample Description',
   },
   resourceTypes,
 };
