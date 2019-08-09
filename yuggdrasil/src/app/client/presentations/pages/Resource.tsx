@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 
+import { Page } from '../../containers/Page';
 import { ResourceForm } from '../../containers/ResourceForm';
-import { LocaleBar } from '../../containers/LocaleBar';
 import { FlatLink } from '../components/Button';
-import { Head } from '../head/Head';
 
 const Wrapper = styled.div`
   padding: 12px;
@@ -22,23 +21,20 @@ const Wrapper = styled.div`
 
 interface Props extends RouteComponentProps {
   match: any;
-  intl: any;
 }
 
-export const Resource = injectIntl(function(props: Props) {
+export const Resource = (props: Props) => {
   const resourceId = props.match.params.id || null;
-  const title: string = props.intl.formatMessage({ id: 'Resource.Title' });
-  const description: string = props.intl.formatMessage({
-    id: 'Resource.Description',
-  });
+  const title = { descriptor: 'Resource.Title' };
+  const description = { descriptor: 'Resource.Description' };
 
   return (
-    <Wrapper>
-      <Head title={title} description={description} />
-      <LocaleBar />
-      <FormattedMessage tagName="h2" id="Resource.Heading" />
-      <FlatLink to="/">TO RESOURCE INDEX</FlatLink>
-      <ResourceForm resourceId={resourceId} history={props.history} />
-    </Wrapper>
+    <Page title={title} description={description}>
+      <Wrapper>
+        <FormattedMessage tagName="h2" id="Resource.Heading" />
+        <FlatLink to="/">TO RESOURCE INDEX</FlatLink>
+        <ResourceForm resourceId={resourceId} history={props.history} />
+      </Wrapper>
+    </Page>
   );
-});
+};

@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import styled from 'styled-components';
 
+import { Page } from '../../containers/Page';
 import { ResourceList } from '../../containers/ResourceList';
-import { LocaleBar } from '../../containers/LocaleBar';
 import { FlatLink } from '../components/Button';
-import { Head } from '../head/Head';
 
 const Wrapper = styled.div`
   padding: 12px;
@@ -19,19 +18,17 @@ const Wrapper = styled.div`
   }
 `;
 
-export const Resources = injectIntl(function(props: any) {
-  const title: string = props.intl.formatMessage({ id: 'Resources.Title' });
-  const description: string = props.intl.formatMessage({
-    id: 'Resources.Description',
-  });
+export const Resources = (props: any) => {
+  const title = { descriptor: 'Resources.Title' };
+  const description = { descriptor: 'Resources.Description' };
 
   return (
-    <Wrapper>
-      <Head title={title} description={description} />
-      <LocaleBar />
-      <FormattedMessage tagName="h2" id="Resources.Heading" />
-      <FlatLink to="/resources/new">CREATE NEW RESOURCE</FlatLink>
-      <ResourceList />
-    </Wrapper>
+    <Page title={title} description={description}>
+      <Wrapper>
+        <FormattedMessage tagName="h2" id="Resources.Heading" />
+        <FlatLink to="/resources/new">CREATE NEW RESOURCE</FlatLink>
+        <ResourceList />
+      </Wrapper>
+    </Page>
   );
-});
+};
