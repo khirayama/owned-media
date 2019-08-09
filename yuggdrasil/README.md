@@ -9,8 +9,7 @@
 - resource_contents
   - id
   - resource_id
-  - country_code
-  - lang_code
+  - locale
   - key
   - value
 - resource_attributes
@@ -18,7 +17,15 @@
   - resource_id
   - key
   - value
-- relations
+- resource_relations
   - id
   - resource1_id
   - resource2_id
+- resource_target_contries
+  - id
+  - resource_id
+  - country_code
+- resource_excepted_countries
+  - id
+  - resource_id
+  - country_code
