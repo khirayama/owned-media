@@ -98,6 +98,14 @@ export function deleteRelations(req: express.Request, res: express.Response) {
   res.json(query);
 }
 
+export function fetchTargetCountries(req: express.Request, res: express.Response) {
+  const resourceId = req.params.id;
+
+  const countryCodes: string[] = Resource.findTargetCountries(resourceId);
+
+  res.json({ countryCodes });
+}
+
 export function createTargetCountries(req: express.Request, res: express.Response) {
   const query = req.query;
   const resourceId = req.params.id;
@@ -116,6 +124,14 @@ export function deleteTargetCountries(req: express.Request, res: express.Respons
   Resource.deleteTargetCountries(resourceId, countryCodes);
 
   res.json(query);
+}
+
+export function fetchExceptedCountries(req: express.Request, res: express.Response) {
+  const resourceId = req.params.id;
+
+  const countryCodes: string[] = Resource.findExceptedCountries(resourceId);
+
+  res.json({ countryCodes });
 }
 
 export function createExceptedCountries(req: express.Request, res: express.Response) {

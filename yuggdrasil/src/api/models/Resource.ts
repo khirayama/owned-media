@@ -108,8 +108,10 @@ type FindCondition = {
 - Resource.delete()
 - Resource.createRelations()
 - Resource.deleteRelations()
+- Resource.findTargetCountries()
 - Resource.createTargetCountries()
 - Resource.deleteTargetCountries()
+- Resource.findExceptedCountries()
 - Resource.createExceptedCountries()
 - Resource.deleteExceptedCountries()
 - Resource.save()
@@ -526,6 +528,12 @@ export class Resource {
     this.save();
   }
 
+  public static findTargetCountries(resourceId: string): string[] {
+    // TODO
+    console.log(resourceId);
+    return [];
+  }
+
   public static createTargetCountries(resourceId: string, countryCodes: string[]) {
     const now = new Date();
     for (let i = 0; i < countryCodes.length; i += 1) {
@@ -572,6 +580,12 @@ export class Resource {
     }
 
     this.save();
+  }
+
+  public static findExceptedCountries(resourceId: string): string[] {
+    // TODO
+    console.log(resourceId);
+    return [];
   }
 
   public static createExceptedCountries(resourceId: string, countryCodes: string[]) {

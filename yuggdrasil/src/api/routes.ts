@@ -10,8 +10,10 @@ import {
   fetchRelatedResources,
   createRelations,
   deleteRelations,
+  fetchTargetCountries,
   createTargetCountries,
   deleteTargetCountries,
+  fetchExceptedCountries,
   createExceptedCountries,
   deleteExceptedCountries,
 } from './handlers';
@@ -23,7 +25,9 @@ apiRouter
   .get('/config', fetchConfig)
   .get('/resources', fetchResources)
   .get('/resources/:id', fetchResource)
-  .get('/resources/:id/relations', fetchRelatedResources);
+  .get('/resources/:id/relations', fetchRelatedResources)
+  .get('/resources/:id/target-countries', fetchTargetCountries)
+  .get('/resources/:id/excepted-countries', fetchExceptedCountries);
 
 export const adminRouter: express.Application = express();
 adminRouter
