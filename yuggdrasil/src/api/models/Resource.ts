@@ -244,7 +244,7 @@ export class Resource {
 
   public static find(
     conditions?: FindCondition | null,
-    options?: { contry?: string; locale?: string; limit?: number; offset?: number; sort?: string },
+    options?: { country?: string; locale?: string; limit?: number; offset?: number; sort?: string },
   ): ResourceShape[] {
     let resourceIds = Object.keys(this.resources);
 
