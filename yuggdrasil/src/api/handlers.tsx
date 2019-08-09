@@ -1,7 +1,7 @@
 import express from 'express';
 
 import { Resource } from './models/Resource';
-import { ResourceWithAllLocalesShape, ResourceShape, ResourceRequest } from './types';
+import { ResourceShape, ResourceRequest } from './types';
 import { requestToPartialResource, loadConfig } from './utils';
 
 const config = loadConfig();
@@ -22,7 +22,7 @@ export function fetchResources(req: express.Request, res: express.Response) {
   }
   const options = { locale: query.locale, limit: Number(query.limit), offset: Number(query.offset), sort: query.sort };
 
-  const resources: ResourceShape[] | ResourceWithAllLocalesShape[] = Resource.find(conditions, options);
+  const resources: ResourceShape[] = Resource.find(conditions, options);
   res.json(resources);
 }
 
@@ -94,6 +94,46 @@ export function deleteRelations(req: express.Request, res: express.Response) {
   const relatedResourceIds = query.id.split(',');
 
   Resource.deleteRelations(resourceId, relatedResourceIds);
+
+  res.json(query);
+}
+
+export function createTargetCountries(req: express.Request, res: express.Response) {
+  const query = req.query;
+  const resourceId = req.params.id;
+  const countryCodes = query.country_codes.split(',');
+
+  Resource.createTargetCountries(resourceId, countryCodes);
+
+  res.json(query);
+}
+
+export function deleteTargetCountries(req: express.Request, res: express.Response) {
+  const query = req.query;
+  const resourceId = req.params.id;
+  const countryCodes = query.country_codes.split(',');
+
+  Resource.deleteTargetCountries(resourceId, countryCodes);
+
+  res.json(query);
+}
+
+export function createExceptedCountries(req: express.Request, res: express.Response) {
+  const query = req.query;
+  const resourceId = req.params.id;
+  const countryCodes = query.country_codes.split(',');
+
+  Resource.createTargetCountries(resourceId, countryCodes);
+
+  res.json(query);
+}
+
+export function deleteExceptedCountries(req: express.Request, res: express.Response) {
+  const query = req.query;
+  const resourceId = req.params.id;
+  const countryCodes = query.country_codes.split(',');
+
+  Resource.deleteExceptedCountries(resourceId, countryCodes);
 
   res.json(query);
 }
