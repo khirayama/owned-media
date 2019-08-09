@@ -2,16 +2,10 @@ import { Resource } from './models/Resource';
 
 export { loadConfig } from './utils';
 
-export {
-  LocaleObject,
-  ResourceType,
-  Config,
-  ResourceShape,
-  ResourceWithAllLocalesShape,
-  ResourceRequest,
-} from './types';
+export { LocaleObject, ResourceType, Config, ResourceShape, ResourceRequest } from './types';
 
 export {
+  fetchConfig,
   fetchResources,
   fetchResource,
   createResource,
@@ -20,6 +14,10 @@ export {
   fetchRelatedResources,
   createRelations,
   deleteRelations,
+  createTargetCountries,
+  deleteTargetCountries,
+  createExceptedCountries,
+  deleteExceptedCountries,
 } from './handlers';
 
 export { apiRouter, adminRouter } from './routes';

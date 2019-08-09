@@ -23,31 +23,11 @@ export type Config = {
   resourceTypes: ResourceType[];
 };
 
-export type ResourceWithAllLocalesShape = {
-  id: string;
-  type: string;
-  key: string;
-  name: LocaleObject;
-  bodyPath: LocaleObject;
-  body: LocaleObject;
-  media: {
-    [key: string]: string;
-  };
-  attributes: {
-    [key: string]: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-};
-
 export type ResourceShape = {
   id: string;
   type: string;
   key: string;
-  name: string;
-  bodyPath: string;
-  body: string;
-  media: {
+  contents: {
     [key: string]: string;
   };
   attributes: {
@@ -61,8 +41,7 @@ export type ResourceRequest = {
   type: string;
   name: string;
   key: string;
-  body_path?: string;
-  media: {
+  contents: {
     [key: string]: string;
   };
   attributes: {
