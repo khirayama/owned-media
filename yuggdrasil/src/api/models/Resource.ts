@@ -529,9 +529,13 @@ export class Resource {
   }
 
   public static findTargetCountries(resourceId: string): string[] {
-    // TODO
-    console.log(resourceId);
-    return [];
+    const countryCodes: string[] = [];
+    for (const resourceTargetCountryRecord of this.records.resourceTargetCountries) {
+      if (resourceTargetCountryRecord.resource_id === resourceId) {
+        countryCodes.push(resourceTargetCountryRecord.country_code);
+      }
+    }
+    return countryCodes;
   }
 
   public static createTargetCountries(resourceId: string, countryCodes: string[]) {
@@ -583,9 +587,13 @@ export class Resource {
   }
 
   public static findExceptedCountries(resourceId: string): string[] {
-    // TODO
-    console.log(resourceId);
-    return [];
+    const countryCodes: string[] = [];
+    for (const resourceExceptedCountryRecord of this.records.resourceExceptedCountries) {
+      if (resourceExceptedCountryRecord.resource_id === resourceId) {
+        countryCodes.push(resourceExceptedCountryRecord.country_code);
+      }
+    }
+    return countryCodes;
   }
 
   public static createExceptedCountries(resourceId: string, countryCodes: string[]) {
