@@ -3,65 +3,15 @@ import * as path from 'path';
 
 import * as fsExtra from 'fs-extra';
 
-import { ResourceShape, ResourceWithAllLocalesShape } from '../types';
-import { resourceWithAllLocalesToResource, loadConfig, csvStringify, csvParse } from '../utils';
+import { Config, ResourceShape } from '../types';
+import { loadConfig, csvStringify, csvParse } from '../utils';
 
-const config = loadConfig();
-
-/*
-- defaultLocale
-- init
-- find
-  - conditions
-  - options
-    - locale
-    - offset
-    - limit
-
-import { Resource } from 'lib/Resource';
-
-Resource.init();
-Resource.defaultLocale = 'ja';
-
-Resource.find();
-Resource.find(null, { locale: 'en' });
-const relatedEnResources = Resource.find({
-  id: Resource.relation(['1']),
-}, {
-  locale: 'en',
-});
-const relatedJaResources = Resource.find({
-  id: Resource.relation(['4']),
-});
-const relatedEnResources = Resource.find({
-  id: Resource.relation(['1']),
-}, {
-  limit: 10,
-});
-Resource.create({
-  type: 'note',
-  name: 'テスト',
-  attributes: {
-    sample: 'サンプル',
-  },
-}, {
-  locale: 'ja',
-});
-Resource.update('1', {
-  type: 'note',
-  name: 'テスト',
-  attributes: {
-    sample: 'サンプル',
-  },
-}, {
-  locale: 'en',
-});
-*/
+const config: Config = loadConfig();
 
 const ROOT_PATH = process.cwd();
 const DATA_PATH = path.join(ROOT_PATH, 'data');
 
-type ResourceRow = {
+type ResourceRecord = {
   id: string;
   type: string;
   key: string;
@@ -69,17 +19,17 @@ type ResourceRow = {
   updated_at: string;
 };
 
-type ResourceContentRow = {
+type ResourceContentRecord = {
   id: string;
   resource_id: string;
   locale: string;
-  name: string;
-  body_path: string;
+  key: string;
+  value: string;
   created_at: string;
   updated_at: string;
 };
 
-type ResourceAttributeRow = {
+type ResourceAttributeRecord = {
   id: string;
   resource_id: string;
   key: string;
@@ -88,7 +38,7 @@ type ResourceAttributeRow = {
   updated_at: string;
 };
 
-type RelationRow = {
+type ResourceRelationRecord = {
   id: string;
   resource1_id: string;
   resource2_id: string;
@@ -96,12 +46,74 @@ type RelationRow = {
   updated_at: string;
 };
 
-type FindCondition = {
-  id?: string[];
-  type?: string[];
-  key?: string[];
+type ResourceTargetCountryRecord = {
+  id: string;
+  resource_id: string;
+  country_code: string;
+  created_at: string;
+  updated_at: string;
 };
 
+type ResourceExceptedCountryRecord = {
+  id: string;
+  resource_id: string;
+  country_code: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type Resources = {
+  [resourceId: string]: {
+    [locale: string]: ResourceShape;
+  };
+};
+
+type FindCondition = {
+  id?: string | string[];
+  type?: string | string[];
+  key?: string | string[];
+};
+
+/*
+- Resource.defaultLocale
+- Resource.columns
+  - Resource.columns.resources
+  - Resource.columns.resourceContents
+  - Resource.columns.resourceAttributes
+  - Resource.columns.resourceRelations
+  - Resource.columns.resourceTargetContries
+  - Resource.columns.resourceExceptedContries
+- Resource.filePaths
+  - Resource.filePaths.resources
+  - Resource.filePaths.resourceContents
+  - Resource.filePaths.resourceAttributes
+  - Resource.filePaths.resourceRelations
+  - Resource.filePaths.resourceTargetContries
+  - Resource.filePaths.resourceExceptedContries
+- Resource.records
+  - Resource.records.resources
+  - Resource.records.resourceContents
+  - Resource.records.resourceAttributes
+  - Resource.records.resourceRelations
+  - Resource.records.resourceTargetContries
+  - Resource.records.resourceExceptedContries
+- Resource.resources
+- Resource.init()
+- Resource.load()
+- Resource.buildResources()
+- Resource.find()
+- Resource.relation()
+- Resource.create()
+- Resource.update()
+- Resource.delete()
+- Resource.createRelations()
+- Resource.deleteRelations()
+- Resource.createTargetCountries()
+- Resource.deleteTargetCountries()
+- Resource.createExceptedCountries()
+- Resource.deleteExceptedCountries()
+- Resource.save()
+*/
 export class Resource {
   public static defaultLocale: string = config.locales[0];
 
@@ -109,36 +121,44 @@ export class Resource {
     resources: ['id', 'type', 'key', 'created_at', 'updated_at'],
     resourceContents: ['id', 'resource_id', 'locale', 'key', 'value', 'created_at', 'updated_at'],
     resourceAttributes: ['id', 'resource_id', 'key', 'value', 'created_at', 'updated_at'],
-    relations: ['id', 'resource1_id', 'resource2_id', 'created_at', 'updated_at'],
+    resourceRelations: ['id', 'resource1_id', 'resource2_id', 'created_at', 'updated_at'],
+    resourceTargetCountries: ['id', 'resource_id', 'country_code', 'created_at', 'updated_at'],
+    resourceExceptedCountries: ['id', 'resource_id', 'country_code', 'created_at', 'updated_at'],
   };
 
   private static filePaths = {
     resources: path.join(DATA_PATH, 'resources.csv'),
     resourceContents: path.join(DATA_PATH, 'resource_contents.csv'),
     resourceAttributes: path.join(DATA_PATH, 'resource_attributes.csv'),
-    relations: path.join(DATA_PATH, 'relations.csv'),
+    resourceRelations: path.join(DATA_PATH, 'resource_relations.csv'),
+    resourceTargetCountries: path.join(DATA_PATH, 'resource_target_countries.csv'),
+    resourceExceptedCountries: path.join(DATA_PATH, 'resource_excepted_countries.csv'),
   };
 
-  private static rows: {
-    resources: ResourceRow[];
-    resourceContents: ResourceContentRow[];
-    resourceAttributes: ResourceAttributeRow[];
-    relations: RelationRow[];
+  private static records: {
+    resources: ResourceRecord[];
+    resourceContents: ResourceContentRecord[];
+    resourceAttributes: ResourceAttributeRecord[];
+    resourceRelations: ResourceRelationRecord[];
+    resourceTargetCountries: ResourceTargetCountryRecord[];
+    resourceExceptedCountries: ResourceExceptedCountryRecord[];
   } = {
     resources: [],
     resourceContents: [],
     resourceAttributes: [],
-    relations: [],
+    resourceRelations: [],
+    resourceTargetCountries: [],
+    resourceExceptedCountries: [],
   };
 
-  private static resources: ResourceWithAllLocalesShape[] = [];
+  private static resources: Resources = {};
 
   public static init() {
     this.load();
-    this.resources = this.buildResource(
-      this.rows.resources,
-      this.rows.resourceContents,
-      this.rows.resourceAttributes,
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
     );
   }
 
@@ -147,72 +167,74 @@ export class Resource {
       const resourcesCSV = fsExtra.readFileSync(this.filePaths.resources, 'utf8');
       const resourceContentsCSV = fsExtra.readFileSync(this.filePaths.resourceContents, 'utf8');
       const resourceAttributesCSV = fsExtra.readFileSync(this.filePaths.resourceAttributes, 'utf8');
-      const relationsCSV = fsExtra.readFileSync(this.filePaths.relations, 'utf8');
+      const resourceRelationsCSV = fsExtra.readFileSync(this.filePaths.resourceRelations, 'utf8');
+      const resourceTargetCountriesCSV = fsExtra.readFileSync(this.filePaths.resourceTargetCountries, 'utf8');
+      const resourceExceptedCountriesCSV = fsExtra.readFileSync(this.filePaths.resourceExceptedCountries, 'utf8');
 
-      this.rows = {
+      // TODO: Support .md for resource.contents
+
+      this.records = {
         resources: csvParse(resourcesCSV),
         resourceContents: csvParse(resourceContentsCSV),
         resourceAttributes: csvParse(resourceAttributesCSV),
-        relations: csvParse(relationsCSV),
+        resourceRelations: csvParse(resourceRelationsCSV),
+        resourceTargetCountries: csvParse(resourceTargetCountriesCSV),
+        resourceExceptedCountries: csvParse(resourceExceptedCountriesCSV),
       };
     } catch (e) {
       // noop
     }
   }
 
-  private static buildResource(
-    resourceRows: ResourceRow[],
-    resourceContentRows: ResourceContentRow[],
-    resourceAttributeRows: ResourceAttributeRow[],
-  ): ResourceWithAllLocalesShape[] {
-    const resources: ResourceWithAllLocalesShape[] = [];
+  private static buildResources(
+    resourceRecords: ResourceRecord[],
+    resourceContentRecords: ResourceContentRecord[],
+    resourceAttributeRecords: ResourceAttributeRecord[],
+  ): Resources {
+    const resources: Resources = {};
 
-    for (const resourceRow of resourceRows) {
-      const resource: ResourceWithAllLocalesShape = {
-        id: resourceRow.id,
-        type: resourceRow.type,
-        key: resourceRow.key,
-        name: {},
-        bodyPath: {},
-        body: {},
-        media: {},
-        attributes: {},
-        createdAt: resourceRow.created_at,
-        updatedAt: resourceRow.updated_at,
-      };
+    for (const resourceRecord of resourceRecords) {
+      for (const locale of config.locales) {
+        const resource: ResourceShape = {
+          id: resourceRecord.id,
+          type: resourceRecord.type,
+          key: resourceRecord.key,
+          contents: {},
+          attributes: {},
+          createdAt: resourceRecord.created_at,
+          updatedAt: resourceRecord.updated_at,
+        };
 
-      for (const resourceContentRow of resourceContentRows) {
-        if (resourceContentRow.resource_id === resourceRow.id) {
-          const locale: string = resourceContentRow.locale;
-          let markdown = '';
-          try {
-            markdown = fsExtra.readFileSync(
-              path.join(DATA_PATH, '..', path.join(resourceContentRow['body_path'])),
-              'utf8',
-            );
-          } catch (e) {
-            // noop
-          }
+        for (const resourceContentRecord of resourceContentRecords) {
+          if (resourceContentRecord.resource_id === resourceRecord.id && resourceContentRecord.locale === locale) {
+            for (let key of this.columns.resourceAttributes) {
+              const whiteList = ['id', 'resource_id', 'created_at', 'updated_at'];
 
-          resource.name[locale] = resourceContentRow.name;
-          resource.bodyPath[locale] = resourceContentRow.body_path;
-          resource.body[locale] = markdown;
-        }
-      }
-
-      for (const resourceAttributeRow of resourceAttributeRows) {
-        if (resourceAttributeRow.resource_id === resourceRow.id) {
-          for (let key of this.columns.resourceAttributes) {
-            const whiteList = ['id', 'resource_id', 'created_at', 'updated_at'];
-
-            if (whiteList.indexOf(key) === -1) {
-              resource.attributes[resourceAttributeRow.key] = resourceAttributeRow.value;
+              if (whiteList.indexOf(key) === -1) {
+                resource.contents[resourceContentRecord.key] = resourceContentRecord.value;
+              }
             }
           }
         }
-      }
 
-      resources.push(resource);
+        for (const resourceAttributeRecord of resourceAttributeRecords) {
+          if (resourceAttributeRecord.resource_id === resourceRecord.id) {
+            for (let key of this.columns.resourceAttributes) {
+              const whiteList = ['id', 'resource_id', 'created_at', 'updated_at'];
+
+              if (whiteList.indexOf(key) === -1) {
+                resource.attributes[resourceAttributeRecord.key] = resourceAttributeRecord.value;
+              }
+            }
+          }
+        }
+
+        if (resources[resource.id]) {
+          resources[resource.id][locale] = resource;
+        } else {
+          resources[resource.id] = { [locale]: resource };
+        }
+      }
     }
 
     return resources;
@@ -220,65 +242,66 @@ export class Resource {
 
   public static find(
     conditions?: FindCondition | null,
-    options?: { locale?: string; limit?: number; offset?: number; sort?: string },
-  ): ResourceShape[] | ResourceWithAllLocalesShape[] {
-    let tmp = this.resources;
+    options?: { contry?: string; locale?: string; limit?: number; offset?: number; sort?: string },
+  ): ResourceShape[] {
+    let resourceIds = Object.keys(this.resources);
 
     if (conditions) {
-      const targetKeys = ['id', 'type', 'key'];
+      const targetKeys = Object.keys(conditions);
       for (let targetKey of targetKeys) {
         if (conditions[targetKey]) {
           if (typeof conditions[targetKey] === 'string') {
-            tmp = tmp.filter((t: ResourceWithAllLocalesShape) => t[targetKey] === conditions[targetKey]);
+            resourceIds = resourceIds.filter(
+              (resourceId: string) => this.resources[resourceId][targetKey] === conditions[targetKey],
+            );
           } else if (Array.isArray(conditions[targetKey])) {
-            tmp = tmp.filter((t: ResourceWithAllLocalesShape) => conditions[targetKey].indexOf(t[targetKey]) !== -1);
+            resourceIds = resourceIds.filter(
+              (resourceId: string) => conditions[targetKey].indexOf(this.resources[resourceId][targetKey]) !== -1,
+            );
           }
         }
       }
     }
 
     // options
+    // const country: string | null = options.country || null;
     const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
     const limit: number | null = options && options.limit ? options.limit : null;
     const offset: number = options && options.offset ? options.offset : 0;
     // const sort: string = 'created_at' || '-created_at';
 
     if (limit) {
-      tmp = tmp.slice(offset, limit);
+      resourceIds = resourceIds.slice(offset, limit);
     }
 
-    return locale === 'all' ? tmp : tmp.map((t: ResourceWithAllLocalesShape) => this.build(t, locale));
+    return resourceIds.map((resourceId: string) => this.resources[resourceId][locale] || null).filter(r => !!r);
   }
 
   public static relation(resourceIds: string[]): string[] {
     const relatedResourceIds: string[] = [];
 
-    for (let relationRow of this.rows.relations) {
-      if (resourceIds.indexOf(relationRow.resource1_id) !== -1) {
-        relatedResourceIds.push(relationRow.resource2_id);
-      } else if (resourceIds.indexOf(relationRow.resource2_id) !== -1) {
-        relatedResourceIds.push(relationRow.resource1_id);
+    for (let resourceRelationRecord of this.records.resourceRelations) {
+      if (resourceIds.indexOf(resourceRelationRecord.resource1_id) !== -1) {
+        relatedResourceIds.push(resourceRelationRecord.resource2_id);
+      } else if (resourceIds.indexOf(resourceRelationRecord.resource2_id) !== -1) {
+        relatedResourceIds.push(resourceRelationRecord.resource1_id);
       }
     }
 
     return relatedResourceIds;
   }
 
-  private static build(resourceWithAllLocales: ResourceWithAllLocalesShape, locale: string): ResourceShape {
-    return resourceWithAllLocalesToResource(resourceWithAllLocales, locale, { defaultLocale: this.defaultLocale });
-  }
-
-  public static create(resource: Partial<ResourceShape>, options: { locale: string } = { locale: this.defaultLocale }) {
-    const locale = options.locale || this.defaultLocale;
+  public static create(resource: Partial<ResourceShape>, options?: { locale: string }) {
+    const locale = options ? options.locale || this.defaultLocale : this.defaultLocale;
 
     const now = new Date();
-    const lastResourceRow = this.rows.resources[this.rows.resources.length - 1];
-    const resourceId: string = lastResourceRow ? String(Number(lastResourceRow.id) + 1) : '1';
+    const lastResourceRecord = this.records.resources[this.records.resources.length - 1];
+    const resourceId: string = lastResourceRecord ? String(Number(lastResourceRecord.id) + 1) : '1';
 
     // For resources
     const resourceType = resource.type || config.resourceTypes[0].type;
     const resourceKey = resource.key || '';
-    this.rows.resources.push({
+    this.records.resources.push({
       id: resourceId,
       type: resourceType,
       key: resourceKey,
@@ -286,13 +309,29 @@ export class Resource {
       updated_at: now.toString(),
     });
     // For resource_contents
-    this.createContent(resourceId, resource, locale);
+    if (resource.contents) {
+      for (let key of Object.keys(resource.contents)) {
+        const lastResourceContentRecord = this.records.resourceContents[this.records.resourceContents.length - 1];
+        const resourceContentId = lastResourceContentRecord ? String(Number(lastResourceContentRecord.id) + 1) : '1';
+        this.records.resourceContents.push({
+          id: resourceContentId,
+          resource_id: resourceId,
+          locale,
+          key,
+          value: resource.contents[key],
+          created_at: now.toString(),
+          updated_at: now.toString(),
+        });
+      }
+    }
     // For resource_attributes
     if (resource.attributes) {
       for (let key of Object.keys(resource.attributes)) {
-        const lastResourceAttributeRow = this.rows.resourceAttributes[this.rows.resourceAttributes.length - 1];
-        const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : '1';
-        this.rows.resourceAttributes.push({
+        const lastResourceAttributeRecord = this.records.resourceAttributes[this.records.resourceAttributes.length - 1];
+        const resourceAttributeId = lastResourceAttributeRecord
+          ? String(Number(lastResourceAttributeRecord.id) + 1)
+          : '1';
+        this.records.resourceAttributes.push({
           id: resourceAttributeId,
           resource_id: resourceId,
           key,
@@ -304,68 +343,84 @@ export class Resource {
     }
 
     this.save();
-    this.resources = this.buildResource(
-      this.rows.resources,
-      this.rows.resourceContents,
-      this.rows.resourceAttributes,
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
     );
 
     return this.find({ id: [resourceId] }, { locale })[0];
   }
 
-  public static update(
-    resourceId: string,
-    resource: Partial<ResourceShape>,
-    options: { locale?: string } = { locale: this.defaultLocale },
-  ) {
-    const locale = options.locale || this.defaultLocale;
+  public static update(resourceId: string, resource: Partial<ResourceShape>, options?: { locale?: string }) {
+    const locale = options ? options.locale || this.defaultLocale : this.defaultLocale;
     const now = new Date();
 
-    const resourceRow = this.rows.resources.filter(resourceRow => resourceRow.id === resourceId)[0];
-    const resourceContentRow = this.rows.resourceContents.filter(
-      resourceContentRow => resourceContentRow.resource_id === resourceId && resourceContentRow.locale === locale,
-    )[0];
-    const resourceAttributeRows = this.rows.resourceAttributes.filter(
-      resourceAttributeRow => resourceAttributeRow.resource_id === resourceId,
+    const resourceRecord = this.records.resources.filter(resourceRecord => resourceRecord.id === resourceId)[0];
+    const resourceContentRecords = this.records.resourceContents.filter(
+      resourceContentRecord =>
+        resourceContentRecord.resource_id === resourceId && resourceContentRecord.locale === locale,
+    );
+    const resourceAttributeRecords = this.records.resourceAttributes.filter(
+      resourceAttributeRecord => resourceAttributeRecord.resource_id === resourceId,
     );
 
     // For resources
     if (resource.type !== undefined) {
-      resourceRow.type = resource.type;
-      resourceRow.updated_at = now.toString();
+      resourceRecord.type = resource.type;
+      resourceRecord.updated_at = now.toString();
     }
     if (resource.key !== undefined) {
-      resourceRow.key = resource.key;
-      resourceRow.updated_at = now.toString();
+      resourceRecord.key = resource.key;
+      resourceRecord.updated_at = now.toString();
     }
     // For resource_contents
-    if (resourceContentRow !== undefined) {
-      if (resource.name) {
-        resourceContentRow.name = resource.name;
-        resourceContentRow.updated_at = now.toString();
+    if (resource.contents) {
+      for (let key of Object.keys(resource.contents)) {
+        let isExisting = false;
+        for (let resourceContentRecord of resourceContentRecords) {
+          if (resourceContentRecord.key === key && resourceContentRecord.locale === locale) {
+            resourceContentRecord.value = resource.contents[key];
+            resourceContentRecord.updated_at = now.toString();
+            isExisting = true;
+          }
+        }
+        if (!isExisting) {
+          const lastResourceContentRecord = this.records.resourceContents[this.records.resourceContents.length - 1];
+          const resourceAttributeId = lastResourceContentRecord
+            ? String(Number(lastResourceContentRecord.id) + 1)
+            : '1';
+          this.records.resourceContents.push({
+            id: resourceAttributeId,
+            resource_id: resourceId,
+            locale,
+            key,
+            value: resource.contents[key],
+            created_at: now.toString(),
+            updated_at: now.toString(),
+          });
+        }
       }
-      if (resource.bodyPath !== undefined) {
-        resourceContentRow.body_path = resource.bodyPath;
-        resourceContentRow.updated_at = now.toString();
-      }
-    } else {
-      this.createContent(resourceId, resource, locale);
     }
     // For resource_attributes
     if (resource.attributes) {
       for (let key of Object.keys(resource.attributes)) {
         let isExisting = false;
-        for (let resourceAttributeRow of resourceAttributeRows) {
-          if (resourceAttributeRow.key === key) {
-            resourceAttributeRow.value = resource.attributes[key];
-            resourceAttributeRow.updated_at = now.toString();
+        for (let resourceAttributeRecord of resourceAttributeRecords) {
+          if (resourceAttributeRecord.key === key) {
+            resourceAttributeRecord.value = resource.attributes[key];
+            resourceAttributeRecord.updated_at = now.toString();
             isExisting = true;
           }
         }
         if (!isExisting) {
-          const lastResourceAttributeRow = this.rows.resourceAttributes[this.rows.resourceAttributes.length - 1];
-          const resourceAttributeId = lastResourceAttributeRow ? String(Number(lastResourceAttributeRow.id) + 1) : '1';
-          this.rows.resourceAttributes.push({
+          const lastResourceAttributeRecord = this.records.resourceAttributes[
+            this.records.resourceAttributes.length - 1
+          ];
+          const resourceAttributeId = lastResourceAttributeRecord
+            ? String(Number(lastResourceAttributeRecord.id) + 1)
+            : '1';
+          this.records.resourceAttributes.push({
             id: resourceAttributeId,
             resource_id: resourceId,
             key,
@@ -378,61 +433,44 @@ export class Resource {
     }
 
     this.save();
-    this.resources = this.buildResource(
-      this.rows.resources,
-      this.rows.resourceContents,
-      this.rows.resourceAttributes,
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
     );
 
     return this.find({ id: [resourceId] }, { locale })[0];
   }
 
   public static delete(resourceId: string): void {
-    this.rows.resources = this.rows.resources.filter(row => row.id !== resourceId);
-    this.rows.resourceContents = this.rows.resourceContents.filter(row => row.resource_id !== resourceId);
-    this.rows.resourceAttributes = this.rows.resourceAttributes.filter(row => row.resource_id !== resourceId);
-    this.rows.relations = this.rows.relations.filter(
-      row => row.resource1_id !== resourceId && row.resource2_id !== resourceId,
+    this.records.resources = this.records.resources.filter(record => record.id !== resourceId);
+    this.records.resourceContents = this.records.resourceContents.filter(record => record.resource_id !== resourceId);
+    this.records.resourceAttributes = this.records.resourceAttributes.filter(
+      record => record.resource_id !== resourceId,
+    );
+    this.records.resourceRelations = this.records.resourceRelations.filter(
+      record => record.resource1_id !== resourceId && record.resource2_id !== resourceId,
+    );
+    this.records.resourceTargetCountries = this.records.resourceTargetCountries.filter(
+      record => record.resource_id !== resourceId,
+    );
+    this.records.resourceExceptedCountries = this.records.resourceExceptedCountries.filter(
+      record => record.resource_id !== resourceId,
     );
 
     this.save();
-    this.resources = this.buildResource(
-      this.rows.resources,
-      this.rows.resourceContents,
-      this.rows.resourceAttributes,
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
     );
-  }
-
-  private static createContent(resourceId: string, resource: Partial<ResourceShape>, locale: string) {
-    const now = new Date();
-    const lastResourceContentRow = this.rows.resourceContents[this.rows.resourceContents.length - 1];
-    const resourceContentId = lastResourceContentRow ? String(Number(lastResourceContentRow.id) + 1) : '1';
-    const resourceName = resource.name || '';
-
-    const RESOURCE_CONTENTS_PATH = ['resources', resourceId, 'resource_contents'].join('/');
-    const RESOURCE_CONTENTS_FULLPATH = [ROOT_PATH, 'resources', resourceId, 'resource_contents'].join('/');
-    const fileName = `${resourceContentId}.md`;
-
-    fsExtra.mkdirSync(RESOURCE_CONTENTS_FULLPATH, { recursive: true });
-    fsExtra.closeSync(fsExtra.openSync(path.join(RESOURCE_CONTENTS_FULLPATH, fileName), 'w'));
-
-    const resourceBodyPath = '/' + path.join(RESOURCE_CONTENTS_PATH, fileName);
-    this.rows.resourceContents.push({
-      id: resourceContentId,
-      resource_id: resourceId,
-      locale,
-      name: resourceName,
-      body_path: resourceBodyPath,
-      created_at: now.toString(),
-      updated_at: now.toString(),
-    });
   }
 
   public static createRelations(resourceId: string, relatedResourceIds: string[]) {
     const now = new Date();
     for (let i = 0; i < relatedResourceIds.length; i += 1) {
-      const lastRelationRow = this.rows.relations[this.rows.relations.length - 1];
-      const relationId = lastRelationRow ? String(Number(lastRelationRow.id) + 1) : '1';
+      const lastRelationRecord = this.records.resourceRelations[this.records.resourceRelations.length - 1];
+      const relationId = lastRelationRecord ? String(Number(lastRelationRecord.id) + 1) : '1';
       const relatedResourceId = relatedResourceIds[i];
 
       if (resourceId === relatedResourceId) {
@@ -441,19 +479,19 @@ export class Resource {
 
       let isExisting = false;
 
-      for (let j = 0; j < this.rows.relations.length; j += 1) {
-        const row = this.rows.relations[j];
+      for (let j = 0; j < this.records.resourceRelations.length; j += 1) {
+        const record = this.records.resourceRelations[j];
         if (
-          (row.resource1_id === resourceId && row.resource2_id === relatedResourceId) ||
-          (row.resource1_id === relatedResourceId && row.resource2_id === resourceId)
+          (record.resource1_id === resourceId && record.resource2_id === relatedResourceId) ||
+          (record.resource1_id === relatedResourceId && record.resource2_id === resourceId)
         ) {
           isExisting = true;
-          row.updated_at = now.toString();
+          record.updated_at = now.toString();
         }
       }
 
       if (!isExisting) {
-        this.rows.relations.push({
+        this.records.resourceRelations.push({
           id: relationId,
           resource1_id: resourceId,
           resource2_id: relatedResourceId,
@@ -474,13 +512,109 @@ export class Resource {
         continue;
       }
 
-      for (let j = 0; j < this.rows.relations.length; j += 1) {
-        const row = this.rows.relations[j];
+      for (let j = 0; j < this.records.resourceRelations.length; j += 1) {
+        const record = this.records.resourceRelations[j];
         if (
-          (row.resource1_id === resourceId && row.resource2_id === relatedResourceId) ||
-          (row.resource1_id === relatedResourceId && row.resource2_id === resourceId)
+          (record.resource1_id === resourceId && record.resource2_id === relatedResourceId) ||
+          (record.resource1_id === relatedResourceId && record.resource2_id === resourceId)
         ) {
-          this.rows.relations.splice(j, 1);
+          this.records.resourceRelations.splice(j, 1);
+        }
+      }
+    }
+
+    this.save();
+  }
+
+  public static createTargetCountries(resourceId: string, countryCodes: string[]) {
+    const now = new Date();
+    for (let i = 0; i < countryCodes.length; i += 1) {
+      const countryCode = countryCodes[i];
+      const lastTargetCountryRecord = this.records.resourceTargetCountries[
+        this.records.resourceTargetCountries.length - 1
+      ];
+      const targetCountryId = lastTargetCountryRecord ? String(Number(lastTargetCountryRecord.id) + 1) : '1';
+
+      let isExisting = false;
+
+      for (let j = 0; j < this.records.resourceTargetCountries.length; j += 1) {
+        const record = this.records.resourceTargetCountries[j];
+        if (record.country_code === countryCode) {
+          isExisting = true;
+          record.updated_at = now.toString();
+        }
+      }
+
+      if (!isExisting) {
+        this.records.resourceTargetCountries.push({
+          id: targetCountryId,
+          country_code: countryCode,
+          resource_id: resourceId,
+          created_at: now.toString(),
+          updated_at: now.toString(),
+        });
+      }
+    }
+
+    this.save();
+  }
+
+  public static deleteTargetCountries(resourceId: string, countryCodes: string[]) {
+    for (let i = 0; i < countryCodes.length; i += 1) {
+      const countryCode = countryCodes[i];
+
+      for (let j = 0; j < this.records.resourceTargetCountries.length; j += 1) {
+        const record = this.records.resourceTargetCountries[j];
+        if (record.country_code === countryCode) {
+          this.records.resourceTargetCountries.splice(j, 1);
+        }
+      }
+    }
+
+    this.save();
+  }
+
+  public static createExceptedCountries(resourceId: string, countryCodes: string[]) {
+    const now = new Date();
+    for (let i = 0; i < countryCodes.length; i += 1) {
+      const countryCode = countryCodes[i];
+      const lastExceptedCountryRecord = this.records.resourceExceptedCountries[
+        this.records.resourceExceptedCountries.length - 1
+      ];
+      const exceptedCountryId = lastExceptedCountryRecord ? String(Number(lastExceptedCountryRecord.id) + 1) : '1';
+
+      let isExisting = false;
+
+      for (let j = 0; j < this.records.resourceExceptedCountries.length; j += 1) {
+        const record = this.records.resourceExceptedCountries[j];
+        if (record.country_code === countryCode) {
+          isExisting = true;
+          record.updated_at = now.toString();
+        }
+      }
+
+      if (!isExisting) {
+        this.records.resourceExceptedCountries.push({
+          id: exceptedCountryId,
+          country_code: countryCode,
+          resource_id: resourceId,
+          created_at: now.toString(),
+          updated_at: now.toString(),
+        });
+      }
+    }
+
+    this.save();
+  }
+
+  public static deleteExceptedCountries(resourceId: string, countryCodes: string[]) {
+    for (let i = 0; i < countryCodes.length; i += 1) {
+      const countryCode = countryCodes[i];
+
+      for (let j = 0; j < this.records.resourceExceptedCountries.length; j += 1) {
+        const record = this.records.resourceExceptedCountries[j];
+        if (record.country_code === countryCode) {
+          this.records.resourceExceptedCountries.splice(j, 1);
         }
       }
     }
@@ -489,14 +623,24 @@ export class Resource {
   }
 
   public static save() {
-    const resourcesString = csvStringify(this.rows.resources, this.columns.resources);
-    const resourceContentsString = csvStringify(this.rows.resourceContents, this.columns.resourceContents);
-    const resourceAttributesString = csvStringify(this.rows.resourceAttributes, this.columns.resourceAttributes);
-    const relationsString = csvStringify(this.rows.relations, this.columns.relations);
+    const resourcesString = csvStringify(this.records.resources, this.columns.resources);
+    const resourceContentsString = csvStringify(this.records.resourceContents, this.columns.resourceContents);
+    const resourceAttributesString = csvStringify(this.records.resourceAttributes, this.columns.resourceAttributes);
+    const resourceRelationsString = csvStringify(this.records.resourceRelations, this.columns.resourceRelations);
+    const resourceTargetContriesString = csvStringify(
+      this.records.resourceTargetCountries,
+      this.columns.resourceTargetCountries,
+    );
+    const resourceExceptedContriesString = csvStringify(
+      this.records.resourceExceptedCountries,
+      this.columns.resourceExceptedCountries,
+    );
 
-    fsExtra.outputFile(this.filePaths.relations, resourcesString);
+    fsExtra.outputFile(this.filePaths.resources, resourcesString);
     fsExtra.outputFile(this.filePaths.resourceContents, resourceContentsString);
     fsExtra.outputFile(this.filePaths.resourceAttributes, resourceAttributesString);
-    fsExtra.outputFile(this.filePaths.relations, relationsString);
+    fsExtra.outputFile(this.filePaths.resourceRelations, resourceRelationsString);
+    fsExtra.outputFile(this.filePaths.resourceTargetCountries, resourceTargetContriesString);
+    fsExtra.outputFile(this.filePaths.resourceExceptedCountries, resourceExceptedContriesString);
   }
 }
