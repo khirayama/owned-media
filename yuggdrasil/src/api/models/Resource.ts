@@ -266,11 +266,14 @@ export class Resource {
     }
 
     // options
-    // const country: string | null = options.country || null;
+    const country: string | null = options ? options.country || null : null;
     const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
     const limit: number | null = options && options.limit ? options.limit : null;
     const offset: number = options && options.offset ? options.offset : 0;
     // const sort: string = 'created_at' || '-created_at';
+
+    // TODO: locale and country should be supported.
+    console.log('TODO: locale and country should be supported.', locale, country);
 
     if (limit) {
       resourceIds = resourceIds.slice(offset, limit);
@@ -504,6 +507,11 @@ export class Resource {
     }
 
     this.save();
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
+    );
   }
 
   public static deleteRelations(resourceId: string, relatedResourceIds: string[]) {
@@ -526,6 +534,11 @@ export class Resource {
     }
 
     this.save();
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
+    );
   }
 
   public static findTargetCountries(resourceId: string): string[] {
@@ -569,6 +582,11 @@ export class Resource {
     }
 
     this.save();
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
+    );
   }
 
   public static deleteTargetCountries(resourceId: string, countryCodes: string[]) {
@@ -584,6 +602,11 @@ export class Resource {
     }
 
     this.save();
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
+    );
   }
 
   public static findExceptedCountries(resourceId: string): string[] {
@@ -627,6 +650,11 @@ export class Resource {
     }
 
     this.save();
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
+    );
   }
 
   public static deleteExceptedCountries(resourceId: string, countryCodes: string[]) {
@@ -642,6 +670,11 @@ export class Resource {
     }
 
     this.save();
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
+    );
   }
 
   public static save() {
@@ -658,11 +691,29 @@ export class Resource {
       this.columns.resourceExceptedCountries,
     );
 
-    fsExtra.outputFile(this.filePaths.resources, resourcesString);
-    fsExtra.outputFile(this.filePaths.resourceContents, resourceContentsString);
-    fsExtra.outputFile(this.filePaths.resourceAttributes, resourceAttributesString);
-    fsExtra.outputFile(this.filePaths.resourceRelations, resourceRelationsString);
-    fsExtra.outputFile(this.filePaths.resourceTargetCountries, resourceTargetContriesString);
-    fsExtra.outputFile(this.filePaths.resourceExceptedCountries, resourceExceptedContriesString);
+    fsExtra.outputFileSync(this.filePaths.resources, resourcesString);
+    fsExtra.outputFileSync(this.filePaths.resourceContents, resourceContentsString);
+    fsExtra.outputFileSync(this.filePaths.resourceAttributes, resourceAttributesString);
+    fsExtra.outputFileSync(this.filePaths.resourceRelations, resourceRelationsString);
+    fsExtra.outputFileSync(this.filePaths.resourceTargetCountries, resourceTargetContriesString);
+    fsExtra.outputFileSync(this.filePaths.resourceExceptedCountries, resourceExceptedContriesString);
+  }
+
+  public static reset() {
+    this.records = {
+      resources: [],
+      resourceContents: [],
+      resourceAttributes: [],
+      resourceRelations: [],
+      resourceTargetCountries: [],
+      resourceExceptedCountries: [],
+    };
+
+    this.save();
+    this.resources = this.buildResources(
+      this.records.resources,
+      this.records.resourceContents,
+      this.records.resourceAttributes,
+    );
   }
 }
