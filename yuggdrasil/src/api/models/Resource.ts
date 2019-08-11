@@ -74,6 +74,14 @@ type FindCondition = {
   key?: string | string[];
 };
 
+type FindConditionOptions = {
+  country?: string;
+  locale?: string;
+  limit?: number;
+  offset?: number;
+  sort?: string;
+};
+
 /*
 - Resource.defaultLocale
 - Resource.columns
@@ -244,10 +252,7 @@ export class Resource {
     return resources;
   }
 
-  public static find(
-    conditions?: FindCondition | null,
-    options?: { country?: string; locale?: string; limit?: number; offset?: number; sort?: string },
-  ): ResourceShape[] {
+  public static find(conditions?: FindCondition | null, options?: FindConditionOptions): ResourceShape[] {
     let resourceIds = Object.keys(this.resources);
     const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
 
