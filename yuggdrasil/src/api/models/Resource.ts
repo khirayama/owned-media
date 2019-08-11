@@ -102,10 +102,10 @@ type FindCondition = {
 - Resource.load()
 - Resource.buildResources()
 - Resource.find()
-- Resource.relation()
 - Resource.create()
 - Resource.update()
 - Resource.delete()
+- Resource.findRelations()
 - Resource.createRelations()
 - Resource.deleteRelations()
 - Resource.findTargetCountries()
@@ -285,20 +285,6 @@ export class Resource {
     return resourceIds
       .map((resourceId: string) => this.resources[resourceId][locale])
       .filter(r => r !== null) as ResourceShape[];
-  }
-
-  public static relation(resourceIds: string[]): string[] {
-    const relatedResourceIds: string[] = [];
-
-    for (let resourceRelationRecord of this.records.resourceRelations) {
-      if (resourceIds.indexOf(resourceRelationRecord.resource1_id) !== -1) {
-        relatedResourceIds.push(resourceRelationRecord.resource2_id);
-      } else if (resourceIds.indexOf(resourceRelationRecord.resource2_id) !== -1) {
-        relatedResourceIds.push(resourceRelationRecord.resource1_id);
-      }
-    }
-
-    return relatedResourceIds;
   }
 
   public static create(resource: Partial<ResourceShape>, options?: { locale: string }): ResourceShape {
@@ -496,6 +482,20 @@ export class Resource {
       this.records.resourceContents,
       this.records.resourceAttributes,
     );
+  }
+
+  public static findRelations(resourceIds: string[]): string[] {
+    const relatedResourceIds: string[] = [];
+
+    for (let resourceRelationRecord of this.records.resourceRelations) {
+      if (resourceIds.indexOf(resourceRelationRecord.resource1_id) !== -1) {
+        relatedResourceIds.push(resourceRelationRecord.resource2_id);
+      } else if (resourceIds.indexOf(resourceRelationRecord.resource2_id) !== -1) {
+        relatedResourceIds.push(resourceRelationRecord.resource1_id);
+      }
+    }
+
+    return relatedResourceIds;
   }
 
   public static createRelations(resourceId: string, relatedResourceIds: string[]) {
