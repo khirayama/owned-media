@@ -68,4 +68,59 @@ describe('Resource.create', () => {
     expect(Resource['records']['resourceContents'][0].locale).toEqual('en_US');
     expect(Resource['records']['resourceContents'][1].locale).toEqual('en_US');
   });
+  it('Create resource with existing key in same locale', () => {
+    Resource.create({
+      type: 'note',
+      key: 'first-content',
+      contents: {
+        name: 'リソース名前',
+        body: 'リソースボディ',
+      },
+      attributes: {
+        sample: '1',
+      },
+    });
+    expect(() => {
+      Resource.create({
+        type: 'note',
+        key: 'first-content',
+        contents: {
+          name: 'リソース名前',
+          body: 'リソースボディ',
+        },
+        attributes: {
+          sample: '1',
+        },
+      });
+    }).toThrow();
+  });
+  it('Create resource with existing key in other locale', () => {
+    Resource.create({
+      type: 'note',
+      key: 'first-content',
+      contents: {
+        name: 'リソース名前',
+        body: 'リソースボディ',
+      },
+      attributes: {
+        sample: '1',
+      },
+    });
+    expect(() => {
+      Resource.create(
+        {
+          type: 'note',
+          key: 'first-content',
+          contents: {
+            name: 'リソース名前',
+            body: 'リソースボディ',
+          },
+          attributes: {
+            sample: '1',
+          },
+        },
+        { locale: 'en_US' },
+      );
+    }).toThrow();
+  });
 });
