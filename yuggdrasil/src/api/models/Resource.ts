@@ -304,7 +304,7 @@ export class Resource {
   public static create(resource: Partial<ResourceShape>, options?: { locale: string }): ResourceShape {
     const locale = options ? options.locale || this.defaultLocale : this.defaultLocale;
 
-    const isResourceExisting = resource.id;
+    const isResourceExisting = !!resource.id;
     if (isResourceExisting) {
       throw new Error('The resource is already existing. Please do `update` to add or update some fileds.');
     }
@@ -315,9 +315,13 @@ export class Resource {
     }
 
     const isResourceWithExistingKeyInOtherLocale =
-      resource.key && !this.find({ key: [resource.key] }, { locale }).length;
+      resource.key &&
+      this.find({ key: [resource.key] }).length &&
+      !this.find({ key: [resource.key] }, { locale }).length;
     if (isResourceWithExistingKeyInOtherLocale) {
-      // TODO: Create that as other locale resource
+      throw new Error(
+        'The resource with this key is already existing in other locale. Please do `update` to add or update some fileds for other locale.',
+      );
     }
 
     const now = new Date();
