@@ -37,6 +37,20 @@ export type ResourceShape = {
   updatedAt: string;
 };
 
+export type ResourceUpdateShape = {
+  id: string;
+  type: string;
+  key: string;
+  contents: {
+    [key: string]: string | null;
+  };
+  attributes: {
+    [key: string]: string | null;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type ResourceRequest = {
   type: string;
   name: string;

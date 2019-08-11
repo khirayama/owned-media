@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import * as fsExtra from 'fs-extra';
 
-import { Config, ResourceShape } from '../types';
+import { Config, ResourceShape, ResourceUpdateShape } from '../types';
 import { loadConfig, csvStringify, csvParse } from '../utils';
 
 const config: Config = loadConfig();
@@ -114,7 +114,9 @@ type FindCondition = {
 - Resource.findExceptedCountries()
 - Resource.createExceptedCountries()
 - Resource.deleteExceptedCountries()
+  Resource.removeRecord()
 - Resource.save()
+- Resource.reset()
 */
 export class Resource {
   public static defaultLocale: string = config.locales[0];
@@ -336,7 +338,7 @@ export class Resource {
           resource_id: resourceId,
           locale,
           key,
-          value: resource.contents[key],
+          value: resource.contents[key] || '',
           created_at: now.toString(),
           updated_at: now.toString(),
         });
@@ -370,11 +372,10 @@ export class Resource {
     return this.find({ id: [resourceId] }, { locale })[0];
   }
 
-  public static update(resourceId: string, resource: Partial<ResourceShape>, options?: { locale?: string }) {
+  public static update(resourceId: string, resource: Partial<ResourceUpdateShape>, options?: { locale?: string }) {
     const locale = options ? options.locale || this.defaultLocale : this.defaultLocale;
     const now = new Date();
 
-    const resourceRecord = this.records.resources.filter(resourceRecord => resourceRecord.id === resourceId)[0];
     const resourceContentRecords = this.records.resourceContents.filter(
       resourceContentRecord =>
         resourceContentRecord.resource_id === resourceId && resourceContentRecord.locale === locale,
@@ -384,26 +385,34 @@ export class Resource {
     );
 
     // For resources
-    if (resource.type !== undefined) {
-      resourceRecord.type = resource.type;
-      resourceRecord.updated_at = now.toString();
+    const resourceRecords = this.records.resources.filter(resourceRecord => resourceRecord.id === resourceId);
+    for (const resourceRecord of resourceRecords) {
+      const targetKeys = ['type', 'key'];
+      for (const targetKey of targetKeys) {
+        if (resource[targetKey] !== undefined) {
+          resourceRecord[targetKey] = resource[targetKey];
+          resourceRecord.updated_at = now.toString();
+        }
+      }
     }
-    if (resource.key !== undefined) {
-      resourceRecord.key = resource.key;
-      resourceRecord.updated_at = now.toString();
-    }
-    // For resource_contents
+    // For resource contents
     if (resource.contents) {
       for (let key of Object.keys(resource.contents)) {
         let isExisting = false;
+        const value = resource.contents[key];
         for (let resourceContentRecord of resourceContentRecords) {
           if (resourceContentRecord.key === key && resourceContentRecord.locale === locale) {
-            resourceContentRecord.value = resource.contents[key];
-            resourceContentRecord.updated_at = now.toString();
             isExisting = true;
+
+            if (value === null) {
+              this.removeRecord(resourceContentRecord.id, this.records.resourceContents);
+            } else {
+              resourceContentRecord.value = value;
+              resourceContentRecord.updated_at = now.toString();
+            }
           }
         }
-        if (!isExisting) {
+        if (!isExisting && value !== null) {
           const lastResourceContentRecord = this.records.resourceContents[this.records.resourceContents.length - 1];
           const resourceAttributeId = lastResourceContentRecord
             ? String(Number(lastResourceContentRecord.id) + 1)
@@ -413,7 +422,7 @@ export class Resource {
             resource_id: resourceId,
             locale,
             key,
-            value: resource.contents[key],
+            value,
             created_at: now.toString(),
             updated_at: now.toString(),
           });
@@ -424,14 +433,19 @@ export class Resource {
     if (resource.attributes) {
       for (let key of Object.keys(resource.attributes)) {
         let isExisting = false;
+        const value = resource.attributes[key];
         for (let resourceAttributeRecord of resourceAttributeRecords) {
           if (resourceAttributeRecord.key === key) {
-            resourceAttributeRecord.value = resource.attributes[key];
-            resourceAttributeRecord.updated_at = now.toString();
             isExisting = true;
+            if (value === null) {
+              this.removeRecord(resourceAttributeRecord.id, this.records.resourceAttributes);
+            } else {
+              resourceAttributeRecord.value = value;
+              resourceAttributeRecord.updated_at = now.toString();
+            }
           }
         }
-        if (!isExisting) {
+        if (!isExisting && value !== null) {
           const lastResourceAttributeRecord = this.records.resourceAttributes[
             this.records.resourceAttributes.length - 1
           ];
@@ -442,7 +456,7 @@ export class Resource {
             id: resourceAttributeId,
             resource_id: resourceId,
             key,
-            value: resource.attributes[key],
+            value,
             created_at: now.toString(),
             updated_at: now.toString(),
           });
@@ -702,6 +716,15 @@ export class Resource {
       this.records.resourceContents,
       this.records.resourceAttributes,
     );
+  }
+
+  private static removeRecord(id, records) {
+    for (let i = 0; i < records.length; i += 1) {
+      const record = records[i];
+      if (record.id === id) {
+        records.splice(i, 1);
+      }
+    }
   }
 
   public static save() {
