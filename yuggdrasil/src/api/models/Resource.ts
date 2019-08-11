@@ -64,7 +64,7 @@ type ResourceExceptedCountryRecord = {
 
 type Resources = {
   [resourceId: string]: {
-    [locale: string]: ResourceShape;
+    [locale: string]: ResourceShape | null;
   };
 };
 
@@ -232,9 +232,9 @@ export class Resource {
         }
 
         if (resources[resource.id]) {
-          resources[resource.id][locale] = resource;
+          resources[resource.id][locale] = Object.keys(resource.contents).length ? resource : null;
         } else {
-          resources[resource.id] = { [locale]: resource };
+          resources[resource.id] = { [locale]: Object.keys(resource.contents).length ? resource : null };
         }
       }
     }
@@ -256,11 +256,13 @@ export class Resource {
         if (value) {
           if (typeof value === 'string') {
             resourceIds = resourceIds.filter((resourceId: string) => {
-              return this.resources[resourceId][locale][targetKey] === value;
+              const resource: ResourceShape | null = this.resources[resourceId][locale];
+              return resource ? resource[targetKey] === value : false;
             });
           } else if (Array.isArray(value)) {
             resourceIds = resourceIds.filter((resourceId: string) => {
-              return value.indexOf(this.resources[resourceId][locale][targetKey]) !== -1;
+              const resource: ResourceShape | null = this.resources[resourceId][locale];
+              return resource ? value.indexOf(resource[targetKey]) !== -1 : false;
             });
           }
         }
@@ -280,7 +282,9 @@ export class Resource {
       resourceIds = resourceIds.slice(offset, limit);
     }
 
-    return resourceIds.map((resourceId: string) => this.resources[resourceId][locale] || null).filter(r => !!r);
+    return resourceIds
+      .map((resourceId: string) => this.resources[resourceId][locale])
+      .filter(r => r !== null) as ResourceShape[];
   }
 
   public static relation(resourceIds: string[]): string[] {
@@ -297,8 +301,12 @@ export class Resource {
     return relatedResourceIds;
   }
 
-  public static create(resource: Partial<ResourceShape>, options?: { locale: string }): ResourceShape {
+  public static create(resource: Partial<ResourceShape>, options?: { locale: string }): ResourceShape | null {
     const locale = options ? options.locale || this.defaultLocale : this.defaultLocale;
+
+    if (resource.key && this.find({ key: [resource.key] }, { locale }).length) {
+      return null;
+    }
 
     const now = new Date();
     const lastResourceRecord = this.records.resources[this.records.resources.length - 1];
