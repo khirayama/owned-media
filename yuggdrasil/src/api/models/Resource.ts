@@ -247,19 +247,21 @@ export class Resource {
     options?: { country?: string; locale?: string; limit?: number; offset?: number; sort?: string },
   ): ResourceShape[] {
     let resourceIds = Object.keys(this.resources);
+    const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
 
     if (conditions) {
       const targetKeys = Object.keys(conditions);
       for (let targetKey of targetKeys) {
-        if (conditions[targetKey]) {
-          if (typeof conditions[targetKey] === 'string') {
-            resourceIds = resourceIds.filter(
-              (resourceId: string) => this.resources[resourceId][targetKey] === conditions[targetKey],
-            );
-          } else if (Array.isArray(conditions[targetKey])) {
-            resourceIds = resourceIds.filter(
-              (resourceId: string) => conditions[targetKey].indexOf(this.resources[resourceId][targetKey]) !== -1,
-            );
+        const value: string | string[] = conditions[targetKey];
+        if (value) {
+          if (typeof value === 'string') {
+            resourceIds = resourceIds.filter((resourceId: string) => {
+              return this.resources[resourceId][locale][targetKey] === value;
+            });
+          } else if (Array.isArray(value)) {
+            resourceIds = resourceIds.filter((resourceId: string) => {
+              return value.indexOf(this.resources[resourceId][locale][targetKey]) !== -1;
+            });
           }
         }
       }
@@ -267,7 +269,6 @@ export class Resource {
 
     // options
     const country: string | null = options ? options.country || null : null;
-    const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
     const limit: number | null = options && options.limit ? options.limit : null;
     const offset: number = options && options.offset ? options.offset : 0;
     // const sort: string = 'created_at' || '-created_at';
@@ -296,7 +297,7 @@ export class Resource {
     return relatedResourceIds;
   }
 
-  public static create(resource: Partial<ResourceShape>, options?: { locale: string }) {
+  public static create(resource: Partial<ResourceShape>, options?: { locale: string }): ResourceShape {
     const locale = options ? options.locale || this.defaultLocale : this.defaultLocale;
 
     const now = new Date();
