@@ -306,7 +306,9 @@ export class Resource {
 
     const isResourceExisting = !!resource.id;
     if (isResourceExisting) {
-      throw new Error('The resource is already existing. Please do `update` to add or update some fileds.');
+      throw new Error(
+        '`create` should be called without id. If id is already existing, use `update` to update resource.',
+      );
     }
 
     const isResourceWithExistingKeyInSameLocale = resource.key && this.find({ key: [resource.key] }, { locale }).length;
