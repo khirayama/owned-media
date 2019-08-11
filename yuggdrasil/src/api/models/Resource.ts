@@ -301,11 +301,23 @@ export class Resource {
     return relatedResourceIds;
   }
 
-  public static create(resource: Partial<ResourceShape>, options?: { locale: string }): ResourceShape | null {
+  public static create(resource: Partial<ResourceShape>, options?: { locale: string }): ResourceShape {
     const locale = options ? options.locale || this.defaultLocale : this.defaultLocale;
 
-    if (resource.key && this.find({ key: [resource.key] }, { locale }).length) {
-      return null;
+    const isResourceExisting = resource.id;
+    if (isResourceExisting) {
+      throw new Error('The resource is already existing. Please do `update` to add or update some fileds.');
+    }
+
+    const isResourceWithExistingKeyInSameLocale = resource.key && this.find({ key: [resource.key] }, { locale }).length;
+    if (isResourceWithExistingKeyInSameLocale) {
+      throw new Error('The resource with this key is already existing in this locale.');
+    }
+
+    const isResourceWithExistingKeyInOtherLocale =
+      resource.key && !this.find({ key: [resource.key] }, { locale }).length;
+    if (isResourceWithExistingKeyInOtherLocale) {
+      // TODO: Create that as other locale resource
     }
 
     const now = new Date();
