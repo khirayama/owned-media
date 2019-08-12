@@ -253,8 +253,10 @@ export class Resource {
   }
 
   public static find(conditions?: FindCondition | null, options?: FindConditionOptions): ResourceShape[] {
-    let resourceIds = Object.keys(this.resources);
     const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
+    const country: string | null = options ? options.country || null : null;
+
+    let resourceIds = Object.keys(this.resources);
 
     if (conditions) {
       const targetKeys = Object.keys(conditions);
@@ -277,7 +279,6 @@ export class Resource {
     }
 
     // options
-    const country: string | null = options ? options.country || null : null;
     const limit: number | null = options && options.limit ? options.limit : null;
     const offset: number = options && options.offset ? options.offset : 0;
     // const sort: string = 'created_at' || '-created_at';
