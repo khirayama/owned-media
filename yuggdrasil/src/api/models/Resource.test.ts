@@ -268,7 +268,48 @@ describe('Resource.update', () => {
 
 describe('Resource.delete', () => {});
 
-describe('Resource.createRelations', () => {});
+describe('Resource.createRelations', () => {
+  beforeAll(() => {
+    const resource1 = Resource.create({
+      type: 'note',
+      key: 'content-1',
+      contents: {
+        name: 'リソース名前 1',
+        body: 'リソースボディ 1',
+      },
+      attributes: {
+        sample: '1',
+      },
+    });
+    const resource2 = Resource.create({
+      type: 'note',
+      key: 'content-2',
+      contents: {
+        name: 'リソース名前 2',
+        body: 'リソースボディ 2',
+      },
+      attributes: {
+        sample: '2',
+      },
+    });
+    const resource3 = Resource.create({
+      type: 'note',
+      key: 'content-3',
+      contents: {
+        name: 'リソース名前 3',
+        body: 'リソースボディ 3',
+      },
+      attributes: {
+        sample: '3',
+      },
+    });
+    Resource.createRelations(resource1.id, [resource2.id, resource3.id]);
+    expect(Resource['records']['resourceRelations'][0].resource1_id).toEqual(resource1.id);
+    expect(Resource['records']['resourceRelations'][0].resource2_id).toEqual(resource2.id);
+    expect(Resource['records']['resourceRelations'][1].resource1_id).toEqual(resource1.id);
+    expect(Resource['records']['resourceRelations'][1].resource2_id).toEqual(resource3.id);
+  });
+});
 
 describe('Resource.deleteRelations', () => {});
 
