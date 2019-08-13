@@ -267,15 +267,25 @@ describe('Resource.update', () => {
 });
 
 describe('Resource.delete', () => {});
+
 describe('Resource.createRelations', () => {});
+
 describe('Resource.deleteRelations', () => {});
+
 describe('Resource.findRelations', () => {});
+
 describe('Resource.createTargetCountries', () => {});
+
 describe('Resource.deleteTargetCountries', () => {});
+
 describe('Resource.findTargetCountries', () => {});
+
 describe('Resource.createExceptedCountries', () => {});
+
 describe('Resource.deleteExceptedCountries', () => {});
+
 describe('Resource.findExceptedCountries', () => {});
+
 describe('Resource.removeRecord', () => {});
 
 describe('Resource.find', () => {
