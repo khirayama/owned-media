@@ -265,3 +265,81 @@ describe('Resource.update', () => {
     });
   });
 });
+
+describe('Resource.delete', () => {});
+describe('Resource.createRelations', () => {});
+describe('Resource.deleteRelations', () => {});
+describe('Resource.findRelations', () => {});
+describe('Resource.createTargetCountries', () => {});
+describe('Resource.deleteTargetCountries', () => {});
+describe('Resource.findTargetCountries', () => {});
+describe('Resource.createExceptedCountries', () => {});
+describe('Resource.deleteExceptedCountries', () => {});
+describe('Resource.findExceptedCountries', () => {});
+describe('Resource.removeRecord', () => {});
+
+describe('Resource.find', () => {
+  beforeAll(() => {
+    const resource1 = Resource.create({
+      type: 'note',
+      key: 'content-1',
+      contents: {
+        name: 'リソース名前 1',
+        body: 'リソースボディ 1',
+      },
+      attributes: {
+        sample: '1',
+      },
+    });
+    const resource2 = Resource.create({
+      type: 'note',
+      key: 'content-2',
+      contents: {
+        name: 'リソース名前 2',
+        body: 'リソースボディ 2',
+      },
+      attributes: {
+        sample: '2',
+      },
+    });
+    const resource3 = Resource.create({
+      type: 'note',
+      key: 'content-3',
+      contents: {
+        name: 'リソース名前 3',
+        body: 'リソースボディ 3',
+      },
+      attributes: {
+        sample: '3',
+      },
+    });
+    Resource.update(
+      resource3.id,
+      {
+        key: 'content-3',
+        contents: {
+          name: 'Resource Name 3',
+          body: 'Resource Body 3',
+        },
+        attributes: {
+          sample: '3',
+        },
+      },
+      { locale: 'en_US' },
+    );
+    Resource.createRelations(resource1.id, [resource2.id, resource3.id]);
+    Resource.createTargetCountries(resource1.id, ['jp']);
+    Resource.createExceptedCountries(resource2.id, ['us']);
+  });
+
+  afterAll(() => {
+    Resource.reset();
+  });
+
+  it('Find resources with string.', () => {});
+  it('Find resources with strings.', () => {});
+  it('Find resources with existing locale.', () => {});
+  it('Find resources with not existing locale.', () => {});
+  it('Find resources having multi locale.', () => {});
+  it('Find resources with country code.', () => {});
+});
