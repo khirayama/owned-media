@@ -315,7 +315,24 @@ describe('Resource.deleteRelations', () => {});
 
 describe('Resource.findRelations', () => {});
 
-describe('Resource.createTargetCountries', () => {});
+describe('Resource.createTargetCountries', () => {
+  beforeAll(() => {
+    const resource = Resource.create({
+      type: 'note',
+      key: 'content-1',
+      contents: {
+        name: 'リソース名前 1',
+        body: 'リソースボディ 1',
+      },
+      attributes: {
+        sample: '1',
+      },
+    });
+    Resource.createTargetCountries(resource.id, ['ja_JP', 'en_US']);
+    expect(Resource['records']['resourceTargetCountries'][0].resource_id).toEqual('ja_JP');
+    expect(Resource['records']['resourceTargetCountries'][1].resource_id).toEqual('en_US');
+  });
+});
 
 describe('Resource.deleteTargetCountries', () => {});
 
