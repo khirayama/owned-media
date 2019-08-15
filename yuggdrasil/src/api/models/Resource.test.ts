@@ -266,7 +266,9 @@ describe('Resource.update', () => {
   });
 });
 
-describe('Resource.delete', () => {});
+describe('Resource.delete', () => {
+  // TODO
+});
 
 describe('Resource.createRelations', () => {
   beforeAll(() => {
@@ -312,9 +314,13 @@ describe('Resource.createRelations', () => {
   });
 });
 
-describe('Resource.deleteRelations', () => {});
+describe('Resource.deleteRelations', () => {
+  // TODO
+});
 
-describe('Resource.findRelations', () => {});
+describe('Resource.findRelations', () => {
+  // TODO
+});
 
 describe('Resource.createTargetCountries', () => {
   beforeAll(() => {
@@ -338,9 +344,13 @@ describe('Resource.createTargetCountries', () => {
   });
 });
 
-describe('Resource.deleteTargetCountries', () => {});
+describe('Resource.deleteTargetCountries', () => {
+  // TODO
+});
 
-describe('Resource.findTargetCountries', () => {});
+describe('Resource.findTargetCountries', () => {
+  // TODO
+});
 
 describe('Resource.createExceptedCountries', () => {
   beforeAll(() => {
