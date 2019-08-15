@@ -270,6 +270,7 @@ describe('Resource.delete', () => {});
 
 describe('Resource.createRelations', () => {
   beforeAll(() => {
+    Resource.reset();
     const resource1 = Resource.create({
       type: 'note',
       key: 'content-1',
@@ -317,6 +318,7 @@ describe('Resource.findRelations', () => {});
 
 describe('Resource.createTargetCountries', () => {
   beforeAll(() => {
+    Resource.reset();
     const resource = Resource.create({
       type: 'note',
       key: 'content-1',
@@ -329,8 +331,10 @@ describe('Resource.createTargetCountries', () => {
       },
     });
     Resource.createTargetCountries(resource.id, ['ja_JP', 'en_US']);
-    expect(Resource['records']['resourceTargetCountries'][0].resource_id).toEqual('ja_JP');
-    expect(Resource['records']['resourceTargetCountries'][1].resource_id).toEqual('en_US');
+  });
+  it('Work correctly', () => {
+    expect(Resource['records']['resourceTargetCountries'][0].country_code).toEqual('ja_JP');
+    expect(Resource['records']['resourceTargetCountries'][1].country_code).toEqual('en_US');
   });
 });
 
@@ -338,7 +342,27 @@ describe('Resource.deleteTargetCountries', () => {});
 
 describe('Resource.findTargetCountries', () => {});
 
-describe('Resource.createExceptedCountries', () => {});
+describe('Resource.createExceptedCountries', () => {
+  beforeAll(() => {
+    Resource.reset();
+    const resource = Resource.create({
+      type: 'note',
+      key: 'content-1',
+      contents: {
+        name: 'リソース名前 1',
+        body: 'リソースボディ 1',
+      },
+      attributes: {
+        sample: '1',
+      },
+    });
+    Resource.createExceptedCountries(resource.id, ['ja_JP', 'en_US']);
+  });
+  it('Work correctly', () => {
+    expect(Resource['records']['resourceExceptedCountries'][0].country_code).toEqual('ja_JP');
+    expect(Resource['records']['resourceExceptedCountries'][1].country_code).toEqual('en_US');
+  });
+});
 
 describe('Resource.deleteExceptedCountries', () => {});
 
@@ -348,6 +372,7 @@ describe('Resource.removeRecord', () => {});
 
 describe('Resource.find', () => {
   beforeAll(() => {
+    Resource.reset();
     const resource1 = Resource.create({
       type: 'note',
       key: 'content-1',
