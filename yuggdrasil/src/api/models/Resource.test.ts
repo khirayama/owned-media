@@ -439,10 +439,225 @@ describe('Resource.find', () => {
     Resource.reset();
   });
 
-  it('Find resources with string.', () => {});
-  it('Find resources with strings.', () => {});
-  it('Find resources with existing locale.', () => {});
-  it('Find resources with not existing locale.', () => {});
-  it('Find resources having multi locale.', () => {});
-  it('Find resources with country code.', () => {});
+  it('Find all resources.', () => {
+    const resources = Resource.find();
+    expect(resources).toEqual([
+      {
+        id: '1',
+        key: 'content-1',
+        type: 'note',
+        contents: { body: 'リソースボディ 1', name: 'リソース名前 1' },
+        attributes: { sample: '1' },
+        createdAt: resources[0].createdAt,
+        updatedAt: resources[0].updatedAt,
+      },
+      {
+        id: '2',
+        key: 'content-2',
+        type: 'note',
+        contents: { body: 'リソースボディ 2', name: 'リソース名前 2' },
+        attributes: { sample: '2' },
+        createdAt: resources[1].createdAt,
+        updatedAt: resources[1].updatedAt,
+      },
+      {
+        id: '3',
+        key: 'content-3',
+        type: 'note',
+        contents: { body: 'リソースボディ 3', name: 'リソース名前 3' },
+        attributes: { sample: '3' },
+        createdAt: resources[2].createdAt,
+        updatedAt: resources[2].updatedAt,
+      },
+    ]);
+  });
+  it('Find all resources with locale.', () => {
+    const resources = Resource.find(null, { locale: 'en_US' });
+    expect(resources).toEqual([
+      {
+        id: '3',
+        key: 'content-3',
+        type: 'note',
+        contents: { body: 'Resource Body 3', name: 'Resource Name 3' },
+        attributes: { sample: '3' },
+        createdAt: resources[0].createdAt,
+        updatedAt: resources[0].updatedAt,
+      },
+    ]);
+  });
+  it('Find all resources with fallbackLocales.', () => {
+    const resources = Resource.find(null, { locale: 'en_US', fallbackLocales: ['ja_JP'] });
+    expect(resources).toEqual([
+      {
+        id: '1',
+        key: 'content-1',
+        type: 'note',
+        contents: { body: 'リソースボディ 1', name: 'リソース名前 1' },
+        attributes: { sample: '1' },
+        createdAt: resources[0].createdAt,
+        updatedAt: resources[0].updatedAt,
+      },
+      {
+        id: '2',
+        key: 'content-2',
+        type: 'note',
+        contents: { body: 'リソースボディ 2', name: 'リソース名前 2' },
+        attributes: { sample: '2' },
+        createdAt: resources[1].createdAt,
+        updatedAt: resources[1].updatedAt,
+      },
+      {
+        id: '3',
+        key: 'content-3',
+        type: 'note',
+        contents: { body: 'Resource Body 3', name: 'Resource Name 3' },
+        attributes: { sample: '3' },
+        createdAt: resources[2].createdAt,
+        updatedAt: resources[2].updatedAt,
+      },
+    ]);
+  });
+  it('Find resources with id.', () => {
+    const resources = Resource.find({ id: '1' });
+    expect(resources).toEqual([
+      {
+        attributes: { sample: '1' },
+        contents: { body: 'リソースボディ 1', name: 'リソース名前 1' },
+        id: '1',
+        key: 'content-1',
+        type: 'note',
+        createdAt: resources[0].createdAt,
+        updatedAt: resources[0].updatedAt,
+      },
+    ]);
+  });
+  it('Find resources with ids.', () => {
+    const resources = Resource.find({ id: ['1', '2', '3'] });
+    expect(resources).toEqual([
+      {
+        id: '1',
+        key: 'content-1',
+        type: 'note',
+        contents: { body: 'リソースボディ 1', name: 'リソース名前 1' },
+        attributes: { sample: '1' },
+        createdAt: resources[0].createdAt,
+        updatedAt: resources[0].updatedAt,
+      },
+      {
+        id: '2',
+        key: 'content-2',
+        type: 'note',
+        contents: { body: 'リソースボディ 2', name: 'リソース名前 2' },
+        attributes: { sample: '2' },
+        createdAt: resources[1].createdAt,
+        updatedAt: resources[1].updatedAt,
+      },
+      {
+        id: '3',
+        key: 'content-3',
+        type: 'note',
+        contents: { body: 'リソースボディ 3', name: 'リソース名前 3' },
+        attributes: { sample: '3' },
+        createdAt: resources[2].createdAt,
+        updatedAt: resources[2].updatedAt,
+      },
+    ]);
+  });
+  it('Find resources with existing locale.', () => {
+    const resources = Resource.find({ id: '3' }, { locale: 'en_US' });
+    expect(resources).toEqual([
+      {
+        id: '3',
+        key: 'content-3',
+        type: 'note',
+        contents: { body: 'Resource Body 3', name: 'Resource Name 3' },
+        attributes: { sample: '3' },
+        createdAt: resources[0].createdAt,
+        updatedAt: resources[0].updatedAt,
+      },
+    ]);
+  });
+  it('Find resources with not existing locale.', () => {
+    const resources = Resource.find({ id: '2' }, { locale: 'en_US' });
+    expect(resources).toEqual([]);
+  });
+  it('Find resources with not existing locale and fallbackLocales.', () => {
+    const resources = Resource.find({ id: '2' }, { locale: 'en_US', fallbackLocales: ['ja_JP'] });
+    expect(resources).toEqual([
+      {
+        id: '2',
+        key: 'content-2',
+        type: 'note',
+        contents: { body: 'リソースボディ 2', name: 'リソース名前 2' },
+        attributes: { sample: '3' },
+        createdAt: resources[0].createdAt,
+        updatedAt: resources[0].updatedAt,
+      },
+    ]);
+  });
+  it('Find resources with country code.', () => {
+    const resourcesForJP = Resource.find(null, { country: 'jp' });
+    expect(resourcesForJP).toEqual([
+      {
+        id: '1',
+        key: 'content-1',
+        type: 'note',
+        contents: { body: 'リソースボディ 1', name: 'リソース名前 1' },
+        attributes: { sample: '1' },
+        createdAt: resourcesForJP[0].createdAt,
+        updatedAt: resourcesForJP[0].updatedAt,
+      },
+      {
+        id: '2',
+        key: 'content-2',
+        type: 'note',
+        contents: { body: 'リソースボディ 2', name: 'リソース名前 2' },
+        attributes: { sample: '2' },
+        createdAt: resourcesForJP[1].createdAt,
+        updatedAt: resourcesForJP[1].updatedAt,
+      },
+      {
+        id: '3',
+        key: 'content-3',
+        type: 'note',
+        contents: { body: 'リソースボディ 3', name: 'リソース名前 3' },
+        attributes: { sample: '3' },
+        createdAt: resourcesForJP[2].createdAt,
+        updatedAt: resourcesForJP[2].updatedAt,
+      },
+    ]);
+    const resourcesForUS = Resource.find(null, { locale: 'en_US', fallbackLocales: ['ja_JP'], country: 'us' });
+    expect(resourcesForUS).toEqual([
+      {
+        id: '3',
+        key: 'content-3',
+        type: 'note',
+        contents: { body: 'Resource Body 3', name: 'Resource Name 3' },
+        attributes: { sample: '3' },
+        createdAt: resourcesForUS[0].createdAt,
+        updatedAt: resourcesForUS[0].updatedAt,
+      },
+    ]);
+    const resourcesForFR = Resource.find(null, { locale: 'en_US', fallbackLocales: ['ja_JP'], country: 'fr' });
+    expect(resourcesForFR).toEqual([
+      {
+        id: '2',
+        key: 'content-2',
+        type: 'note',
+        contents: { body: 'リソースボディ 2', name: 'リソース名前 2' },
+        attributes: { sample: '2' },
+        createdAt: resourcesForFR[0].createdAt,
+        updatedAt: resourcesForFR[0].updatedAt,
+      },
+      {
+        id: '3',
+        key: 'content-3',
+        type: 'note',
+        contents: { body: 'Resource Body 3', name: 'Resource Name 3' },
+        attributes: { sample: '3' },
+        createdAt: resourcesForFR[1].createdAt,
+        updatedAt: resourcesForFR[1].updatedAt,
+      },
+    ]);
+  });
 });
