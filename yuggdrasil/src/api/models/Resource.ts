@@ -254,10 +254,11 @@ export class Resource {
   }
 
   public static find(conditions?: FindCondition | null, options?: FindConditionOptions): ResourceShape[] {
+    // TODO: Rewrite this method. Using finding records and built resources is better.
     const locale: string = options && options.locale ? options.locale || this.defaultLocale : this.defaultLocale;
     const country: string | null = options ? options.country || null : null;
 
-    let resourceIds = Object.keys(this.resources);
+    let resourceRecords = this.records.resources;
 
     if (conditions) {
       const targetKeys = Object.keys(conditions);
@@ -265,18 +266,17 @@ export class Resource {
         const value: string | string[] = conditions[targetKey];
         if (value) {
           if (typeof value === 'string') {
-            resourceIds = resourceIds.filter((resourceId: string) => {
-              const resource: ResourceShape | null = this.resources[resourceId][locale];
-              return resource ? resource[targetKey] === value : false;
-            });
+            resourceRecords = resourceRecords.filter(resourceRecord => resourceRecord[targetKey] === [value]);
           } else if (Array.isArray(value)) {
-            resourceIds = resourceIds.filter((resourceId: string) => {
-              const resource: ResourceShape | null = this.resources[resourceId][locale];
-              return resource ? value.indexOf(resource[targetKey]) !== -1 : false;
-            });
+            resourceRecords = resourceRecords.filter(resourceRecord => value.indexOf(resourceRecord[targetKey]) !== -1);
           }
         }
       }
+    }
+
+    if (country) {
+      let targetCountryRecords = this.records.resourceTargetCountries.filter(targetCountryRecord => targetCountryRecord.country_code === country);
+      let exceptedCountryRecords = this.records.resourceExceptedCountries.filter(exceptedCountryRecord => exceptedCountryRecord.country_code === country);
     }
 
     // options
@@ -285,7 +285,6 @@ export class Resource {
     // const sort: string = 'created_at' || '-created_at';
 
     // TODO: locale and country should be supported.
-    console.log('TODO: locale and country should be supported.', locale, country);
 
     if (limit) {
       resourceIds = resourceIds.slice(offset, limit);
