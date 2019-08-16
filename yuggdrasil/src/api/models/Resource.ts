@@ -77,6 +77,7 @@ type FindCondition = {
 type FindConditionOptions = {
   country?: string;
   locale?: string;
+  fallbackLocales?: string[];
   limit?: number;
   offset?: number;
   sort?: string;
