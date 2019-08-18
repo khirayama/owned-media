@@ -1,21 +1,48 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
+import * as express from "express";
+import * as bodyParser from "body-parser";
+import {Request, Response} from "express";
+import {Routes} from "./routes";
 import {User} from "./entity/User";
 
 createConnection().then(async connection => {
 
-    console.log("Inserting a new user into the database...");
-    const user = new User();
-    user.firstName = "Timber";
-    user.lastName = "Saw";
-    user.age = 25;
-    await connection.manager.save(user);
-    console.log("Saved a new user with id: " + user.id);
+    // create express app
+    const app = express();
+    app.use(bodyParser.json());
 
-    console.log("Loading users from the database...");
-    const users = await connection.manager.find(User);
-    console.log("Loaded users: ", users);
+    // register express routes from defined application routes
+    Routes.forEach(route => {
+        (app as any)[route.method](route.route, (req: Request, res: Response, next: Function) => {
+            const result = (new (route.controller as any))[route.action](req, res, next);
+            if (result instanceof Promise) {
+                result.then(result => result !== null && result !== undefined ? res.send(result) : undefined);
 
-    console.log("Here you can setup and run express/koa/any other framework.");
+            } else if (result !== null && result !== undefined) {
+                res.json(result);
+            }
+        });
+    });
+
+    // setup express app here
+    // ...
+
+    // start express server
+    app.listen(3000);
+
+    // insert new users for test
+    await connection.manager.save(connection.manager.create(User, {
+        firstName: "Timber",
+        lastName: "Saw",
+        age: 27
+    }));
+    await connection.manager.save(connection.manager.create(User, {
+        firstName: "Phantom",
+        lastName: "Assassin",
+        age: 24
+    }));
+
+    console.log("Express server has started on port 3000. Open http://localhost:3000/users to see results");
 
 }).catch(error => console.log(error));
