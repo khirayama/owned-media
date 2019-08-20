@@ -356,6 +356,46 @@
 
 note: 言語、国によって差異がでるものがcontents。差異がでないものがattributes。
 
+## 設計 2 / Modeling 2
+
+- resources
+  - id
+  - key
+  - type(note / product / plant)
+  - locale
+  - name
+  - body
+
+- labels
+  - id
+  - key
+  - locale
+  - name
+  - body
+
+- resource_labels
+  - id
+  - resource_key
+  - label_key
+
+- resource_pages
+  - id
+  - resource_id
+  - title
+  - description
+  - keywords
+
+- media
+  - id
+  - url
+  - alt
+  - key
+
+- resource_media
+  - id
+  - resource_id
+  - media_id
+
 ### 写真 / Photos
 
 keywords: 観葉植物 / ornamental foliage plant / indoor green / indoor plants
