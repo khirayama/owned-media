@@ -388,7 +388,7 @@ note: 言語、国によって差異がでるものがcontents。差異がでな
 - media
   - id
   - url
-  - alt
+  - caption
   - key
 
 - resource_media
