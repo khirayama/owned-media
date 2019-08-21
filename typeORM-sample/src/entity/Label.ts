@@ -1,26 +1,26 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import * as typeorm from "typeorm";
 
 import { SupportLocale } from '../../config';
 
-@Entity()
+@typeorm.Entity()
 export abstract class Label {
 
-  @PrimaryGeneratedColumn('uuid')
+  @typeorm.PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @typeorm.Column()
   key: string;
 
-  @Column({
+  @typeorm.Column({
     type: 'enum',
     enum: SupportLocale,
     default: SupportLocale.jaJP,
   })
   locale: SupportLocale;
 
-  @Column()
+  @typeorm.Column()
   name: string;
 
-  @Column()
+  @typeorm.Column()
   body: string;
 }
