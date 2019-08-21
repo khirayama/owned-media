@@ -2,7 +2,7 @@ import * as typeorm from "typeorm";
 
 import { SupportLocale, ResourceType } from '../../config';
 
-@typeorm.Entity()
+@typeorm.Entity('resources')
 export abstract class Resource {
 
   @typeorm.PrimaryGeneratedColumn('uuid')

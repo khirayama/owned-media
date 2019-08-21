@@ -2,7 +2,7 @@ import * as typeorm from "typeorm";
 
 import { SupportLocale } from '../../config';
 
-@typeorm.Entity()
+@typeorm.Entity('labels')
 export abstract class Label {
 
   @typeorm.PrimaryGeneratedColumn('uuid')
