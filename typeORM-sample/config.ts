@@ -4,6 +4,7 @@ export enum SupportLocale {
 }
 
 export enum ResourceType {
+  // TODO: 複数形もいるか？ for table
   NOTE = 'note',
   PRODUCT = 'product',
   PLANT = 'plant'
