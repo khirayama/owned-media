@@ -1,33 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import * as typeorm from "typeorm";
 
 import { SupportLocale, ResourceType } from '../../config';
 
-@Entity()
+@typeorm.Entity()
 export abstract class Resource {
 
-  @PrimaryGeneratedColumn('uuid')
+  @typeorm.PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @typeorm.Column()
   key: string;
 
-  @Column({
+  @typeorm.Column({
     type: 'enum',
     enum: ResourceType,
     default: ResourceType.NOTE,
   })
   type: ResourceType;
 
-  @Column({
+  @typeorm.Column({
     type: 'enum',
     enum: SupportLocale,
     default: SupportLocale.jaJP,
   })
   locale: SupportLocale;
 
-  @Column()
+  @typeorm.Column()
   name: string;
 
-  @Column()
+  @typeorm.Column()
   body: string;
 }
