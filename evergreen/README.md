@@ -362,10 +362,6 @@ note: 言語、国によって差異がでるものがcontents。差異がでな
   - id
   - key
   - type(note / product / plant)
-
-- resource_contents
-  - id
-  - resource_id
   - locale
   - name
   - body
@@ -373,18 +369,14 @@ note: 言語、国によって差異がでるものがcontents。差異がでな
 - labels
   - id
   - key
-
-- label_contents
-  - id
-  - label_id
   - locale
   - name
   - body
 
-- resource_labels
+- connections
   - id
-  - resource_id
-  - label_id
+  - resource_key
+  - label_key
 
 - resource_pages
   - id
