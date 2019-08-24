@@ -362,6 +362,10 @@ note: 言語、国によって差異がでるものがcontents。差異がでな
   - id
   - key
   - type(note / product / plant)
+
+- resource_contents
+  - id
+  - resourceId
   - locale
   - name
   - body
@@ -369,18 +373,22 @@ note: 言語、国によって差異がでるものがcontents。差異がでな
 - labels
   - id
   - key
+
+- label_contents
+  - id
+  - labelId
   - locale
   - name
   - body
 
-- connections
+- resources_labels
   - id
-  - resource_key
-  - label_key
+  - resourceId
+  - labelId
 
-- resource_pages
+- resource_content_pages
   - id
-  - resource_id
+  - resourceContentId
   - title
   - description
   - keywords
@@ -391,10 +399,10 @@ note: 言語、国によって差異がでるものがcontents。差異がでな
   - caption
   - key
 
-- resource_media
+- resources_media
   - id
-  - resource_id
-  - media_id
+  - resourceId
+  - mediaId
 
 ### 写真 / Photos
 
