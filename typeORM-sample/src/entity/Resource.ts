@@ -1,10 +1,10 @@
 import * as typeorm from "typeorm";
 
 import { ResourceType } from '../../config';
+import { ResourceContent } from './ResourceContent';
 
 @typeorm.Entity('resources')
 export class Resource {
-
   @typeorm.PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -17,4 +17,7 @@ export class Resource {
     default: ResourceType.NOTE,
   })
   type: ResourceType;
+
+  @typeorm.OneToMany(type => ResourceContent, resourceContent => resourceContent.resource)
+  contents: ResourceContent[];
 }
