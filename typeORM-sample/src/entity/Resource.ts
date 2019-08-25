@@ -3,6 +3,7 @@ import * as typeorm from "typeorm";
 import { ResourceType } from '../../config';
 import { ResourceContent } from './ResourceContent';
 import { ResourceMeta } from './ResourceMeta';
+import { ResourceAttribute } from './ResourceAttribute';
 
 @typeorm.Entity('resources')
 export class Resource {
@@ -20,6 +21,9 @@ export class Resource {
 
   @typeorm.OneToMany(type => ResourceMeta, resourceMeta => resourceMeta.resource)
   meta: ResourceMeta[];
+
+  @typeorm.OneToMany(type => ResourceAttribute, resourceAttribute => resourceAttribute.resource)
+  attributes: ResourceAttribute[];
 
   @typeorm.CreateDateColumn({name: 'created_at'})
   createdAt: Date;
