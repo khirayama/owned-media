@@ -223,7 +223,8 @@ Steps to run this project:
 {
   caption: 'medium name',
   key: 'medium-key',
-  body: 'base64 string'
+  body?: 'base64 string'
+  url?: '/path/to/image'
 }
 ```
 
