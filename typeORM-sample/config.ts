@@ -1,11 +1,34 @@
-export enum SupportLocale {
-  jaJP = 'ja_JP',
-  enUS = 'en_US',
-}
+export const supportLocales: string[] = [
+  'ja_JP',
+  'en_US',
+];
 
-export enum ResourceType {
-  // TODO: 複数形もいるか？ for table
-  NOTE = 'note',
-  PRODUCT = 'product',
-  PLANT = 'plant'
-}
+export const resourceTypes: {
+  name: string;
+  attributes?: {
+    [key: string]: {
+      type: 'boolean' | 'number' | 'string' | 'date';
+      defaultValue?: boolean | number | string | Date;
+    };
+  };
+}[] = [
+  {
+    name: 'note',
+  },
+  {
+    name: 'product',
+  },
+  {
+    name: 'plant',
+    attributes: {
+      shadeTolerance: {
+        type: 'number',
+        defaultValue: 1,
+      },
+      coldTolerance: {
+        type: 'number',
+        defaultValue: 1,
+      },
+    },
+  },
+];
