@@ -12,7 +12,7 @@ export class Resource {
   @typeorm.PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @typeorm.Column()
+  @typeorm.Column({ unique: true })
   key: string;
 
   @typeorm.Column({
