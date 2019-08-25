@@ -1,6 +1,6 @@
 import * as typeorm from "typeorm";
 
-import { SupportLocale } from '../../config';
+import { supportLocales } from '../../config';
 import { Resource } from './Resource';
 
 @typeorm.Entity('resource_contents')
@@ -8,8 +8,12 @@ export class ResourceContent {
   @typeorm.PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @typeorm.Column({ type: 'varchar' })
-  locale: SupportLocale;
+  @typeorm.Column({
+    type: 'varchar',
+    enum: supportLocales,
+    default: supportLocales[0],
+  })
+  locale: string;
 
   @typeorm.Column()
   name: string;

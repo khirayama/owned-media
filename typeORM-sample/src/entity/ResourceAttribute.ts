@@ -1,6 +1,5 @@
 import * as typeorm from "typeorm";
 
-import { SupportLocale } from '../../config';
 import { Resource } from './Resource';
 
 @typeorm.Entity('resource_attributes')

@@ -1,9 +1,11 @@
 import * as typeorm from "typeorm";
 
-import { ResourceType } from '../../config';
+import { resourceTypes } from '../../config';
 import { ResourceContent } from './ResourceContent';
 import { ResourceMeta } from './ResourceMeta';
 import { ResourceAttribute } from './ResourceAttribute';
+
+const resourceTypeNames = resourceTypes.map((resourceType) => resourceType.name);
 
 @typeorm.Entity('resources')
 export class Resource {
@@ -13,8 +15,12 @@ export class Resource {
   @typeorm.Column()
   key: string;
 
-  @typeorm.Column({ type: 'varchar' })
-  type: ResourceType;
+  @typeorm.Column({
+    type: 'varchar',
+    enum: resourceTypeNames,
+    default: resourceTypeNames[0],
+  })
+  type: string;
 
   @typeorm.OneToMany(type => ResourceContent, resourceContent => resourceContent.resource)
   contents: ResourceContent[];
