@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import * as typeorm from "typeorm";
 
-import { SupportLocale, ResourceType } from './config';
+import { supportLocales } from './config';
 import { Resource } from './src/entity/Resource';
 import { ResourceContent } from './src/entity/ResourceContent';
 import { ResourceMeta } from './src/entity/ResourceMeta';
@@ -75,10 +75,10 @@ const root = path.resolve(__dirname);
   const connection = await typeorm.createConnection();
 
   // const key = 'fundation-knowledge';
-  // const locale = SupportLocale.jaJP;
+  // const locale = 'ja_JP';
   //
   // const content = new ResourceContent();
-  // content.locale = SupportLocale.jaJP;
+  // content.locale = locale;
   // content.name = '基礎知識';
   // content.body = '';
   // await connection.manager.save(content);
@@ -92,30 +92,13 @@ const root = path.resolve(__dirname);
   // await connection.manager.save(resource);
 
   const resourceRepository = connection.getRepository(Resource);
-  // const resources = await resourceRepository.find();
-  // const resourcesWithContents = await resourceRepository.find({ relations: ['contents'] });
-  // console.log(resources);
-  // console.log(resourcesWithContents);
-
-  // const resourcesWithContent = await resourceRepository.find({
-  //   where: {
-  //     'locale': 'ja_JP',
-  //   },
-  //   join: {
-  //     alias: 'r',
-  //     leftJoinAndSelect: {
-  //       rc: 'r.contents',
-  //     },
-  //   },
-  // });
   const resourceQuery = await resourceRepository
-    .createQueryBuilder('r')
-    .leftJoinAndSelect('r.contents', 'resource_contents')
-    .leftJoinAndSelect('r.meta', 'resource_meta', 'resource_meta.locale = resource_contents.locale')
-    .leftJoinAndSelect('r.attributes', 'resource_attributes')
+    .createQueryBuilder('resource')
+    .leftJoinAndSelect('resource.contents', 'resource_contents')
+    .leftJoinAndSelect('resource.meta', 'resource_meta', 'resource_meta.locale = resource_contents.locale')
+    .leftJoinAndSelect('resource.attributes', 'resource_attributes')
     .where('resource_contents.locale = :locale');
   const resourcesWithContent = await resourceQuery.setParameters({ locale: 'ja_JP' }).getOne();
-  console.log(JSON.stringify(resourcesWithContent, null, 2));
   console.log(generateResourceResponse(resourcesWithContent));
   console.log(generateResourceResponse(await resourceQuery.setParameters({ locale: 'en_US' }).getOne()));
 })();
