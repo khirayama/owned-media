@@ -34,12 +34,21 @@ type ResourceResponse = {
 };
 
 function generateResourceResponse(resource: Resource): ResourceResponse {
-  if (
-    resource.contents.length !== 1 ||
-    resource.meta.length !== 1
-  ) {
+  if (resource.contents.length !== 1) {
     console.log(`Please check your query.`);
   }
+
+  const attributes = {};
+  for (const attr of resource.attributes) {
+    switch (attr.type) {
+      case 'number': {
+        attributes[attr.key] = Number(attr.value);
+        break;
+      }
+    }
+  }
+
+  const meta = resource.meta[0] || null;
 
   return {
     id: resource.id,
@@ -48,13 +57,13 @@ function generateResourceResponse(resource: Resource): ResourceResponse {
     locale: resource.contents[0].locale,
     name: resource.contents[0].name,
     body: resource.contents[0].body,
-    meta: resource.meta[0] || {
-      title: '',
-      description: '',
-      keywords: '',
+    meta: {
+      title: meta ? meta.title : '',
+      description: meta ? meta.description : '',
+      keywords: meta ? meta.keywords : '',
     },
     media: {}, // TODO
-    attributes: resource.attributes || {},
+    attributes,
     createdAt: resource.contents[0].createdAt,
     updatedAt: resource.contents[0].updatedAt,
   };
@@ -102,6 +111,8 @@ const root = path.resolve(__dirname);
   const resourceQuery = await resourceRepository
     .createQueryBuilder('r')
     .leftJoinAndSelect('r.contents', 'resource_contents')
+    .leftJoinAndSelect('r.meta', 'resource_meta', 'resource_meta.locale = resource_contents.locale')
+    .leftJoinAndSelect('r.attributes', 'resource_attributes')
     .where('resource_contents.locale = :locale');
   const resourcesWithContent = await resourceQuery.setParameters({ locale: 'ja_JP' }).getOne();
   console.log(JSON.stringify(resourcesWithContent, null, 2));
