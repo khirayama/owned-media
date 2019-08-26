@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import * as typeorm from "typeorm";
 
-import { supportLocales } from './config';
+import { supportLocales, resourceTypes } from './config';
 import { Resource } from './src/entity/Resource';
 import { ResourceContent } from './src/entity/ResourceContent';
 import { ResourceMeta } from './src/entity/ResourceMeta';
@@ -69,27 +69,31 @@ function generateResourceResponse(resource: Resource): ResourceResponse {
   };
 }
 
+async function createResource(locale: string, params: { key: string; type?: string; name?: string; body?: string; }) {
+  const connection = typeorm.getConnection();
+
+  const key = params.key;
+
+  const content = new ResourceContent();
+  content.locale = locale;
+  content.name = params.name;
+  content.body = '';
+  await connection.manager.save(content);
+  // TODO: Make markdown file with params.body
+  content.body = `/contents/${key}-${locale}.md`;
+  await connection.manager.save(content);
+
+  const resource = new Resource();
+  resource.key = key;
+  resource.contents = [content];
+  resource.type = params.type ? params.type : resourceTypes[0].name;
+  await connection.manager.save(resource);
+}
+
 const root = path.resolve(__dirname);
 
 (async () => {
   const connection = await typeorm.createConnection();
-
-  // const key = 'fundation-knowledge';
-  // const locale = 'ja_JP';
-  //
-  // const content = new ResourceContent();
-  // content.locale = locale;
-  // content.name = '基礎知識';
-  // content.body = '';
-  // await connection.manager.save(content);
-  // content.body = `/contents/${key}-${locale}.md`;
-  // await connection.manager.save(content);
-  //
-  // const resource = new Resource();
-  // resource.key = 'fundation-knowledge';
-  // resource.contents = [content];
-  // resource.type = ResourceType.NOTE;
-  // await connection.manager.save(resource);
 
   const resourceRepository = connection.getRepository(Resource);
   const resourceQuery = await resourceRepository
