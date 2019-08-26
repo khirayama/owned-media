@@ -15,6 +15,7 @@ type ResourceResponse = {
   locale: string;
   name: string;
   body: string;
+  [key: string]: any; // For attributes
   meta: {
     title: string;
     description: string;
@@ -26,31 +27,38 @@ type ResourceResponse = {
       caption: string;
     };
   };
-  attributes: {
-    [key: string]: any;
-  };
   createdAt: Date;
   updatedAt: Date;
 };
+
+type ResourceCreateParams = {
+  key: string;
+  type?: string;
+  name?: string;
+  body?: string;
+  [key: string]: any; // For attributes
+};
+
+const reservedResourceFields = [
+  'id',
+  'key',
+  'type',
+  'locale',
+  'name',
+  'body',
+  'meta',
+  'media',
+  'createdAt',
+  'updatedAt',
+];
 
 function generateResourceResponse(resource: Resource): ResourceResponse {
   if (resource.contents.length !== 1) {
     console.log(`Please check your query.`);
   }
 
-  const attributes = {};
-  for (const attr of resource.attributes) {
-    switch (attr.type) {
-      case 'number': {
-        attributes[attr.key] = Number(attr.value);
-        break;
-      }
-    }
-  }
-
   const meta = resource.meta[0] || null;
-
-  return {
+  const resourceResponse: ResourceResponse = {
     id: resource.id,
     key: resource.key,
     type: resource.type,
@@ -63,13 +71,25 @@ function generateResourceResponse(resource: Resource): ResourceResponse {
       keywords: meta ? meta.keywords : '',
     },
     media: {}, // TODO
-    attributes,
     createdAt: resource.contents[0].createdAt,
     updatedAt: resource.contents[0].updatedAt,
   };
+
+  for (const attr of resource.attributes) {
+    if (reservedResourceFields.indexOf(attr.key) === -1) {
+      switch (attr.type) {
+        case 'number': {
+          resourceResponse[attr.key] = Number(attr.value);
+          break;
+        }
+      }
+    }
+  }
+
+  return resourceResponse;
 }
 
-async function createResource(locale: string, params: { key: string; type?: string; name?: string; body?: string; }) {
+async function createResource(locale: string, params: ResourceCreateParams) {
   const connection = typeorm.getConnection();
 
   const key = params.key;
@@ -77,8 +97,6 @@ async function createResource(locale: string, params: { key: string; type?: stri
   const content = new ResourceContent();
   content.locale = locale;
   content.name = params.name;
-  content.body = '';
-  await connection.manager.save(content);
   // TODO: Make markdown file with params.body
   content.body = `/contents/${key}-${locale}.md`;
   await connection.manager.save(content);
@@ -88,6 +106,19 @@ async function createResource(locale: string, params: { key: string; type?: stri
   resource.contents = [content];
   resource.type = params.type ? params.type : resourceTypes[0].name;
   await connection.manager.save(resource);
+
+  const attributeKeys = Object.keys(params);
+  for (const attributeKey of attributeKeys) {
+    if (reservedResourceFields.indexOf(attributeKey) === -1) {
+      const resourceAttribute = new ResourceAttribute();
+      resourceAttribute.key = attributeKey;
+      resourceAttribute.value = params[attributeKey];
+      resourceAttribute.type = typeof params[attributeKey];
+      await connection.manager.save(resourceAttribute);
+      resource.attributes.push(resourceAttribute);
+      await connection.manager.save(resource);
+    }
+  }
 }
 
 const root = path.resolve(__dirname);
