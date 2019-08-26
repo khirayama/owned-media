@@ -30,6 +30,8 @@ Steps to run this project:
   type: 'sample type',
   name: 'Sample Name',
   body: 'Sample Body',
+  attr: 'Sample Attribute',
+  attr2: 'Sample Attribute 2',
 }
 ```
 
@@ -54,6 +56,8 @@ Steps to run this project:
   type: 'sample type',
   name: 'Sample Name',
   body: 'Sample Body',
+  attr: 'Sample Attribute',
+  attr2: null, // 削除
 }
 ```
 
@@ -61,41 +65,6 @@ Steps to run this project:
 `DELETE /api/resources/:id`
 ```
 // localeがない場合、全削除
-```
-
-#### Add attributes
-`POST /api/resources/:id/attributes`
-```
-{
-  key: value,
-  key2: value2,
-}
-```
-
-#### Update attributes
-`PUT /api/resources/:id/attributes`
-```
-{
-  key: updatedValue,
-}
-```
-
-#### Delete attributes
-`DELETE /api/resources/:id/attributes`
-```
-// 指定keyがない場合は、全削除
-['key', 'key2']
-```
-
-#### Add meta
-`POST /api/resources/:id/meta?locale=value`
-```
-// localeがない場合、default localeを利用
-{
-  title: 'sample title',
-  description: 'sample description',
-  keywords: 'sample,keywords',
-}
 ```
 
 #### Update meta
@@ -109,16 +78,10 @@ Steps to run this project:
 }
 ```
 
-#### Delete meta
-`DELETE /api/resources/:id/meta?locale=value`
-```
-// localeがない場合、default localeを利用
-```
+#### Attach media
+`PUT /api/resources/:id/media/:mediaId`
 
-#### Add media
-`POST /api/resources/:id/media/:mediaId`
-
-#### Delete media
+#### Detach media
 `DELETE /api/resources/:id/media/:mediaId`
 
 ### Label
@@ -165,17 +128,6 @@ Steps to run this project:
 // localeがない場合、全削除
 ```
 
-#### Add meta
-`POST /api/labels/:id/meta?locale=value`
-```
-// localeがない場合、default localeを利用
-{
-  title: 'sample title',
-  description: 'sample description',
-  keywords: 'sample,keywords',
-}
-```
-
 #### Update meta
 `PUT /api/labels/:id/meta?locale=value`
 ```
@@ -187,16 +139,10 @@ Steps to run this project:
 }
 ```
 
-#### Delete meta
-`DELETE /api/labels/:id/meta?locale=value`
-```
-// localeがない場合、default localeを利用
-```
-
-#### Add media
+#### Attach media
 `POST /api/labels/:id/media/:mediaId`
 
-#### Delete media
+#### Detach media
 `DELETE /api/labels/:id/media/:mediaId`
 
 ### Medium
@@ -207,7 +153,8 @@ Steps to run this project:
 {
   caption: 'medium name',
   key: 'medium-key',
-  body: 'base64 string'
+  body?: 'base64 string'
+  url?: '/path/to/media'
 }
 ```
 
@@ -224,7 +171,7 @@ Steps to run this project:
   caption: 'medium name',
   key: 'medium-key',
   body?: 'base64 string'
-  url?: '/path/to/image'
+  url?: '/path/to/media'
 }
 ```
 
