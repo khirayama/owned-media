@@ -1,28 +1,40 @@
 {
-   "name": "typeORM-sample",
-   "version": "1.0.0",
-   "description": "",
-   "main": "index.js",
-   "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "start": "ts-node src/index.ts",
-      "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
-   },
-   "keywords": [],
-   "author": "",
-   "license": "ISC",
-   "devDependencies": {
-      "@types/node": "12.7.2",
-      "@types/sqlite3": "3.1.5",
-      "ts-node": "8.3.0",
-      "tsconfig-paths": "3.8.0",
-      "typescript": "3.5.3"
-   },
-   "dependencies": {
-      "reflect-metadata": "0.1.13",
-      "sqlite3": "4.1.0",
-      "typeorm": "0.2.18",
-      "express": "4.17.1",
-      "body-parser": "1.19.0"
-   }
+  "name": "typeORM-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node src/index.ts",
+    "lint": "eslint '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
+    "lint:fix": "eslint --fix '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/fs-extra": "8.0.0",
+    "@types/node": "12.7.2",
+    "@types/sqlite3": "3.1.5",
+    "@typescript-eslint/eslint-plugin": "2.0.0",
+    "@typescript-eslint/parser": "2.0.0",
+    "eslint": "6.2.2",
+    "eslint-config-prettier": "6.1.0",
+    "eslint-plugin-jest": "22.15.2",
+    "eslint-plugin-node": "9.1.0",
+    "eslint-plugin-prettier": "3.1.0",
+    "prettier": "1.18.2",
+    "ts-node": "8.3.0",
+    "tsconfig-paths": "3.8.0",
+    "typescript": "3.5.3"
+  },
+  "dependencies": {
+    "body-parser": "1.19.0",
+    "express": "4.17.1",
+    "fs-extra": "8.1.0",
+    "reflect-metadata": "0.1.13",
+    "sqlite3": "4.1.0",
+    "typeorm": "0.2.18"
+  }
 }
