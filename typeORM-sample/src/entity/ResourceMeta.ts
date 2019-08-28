@@ -1,4 +1,4 @@
-import * as typeorm from "typeorm";
+import * as typeorm from 'typeorm';
 
 import { supportLocales } from '../../config';
 import { Resource } from './Resource';
@@ -10,8 +10,6 @@ export class ResourceMeta {
 
   @typeorm.Column({
     type: 'varchar',
-    enum: supportLocales,
-    default: supportLocales[0],
   })
   locale: string;
 
@@ -24,12 +22,12 @@ export class ResourceMeta {
   @typeorm.Column()
   keywords: string;
 
-  @typeorm.ManyToOne(type => Resource, resource => resource.contents)
+  @typeorm.ManyToOne(() => Resource, resource => resource.contents)
   resource: Resource;
 
-  @typeorm.CreateDateColumn({name: 'created_at'})
+  @typeorm.CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @typeorm.UpdateDateColumn({name: 'updated_at'})
+  @typeorm.UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

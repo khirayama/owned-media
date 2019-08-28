@@ -1,4 +1,4 @@
-import * as typeorm from "typeorm";
+import * as typeorm from 'typeorm';
 
 import { Resource } from './Resource';
 
@@ -13,15 +13,12 @@ export class ResourceAttribute {
   @typeorm.Column()
   value: string;
 
-  @typeorm.Column()
-  type: string;
-
-  @typeorm.ManyToOne(type => Resource, resource => resource.contents)
+  @typeorm.ManyToOne(() => Resource, resource => resource.contents)
   resource: Resource;
 
-  @typeorm.CreateDateColumn({name: 'created_at'})
+  @typeorm.CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @typeorm.UpdateDateColumn({name: 'updated_at'})
+  @typeorm.UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

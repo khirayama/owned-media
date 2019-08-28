@@ -1,11 +1,11 @@
-import * as typeorm from "typeorm";
+import * as typeorm from 'typeorm';
 
 import { resourceTypes } from '../../config';
 import { ResourceContent } from './ResourceContent';
 import { ResourceMeta } from './ResourceMeta';
 import { ResourceAttribute } from './ResourceAttribute';
 
-const resourceTypeNames = resourceTypes.map((resourceType) => resourceType.name);
+const resourceTypeNames = resourceTypes.map(resourceType => resourceType.name);
 
 @typeorm.Entity('resources')
 export class Resource {
@@ -15,25 +15,21 @@ export class Resource {
   @typeorm.Column({ unique: true })
   key: string;
 
-  @typeorm.Column({
-    type: 'varchar',
-    enum: resourceTypeNames,
-    default: resourceTypeNames[0],
-  })
+  @typeorm.Column({ type: 'varchar' })
   type: string;
 
-  @typeorm.OneToMany(type => ResourceContent, resourceContent => resourceContent.resource)
+  @typeorm.OneToMany(() => ResourceContent, resourceContent => resourceContent.resource)
   contents: ResourceContent[];
 
-  @typeorm.OneToMany(type => ResourceMeta, resourceMeta => resourceMeta.resource)
+  @typeorm.OneToMany(() => ResourceMeta, resourceMeta => resourceMeta.resource)
   meta: ResourceMeta[];
 
-  @typeorm.OneToMany(type => ResourceAttribute, resourceAttribute => resourceAttribute.resource)
+  @typeorm.OneToMany(() => ResourceAttribute, resourceAttribute => resourceAttribute.resource)
   attributes: ResourceAttribute[];
 
-  @typeorm.CreateDateColumn({name: 'created_at'})
+  @typeorm.CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @typeorm.UpdateDateColumn({name: 'updated_at'})
+  @typeorm.UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
