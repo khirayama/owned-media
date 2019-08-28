@@ -22,11 +22,10 @@ Steps to run this project:
 ### Resource
 
 #### Create resource
-`POST /api/resources?locale=value`
+`POST /api/resources?key=value&locale=value`
 ```
 // localeがない場合、default localeを利用
 {
-  key: 'sample-key',
   type: 'sample type',
   name: 'Sample Name',
   body: 'Sample Body',
@@ -51,6 +50,7 @@ Steps to run this project:
 `PUT /api/resources/:id?locale=value`
 ```
 // localeがない場合、default localeを利用
+// keyが更新された場合、全てのlocaleのkeyが更新される
 {
   key: 'sample-key',
   type: 'sample type',
