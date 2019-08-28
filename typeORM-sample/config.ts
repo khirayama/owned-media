@@ -1,7 +1,8 @@
-export const supportLocales: string[] = [
-  'ja_JP',
-  'en_US',
-];
+import * as path from 'path';
+
+export const contentsDir = path.resolve(__dirname, 'contents');
+
+export const supportLocales: string[] = ['ja_JP', 'en_US'];
 
 export const resourceTypes: {
   name: string;
