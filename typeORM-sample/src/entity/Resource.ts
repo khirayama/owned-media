@@ -5,8 +5,6 @@ import { ResourceContent } from './ResourceContent';
 import { ResourceMeta } from './ResourceMeta';
 import { ResourceAttribute } from './ResourceAttribute';
 
-const resourceTypeNames = resourceTypes.map(resourceType => resourceType.name);
-
 @typeorm.Entity('resources')
 export class Resource {
   @typeorm.PrimaryGeneratedColumn('uuid')
