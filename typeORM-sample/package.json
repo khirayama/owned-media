@@ -15,19 +15,19 @@
   "license": "ISC",
   "devDependencies": {
     "@types/fs-extra": "8.0.0",
-    "@types/node": "12.7.2",
+    "@types/node": "12.7.3",
     "@types/sqlite3": "3.1.5",
     "@typescript-eslint/eslint-plugin": "2.0.0",
     "@typescript-eslint/parser": "2.0.0",
-    "eslint": "6.2.2",
+    "eslint": "6.3.0",
     "eslint-config-prettier": "6.1.0",
-    "eslint-plugin-jest": "22.15.2",
-    "eslint-plugin-node": "9.1.0",
+    "eslint-plugin-jest": "22.16.0",
+    "eslint-plugin-node": "9.2.0",
     "eslint-plugin-prettier": "3.1.0",
     "prettier": "1.18.2",
     "ts-node": "8.3.0",
     "tsconfig-paths": "3.8.0",
-    "typescript": "3.5.3"
+    "typescript": "3.6.2"
   },
   "dependencies": {
     "body-parser": "1.19.0",
