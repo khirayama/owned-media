@@ -9,6 +9,8 @@ Steps to run this project:
 ## TODO
 
 - [ ] Set up entity test env
+- [ ] resource.contentsは別にしたほうがいいかもしれない。for locale
+  - [ ] そうじゃないときUpdateのときに、keyとかattrをflatに投げると思うけど、別言語のも変わってるのが違和感がある
 
 ## Models
 
