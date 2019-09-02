@@ -21,7 +21,7 @@ export type ResourceCreateParams = {
     description?: string;
     keywords?: string;
   };
-  attributes: {
+  attributes?: {
     [key: string]: boolean | number | string | Date;
   };
 };
