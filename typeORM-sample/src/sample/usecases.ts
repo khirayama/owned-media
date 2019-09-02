@@ -12,9 +12,18 @@ export type ResourceCreateParams = {
   key: string;
   locale: string;
   type?: string;
-  name?: string;
-  body?: string;
-  [key: string]: any; // For attributes
+  contents?: {
+    name?: string;
+    body?: string;
+  };
+  meta?: {
+    title?: string;
+    description?: string;
+    keywords?: string;
+  };
+  attributes: {
+    [key: string]: boolean | number | string | Date;
+  };
 };
 
 export async function createResource(params: ResourceCreateParams): Promise<void> {
