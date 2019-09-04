@@ -7,11 +7,15 @@ import { createResource } from './usecases';
 type ResourceResponse = {
   id: string;
   key: string;
-  type: string;
   locale: string;
-  name: string;
-  body: string;
-  [key: string]: any; // For attributes
+  type: string;
+  contents: {
+    name: string;
+    body: string;
+  };
+  attributes: {
+    [key: string]: any;
+  };
   meta: {
     title: string;
     description: string;
