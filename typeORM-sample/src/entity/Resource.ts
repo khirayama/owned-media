@@ -1,6 +1,5 @@
 import * as typeorm from 'typeorm';
 
-import { resourceTypes } from '../../config';
 import { ResourceContent } from './ResourceContent';
 import { ResourceMeta } from './ResourceMeta';
 import { ResourceAttribute } from './ResourceAttribute';
