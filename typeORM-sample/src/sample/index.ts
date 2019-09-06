@@ -37,16 +37,19 @@ function generateResourceResponse(resource: Resource): ResourceResponse {
 
   const resourceResponse: ResourceResponse = {
     id: resource.id,
+    locale: content ? content.locale : '',
     key: resource.key,
     type: resource.type,
-    locale: content ? content.locale : '',
-    name: content ? content.name : '',
-    body: content ? content.body : '',
+    contents: {
+      name: content ? content.name : '',
+      body: content ? content.body : '',
+    },
     meta: {
       title: meta ? meta.title : '',
       description: meta ? meta.description : '',
       keywords: meta ? meta.keywords : '',
     },
+    attributes: {},
     media: {}, // TODO
     createdAt: resource.contents[0].createdAt,
     updatedAt: resource.contents[0].updatedAt,
