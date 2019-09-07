@@ -2,7 +2,7 @@ import * as typeorm from 'typeorm';
 import * as fsExtra from 'fs-extra';
 
 import { reservedResourceFields } from './var';
-import { resourceTypes, supportLocales, contentsDir } from '../../config';
+import { resourceTypes, contentsDir } from '../../config';
 import { Resource } from '../entity/Resource';
 import { ResourceContent } from '../entity/ResourceContent';
 import { ResourceMeta } from '../entity/ResourceMeta';
@@ -26,12 +26,21 @@ export type ResourceCreateParams = {
   };
 };
 
+/* TODO: Move into controller
+const isNotSupportedLocale = supportLocales.indexOf(locale) === -1;
+if (isNotSupportedLocale) {
+  console.log(`Not support ${locale} as locale.`);
+  return;
+}
+// Check key. [a-z] and -.
+*/
+
 export async function createResource(params: ResourceCreateParams): Promise<void> {
   const connection = typeorm.getConnection();
   const resourceRepository = connection.getRepository(Resource);
 
   const key = params.key;
-  const locale = params.locale || supportLocales[0];
+  const locale = params.locale;
   const resourceType = params.type ? params.type : resourceTypes[0].name;
 
   // Validation
@@ -39,12 +48,6 @@ export async function createResource(params: ResourceCreateParams): Promise<void
   const isNotSupportedResourceType = resourceTypeNames.indexOf(resourceType) === -1;
   if (isNotSupportedResourceType) {
     console.log(`Not support ${resourceType} as resource type.`);
-    return;
-  }
-
-  const isNotSupportedLocale = supportLocales.indexOf(locale) === -1;
-  if (isNotSupportedLocale) {
-    console.log(`Not support ${locale} as locale.`);
     return;
   }
 
@@ -79,33 +82,46 @@ New resource will be created with this locale.`);
   }
 
   // Create content
-  const content = new ResourceContent();
-  content.locale = locale;
-  content.name = params.contents ? params.contents.name || '' : '';
-  content.body = `/contents/${key}-${locale}.md`;
-  await fsExtra.outputFile(`${contentsDir}${content.body}`, params.contents ? params.contents.body || '' : '');
-  await connection.manager.save(content);
+  let content: ResourceContent | null = null;
+  if (params.contents) {
+    content = new ResourceContent();
+    content.locale = locale;
+    content.name = params.contents.name || '';
+    content.body = `/contents/${key}-${locale}.md`;
+    await fsExtra.outputFile(`${contentsDir}${content.body}`, params.contents.body || '');
+    await connection.manager.save(content);
+  }
 
-  // Create meta
-  const meta = new ResourceMeta();
-  meta.locale = locale;
-  meta.title = '';
-  meta.description = '';
-  meta.keywords = '';
-  await connection.manager.save(meta);
+  let meta: ResourceMeta | null = null;
+  if (params.meta) {
+    meta = new ResourceMeta();
+    meta.locale = locale;
+    meta.title = meta.title || '';
+    meta.description = meta.description || '';
+    meta.keywords = meta.keywords || '';
+    await connection.manager.save(meta);
+  }
 
   // Create resource
   let resource: Resource | null = null;
   if (isExistingResourceWithSameKeyAndAnotherLocale) {
     resource = await connection.getRepository(Resource).findOne({ where: { key }, relations: ['contents', 'meta'] });
-    resource.contents.push(content);
-    resource.meta.push(meta);
+    if (content) {
+      resource.contents.push(content);
+    }
+    if (meta) {
+      resource.meta.push(meta);
+    }
     await connection.manager.save(resource);
   } else {
     resource = new Resource();
     resource.key = key;
-    resource.contents = [content];
-    resource.meta = [meta];
+    if (content) {
+      resource.contents = [content];
+    }
+    if (meta) {
+      resource.meta = [meta];
+    }
     resource.type = resourceType;
     await connection.manager.save(resource);
   }
