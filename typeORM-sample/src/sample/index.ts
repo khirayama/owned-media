@@ -91,40 +91,50 @@ function generateResourceResponse(resource: Resource): ResourceResponse {
     locale: 'en_US',
     key: 'sample-resource-2',
     type: 'nota',
-    name: 'サンプルネーム',
-    body: 'サンプルボディ',
+    contents: {
+      name: 'サンプルネーム',
+      body: 'サンプルボディ',
+    },
   });
   // not support locale
   await createResource({
     locale: 'en_UK',
     key: 'sample-resource-2',
     type: 'nota',
-    name: 'サンプルネーム',
-    body: 'サンプルボディ',
+    contents: {
+      name: 'サンプルネーム',
+      body: 'サンプルボディ',
+    },
   });
   // Create new resource
   await createResource({
     locale: 'ja_JP',
     key: 'sample-resource',
     type: 'note',
-    name: 'サンプルネーム',
-    body: 'サンプルボディ',
+    contents: {
+      name: 'サンプルネーム',
+      body: 'サンプルボディ',
+    },
   });
   // Create resource with another locale
   await createResource({
     locale: 'en_US',
     key: 'sample-resource',
     type: 'note',
-    name: 'Sample Name',
-    body: 'Sample Body',
+    contents: {
+      name: 'Sample Name',
+      body: 'Sample Body',
+    },
   });
   // Create new resource
   await createResource({
     locale: 'en_US',
     key: 'sample-resource-2',
     type: 'note',
-    name: 'サンプルネーム',
-    body: 'サンプルボディ',
+    contents: {
+      name: 'サンプルネーム',
+      body: 'サンプルボディ',
+    },
   });
 
   const resourceRepository = connection.getRepository(Resource);
@@ -135,5 +145,6 @@ function generateResourceResponse(resource: Resource): ResourceResponse {
     .leftJoinAndSelect('resource.attributes', 'resource_attributes')
     .where('resource_contents.locale = :locale');
   const resourcesWithContent = await resourceQuery.setParameters({ locale: 'ja_JP' }).getOne();
-  console.log(generateResourceResponse(resourcesWithContent));
+  console.log(resourcesWithContent);
+  // console.log(generateResourceResponse(resourcesWithContent));
 })();

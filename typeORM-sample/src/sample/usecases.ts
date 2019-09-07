@@ -81,9 +81,9 @@ New resource will be created with this locale.`);
   // Create content
   const content = new ResourceContent();
   content.locale = locale;
-  content.name = params.name;
+  content.name = params.contents ? params.contents.name || '' : '';
   content.body = `/contents/${key}-${locale}.md`;
-  await fsExtra.outputFile(`${contentsDir}${content.body}`, params.body || '');
+  await fsExtra.outputFile(`${contentsDir}${content.body}`, params.contents ? params.contents.body || '' : '');
   await connection.manager.save(content);
 
   // Create meta
