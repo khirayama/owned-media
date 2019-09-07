@@ -25,18 +25,60 @@ Steps to run this project:
 
 ## API
 
+### Endpoints
+
+Resources
+- `POST /api/resources?locale=value`
+- `GET /api/resources?locale=value&conditions=value`
+- `GET /api/resources/:id?locale=value`
+- `PUT /api/resources/:id?locale=value`
+- `DELETE /api/resources/:id`
+- `POST /api/resources/:id/contents?locale=value`
+- `GET /api/resources/:id/contents`
+- `GET /api/resources/:id/contents/:locale`
+- `PUT /api/resources/:id/contents/:locale`
+- `DELETE /api/resources/:id/contents/:locale`
+- `POST /api/resources/:id/meta?locale=value`
+- `GET /api/resources/:id/meta`
+- `GET /api/resources/:id/meta/:locale`
+- `PUT /api/resources/:id/meta/:locale`
+- `DELETE /api/resources/:id/meta/:locale`
+- `PUT /api/resources/:id/media/:mediaId`
+- `DELETE /api/resources/:id/media/:mediaId`
+- `PUT /api/resources/:id/attributes`
+Labels
+- `POST /api/labels?locale=value`
+- `GET /api/labels?locale=value&conditions=value`
+- `GET /api/labels/:id?locale=value`
+- `PUT /api/labels/:id?locale=value`
+- `DELETE /api/labels/:id`
+- `POST /api/labels/:id/contents?locale=value`
+- `GET /api/labels/:id/contents`
+- `GET /api/labels/:id/contents/:locale`
+- `PUT /api/labels/:id/contents/:locale`
+- `DELETE /api/labels/:id/contents/:locale`
+- `POST /api/labels/:id/meta?locale=value`
+- `GET /api/labels/:id/meta`
+- `GET /api/labels/:id/meta/:locale`
+- `PUT /api/labels/:id/meta/:locale`
+- `DELETE /api/labels/:id/meta/:locale`
+- `PUT /api/labels/:id/media/:mediaId`
+- `DELETE /api/labels/:id/media/:mediaId`
+Media
+- `POST /api/media`
+- `GET /api/media`
+- `GET /api/media/:id`
+- `DELETE /api/media/:id`
+
 ### Resource
 
 #### Create resource
-`POST /api/resources?key=value&locale=value`
+`POST /api/resources?locale=value`
 ```
 // localeがない場合、default localeを利用
 {
   type: 'sample type',
-  name: 'Sample Name',
-  body: 'Sample Body',
-  attr: 'Sample Attribute',
-  attr2: 'Sample Attribute 2',
+  key: 'sample-key',
 }
 ```
 
