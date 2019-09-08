@@ -1,6 +1,6 @@
 import * as typeorm from 'typeorm';
 
-import { createResource } from './usecases';
+import { isValidKey, createResource } from './usecases';
 import { ormconfig } from '../../ormconfig.test';
 // import { Resource } from '../entity/Resource';
 
@@ -8,6 +8,20 @@ beforeAll(async () => {
   const connection = await typeorm.createConnection(ormconfig);
   await connection.dropDatabase();
   await connection.synchronize();
+});
+
+describe('isValidKey', () => {
+  test('Normal usage.', () => {
+    // true
+    expect(isValidKey('samplekey')).toBeTruthy();
+    expect(isValidKey('sample-key')).toBeTruthy();
+    expect(isValidKey('sample-key-1')).toBeTruthy();
+    expect(isValidKey('1-sample-key')).toBeTruthy();
+    // false
+    expect(isValidKey('Samplekey')).toBeFalsy();
+    expect(isValidKey('sample_key')).toBeFalsy();
+    expect(isValidKey('sample!key')).toBeFalsy();
+  });
 });
 
 describe('createResource', () => {
