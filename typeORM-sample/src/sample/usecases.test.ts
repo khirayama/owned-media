@@ -10,16 +10,25 @@ beforeAll(async () => {
   await connection.synchronize();
 });
 
-test('Create resource with not support type.', async () => {
-  const resource = await createResource({
-    locale: 'en_US',
-    key: 'sample-resource-2',
-    type: 'note',
-    contents: {
-      name: 'サンプルネーム',
-      body: 'サンプルボディ',
-    },
+describe('createResource', () => {
+  test('Create resource.', async () => {
+    const resource = await createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
+    expect(resource).toEqual({
+      id: resource.id,
+      key: 'sample-resource',
+      type: 'note',
+      createdAt: resource.createdAt,
+      updatedAt: resource.updatedAt,
+    });
   });
-  console.log(resource);
-  expect(true).toEqual(true);
+  test('Create resource with locale.', async () => {});
+  test('Create resource with contents, meta and attributes.', async () => {});
+  test('Create resource with unsupported resource type.', async () => {});
+  test('Create resource with unsupported locale.', async () => {});
+  test('Create resource with same locale and key.', async () => {});
+  test('Create resource with another locale and same key.', async () => {});
+  test('Create resource with same locale and key but having update for key and attributes.', async () => {});
 });
