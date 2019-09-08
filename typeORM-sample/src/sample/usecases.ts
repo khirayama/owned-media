@@ -35,7 +35,7 @@ if (isNotSupportedLocale) {
 // Check key. [a-z] and -.
 */
 
-export async function createResource(params: ResourceCreateParams): Promise<void> {
+export async function createResource(params: ResourceCreateParams): Promise<Resource> {
   const connection = typeorm.getConnection();
   const resourceRepository = connection.getRepository(Resource);
 
@@ -159,4 +159,6 @@ New resource will be created with this locale.`);
     }
     await connection.manager.save(resource);
   }
+
+  return resource;
 }
