@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "rm -f ./data/database.test.sqlite && npm run typeorm schema:sync -f ormconfig.test.js && jest",
+    "test": "jest",
     "start": "ts-node src/index.ts",
     "lint": "eslint '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
     "lint:fix": "eslint --fix '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
