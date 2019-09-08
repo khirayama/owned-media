@@ -24,6 +24,7 @@ describe('createResource', () => {
       updatedAt: resource.updatedAt,
     });
   });
+  test('Create resource with unvalid key.', async () => {});
   test('Create resource with locale.', async () => {});
   test('Create resource with contents, meta and attributes.', async () => {});
   test('Create resource with unsupported resource type.', async () => {});
