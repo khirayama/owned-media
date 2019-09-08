@@ -2,7 +2,7 @@ import * as typeorm from 'typeorm';
 import * as fsExtra from 'fs-extra';
 
 import { reservedResourceFields } from './var';
-import { resourceTypes, contentsDir } from '../../config';
+import { resourceTypes, contentsDir, supportLocales } from '../../config';
 import { Resource } from '../entity/Resource';
 import { ResourceContent } from '../entity/ResourceContent';
 import { ResourceMeta } from '../entity/ResourceMeta';
@@ -10,7 +10,7 @@ import { ResourceAttribute } from '../entity/ResourceAttribute';
 
 export type ResourceCreateParams = {
   key: string;
-  locale: string;
+  locale?: string;
   type?: string;
   contents?: {
     name?: string;
@@ -26,24 +26,22 @@ export type ResourceCreateParams = {
   };
 };
 
-/* TODO: Move into controller
-const isNotSupportedLocale = supportLocales.indexOf(locale) === -1;
-if (isNotSupportedLocale) {
-  console.log(`Not support ${locale} as locale.`);
-  return;
-}
-// Check key. [a-z] and -.
-*/
-
 export async function createResource(params: ResourceCreateParams): Promise<Resource> {
-  const connection = typeorm.getConnection();
-  const resourceRepository = connection.getRepository(Resource);
+  const connection = await typeorm.getConnection();
+  const resourceRepository = await connection.getRepository(Resource);
 
   const key = params.key;
-  const locale = params.locale;
+  const locale = params.locale || supportLocales[0];
   const resourceType = params.type ? params.type : resourceTypes[0].name;
 
   // Validation
+  // TODO: Check key. [a-z] and -.
+  const isNotSupportedLocale = supportLocales.indexOf(locale) === -1;
+  if (isNotSupportedLocale) {
+    console.log(`Not support ${locale} as locale.`);
+    return;
+  }
+
   const resourceTypeNames = resourceTypes.map(resourceType => resourceType.name);
   const isNotSupportedResourceType = resourceTypeNames.indexOf(resourceType) === -1;
   if (isNotSupportedResourceType) {
@@ -93,7 +91,7 @@ New resource will be created with this locale.`);
   }
 
   let meta: ResourceMeta | null = null;
-  if (params.meta) {
+  if (locale && params.meta) {
     meta = new ResourceMeta();
     meta.locale = locale;
     meta.title = meta.title || '';
