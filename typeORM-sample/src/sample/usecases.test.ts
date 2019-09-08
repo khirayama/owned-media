@@ -5,12 +5,13 @@ import { ormconfig } from '../../ormconfig.test';
 // import { Resource } from '../entity/Resource';
 
 beforeAll(async () => {
-  await typeorm.createConnection(ormconfig);
+  const connection = await typeorm.createConnection(ormconfig);
+  await connection.dropDatabase();
+  await connection.synchronize();
 });
 
 test('Create resource with not support type.', async () => {
-  // not support type
-  await createResource({
+  const resource = await createResource({
     locale: 'en_US',
     key: 'sample-resource-2',
     type: 'note',
@@ -19,5 +20,6 @@ test('Create resource with not support type.', async () => {
       body: 'サンプルボディ',
     },
   });
+  console.log(resource);
   expect(true).toEqual(true);
 });
