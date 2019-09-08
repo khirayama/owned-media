@@ -39,7 +39,11 @@ export async function createResource(params: ResourceCreateParams): Promise<Reso
   const resourceType = params.type ? params.type : resourceTypes[0].name;
 
   // Validation
-  // TODO: Check key. [a-z] and -.
+  if (isValidKey(key)) {
+    console.log(`${key} is invalid key.`);
+    return;
+  }
+
   const isNotSupportedLocale = supportLocales.indexOf(locale) === -1;
   if (isNotSupportedLocale) {
     console.log(`Not support ${locale} as locale.`);
