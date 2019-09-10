@@ -39,12 +39,11 @@ describe('createResource', () => {
     });
   });
   test('Create resource with unvalid key.', async () => {
-    return expect(async () => {
-      await createResource({
-        key: 'sample_resource',
-        type: 'note',
-      });
-    }).toThrow();
+    const createResourcePromise = createResource({
+      key: 'sample_resource',
+      type: 'note',
+    });
+    await expect(createResourcePromise).rejects.toThrow();
   });
   test('Create resource with locale.', async () => {});
   test('Create resource with contents, meta and attributes.', async () => {});
