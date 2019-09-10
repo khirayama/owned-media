@@ -38,7 +38,14 @@ describe('createResource', () => {
       updatedAt: resource.updatedAt,
     });
   });
-  test('Create resource with unvalid key.', async () => {});
+  test('Create resource with unvalid key.', async () => {
+    return expect(async () => {
+      await createResource({
+        key: 'sample_resource',
+        type: 'note',
+      });
+    }).toThrow();
+  });
   test('Create resource with locale.', async () => {});
   test('Create resource with contents, meta and attributes.', async () => {});
   test('Create resource with unsupported resource type.', async () => {});
