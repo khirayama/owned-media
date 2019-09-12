@@ -17,12 +17,12 @@ afterAll(async () => {
 
 describe('isValidKey', () => {
   test('Normal usage.', () => {
-    // true
+    // valid
     expect(isValidKey('samplekey')).toBeTruthy();
     expect(isValidKey('sample-key')).toBeTruthy();
     expect(isValidKey('sample-key-1')).toBeTruthy();
     expect(isValidKey('1-sample-key')).toBeTruthy();
-    // false
+    // unvalid
     expect(isValidKey('Samplekey')).toBeFalsy();
     expect(isValidKey('sample_key')).toBeFalsy();
     expect(isValidKey('sample!key')).toBeFalsy();
