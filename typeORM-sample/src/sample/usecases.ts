@@ -1,96 +1,15 @@
 import * as typeorm from 'typeorm';
-import * as fsExtra from 'fs-extra';
 
-import { reservedResourceFields } from './var';
-import { resourceTypes, contentsDir, supportLocales } from '../../config';
+import { resourceTypes, supportLocales } from '../../config';
 import { Resource } from '../entity/Resource';
-import { ResourceContent } from '../entity/ResourceContent';
-import { ResourceMeta } from '../entity/ResourceMeta';
-import { ResourceAttribute } from '../entity/ResourceAttribute';
 
 export type ResourceCreateParams = {
   key: string;
-  locale?: string;
   type?: string;
-  contents?: {
-    name?: string;
-    body?: string;
-  };
-  meta?: {
-    title?: string;
-    description?: string;
-    keywords?: string;
-  };
-  attributes?: {
-    [key: string]: boolean | number | string | Date;
-  };
 };
 
 export function isValidKey(key: string) {
   return /^[a-z0-9|-]+$/.test(key);
-}
-
-export function createResourcePresenter(resource: Resource): any {
-  const res: any = {
-    id: resource.id,
-    key: resource.key,
-    type: resource.type,
-    createdAt: resource.createdAt,
-    updatedAt: resource.updatedAt,
-  };
-
-  if (resource.contents && resource.contents.length) {
-    res.contents = {
-      // id: resource.contents[0].id,
-      name: resource.contents[0].name,
-      body: resource.contents[0].body,
-      // locale: resource.contents[0].locale,
-      // createdAt: resource.contents[0].createdAt,
-      // updatedAt: resource.contents[0].updatedAt,
-    };
-  }
-
-  if (resource.meta && resource.meta.length) {
-    res.meta = {
-      // id: resource.meta[0].id,
-      title: resource.meta[0].title,
-      description: resource.meta[0].description,
-      keywords: resource.meta[0].keywords,
-      // locale: resource.meta[0].locale,
-      // createdAt: resource.meta[0].createdAt,
-      // updatedAt: resource.meta[0].updatedAt,
-    };
-  }
-
-  const resourceType = resourceTypes.filter(resourceType => resourceType.name === resource.type)[0] || null;
-  if (resourceType.attributes) {
-    for (let attrKey of Object.keys(resourceType.attributes)) {
-      for (let attr of resource.attributes) {
-        if (attrKey === attr.key) {
-          switch (resourceType.attributes[attrKey].type) {
-            case 'number': {
-              resource.attributes[attrKey] = Number(attr.value);
-              break;
-            }
-            case 'boolean': {
-              resource.attributes[attrKey] = attr.value === 'true';
-              break;
-            }
-            case 'date': {
-              resource.attributes[attrKey] = new Date(attr.value);
-              break;
-            }
-            default: {
-              resource.attributes[attrKey] = attr.value;
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return res;
 }
 
 export async function createResource(params: ResourceCreateParams): Promise<any> {
@@ -98,17 +17,11 @@ export async function createResource(params: ResourceCreateParams): Promise<any>
   const resourceRepository = await connection.getRepository(Resource);
 
   const key = params.key;
-  const locale = params.locale || supportLocales[0];
   const resourceType = params.type ? params.type : resourceTypes[0].name;
 
   // Validations
   if (!isValidKey(key)) {
     throw new Error(`${key} is invalid key.`);
-  }
-
-  const isNotSupportedLocale = supportLocales.indexOf(locale) === -1;
-  if (isNotSupportedLocale) {
-    throw new Error(`Not support ${locale} as locale.`);
   }
 
   const resourceTypeNames = resourceTypes.map(resourceType => resourceType.name);
@@ -118,114 +31,23 @@ export async function createResource(params: ResourceCreateParams): Promise<any>
     return;
   }
 
-  const isExistingResourceWithSameKeyAndSameLocale = !!(await resourceRepository
+  const isExistingResourceWithSameKey = !!(await resourceRepository
     .createQueryBuilder('resource')
     .select('COUNT(`id`)')
-    .leftJoinAndSelect('resource.contents', 'resource_contents')
-    .leftJoinAndSelect('resource.meta', 'resource_meta', 'resource_meta.locale = resource_contents.locale')
-    .leftJoinAndSelect('resource.attributes', 'resource_attributes')
-    .where('resource.key = :key AND resource_contents.locale = :locale')
-    .setParameters({ key, locale })
+    .where('resource.key = :key')
+    .setParameters({ key })
     .getCount());
-  if (isExistingResourceWithSameKeyAndSameLocale) {
+  if (isExistingResourceWithSameKey) {
     console.log(`Existing resource with this key and locale.
 If new resource is wanted to create, please change key.
 If another locale resource is wanted to create, please change locale.`);
     return;
   }
 
-  const isExistingResourceWithSameKeyAndAnotherLocale = !!(await resourceRepository
-    .createQueryBuilder('resource')
-    .select('COUNT(`id`)')
-    .leftJoinAndSelect('resource.contents', 'resource_contents')
-    .leftJoinAndSelect('resource.meta', 'resource_meta', 'resource_meta.locale = resource_contents.locale')
-    .leftJoinAndSelect('resource.attributes', 'resource_attributes')
-    .where('resource.key = :key')
-    .setParameters({ key })
-    .getCount());
-  if (isExistingResourceWithSameKeyAndAnotherLocale) {
-    console.log(`Existing resource with this key and another locale.
-New resource will be created with this locale.`);
-  }
+  const resource = new Resource();
+  resource.key = key;
+  resource.type = resourceType;
+  await connection.manager.save(resource);
 
-  // Create content
-  let content: ResourceContent | null = null;
-  if (params.contents) {
-    content = new ResourceContent();
-    content.locale = locale;
-    content.name = params.contents.name || '';
-    content.body = `/contents/${key}-${locale}.md`;
-    await fsExtra.outputFile(`${contentsDir}${content.body}`, params.contents.body || '');
-    await connection.manager.save(content);
-  }
-
-  let meta: ResourceMeta | null = null;
-  if (locale && params.meta) {
-    meta = new ResourceMeta();
-    meta.locale = locale;
-    meta.title = meta.title || '';
-    meta.description = meta.description || '';
-    meta.keywords = meta.keywords || '';
-    await connection.manager.save(meta);
-  }
-
-  // Create resource
-  let resource: Resource | null = null;
-  if (isExistingResourceWithSameKeyAndAnotherLocale) {
-    resource = await connection.getRepository(Resource).findOne({ where: { key }, relations: ['contents', 'meta'] });
-    if (content) {
-      resource.contents.push(content);
-    }
-    if (meta) {
-      resource.meta.push(meta);
-    }
-    await connection.manager.save(resource);
-  } else {
-    resource = new Resource();
-    resource.key = key;
-    if (content) {
-      resource.contents = [content];
-    }
-    if (meta) {
-      resource.meta = [meta];
-    }
-    resource.type = resourceType;
-    await connection.manager.save(resource);
-  }
-
-  // Create attributes
-  // TODO: Update attributes for new resource with another locale
-  const targetResourceType = resourceTypes.filter(resourceType => resourceType.name === resource.type)[0];
-  if (targetResourceType && targetResourceType.attributes) {
-    for (const attributeKey of Object.keys(targetResourceType.attributes)) {
-      if (reservedResourceFields.indexOf(attributeKey) === -1) {
-        const attributeType = targetResourceType.attributes[attributeKey].type;
-
-        let defaultValue: any = '';
-        if (attributeType === 'boolean') {
-          defaultValue = false;
-        } else if (attributeType === 'number') {
-          defaultValue = 0;
-        } else if (attributeType === 'string') {
-          defaultValue = '';
-        } else if (attributeType === 'date') {
-          defaultValue = new Date();
-        }
-        defaultValue = targetResourceType.attributes[attributeKey].defaultValue || defaultValue;
-
-        const resourceAttribute = new ResourceAttribute();
-        resourceAttribute.key = attributeKey;
-        resourceAttribute.value = params[attributeKey] || defaultValue;
-        await connection.manager.save(resourceAttribute);
-        if (resource.attributes) {
-          resource.attributes.push(resourceAttribute);
-        } else {
-          resource.attributes = [resourceAttribute];
-        }
-      }
-    }
-    await connection.manager.save(resource);
-  }
-
-  return createResourcePresenter(resource);
+  return resource;
 }
