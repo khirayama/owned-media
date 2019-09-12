@@ -10,6 +10,11 @@ beforeAll(async () => {
   await connection.synchronize();
 });
 
+afterAll(async () => {
+  const connection = await typeorm.getConnection();
+  await connection.close();
+});
+
 describe('isValidKey', () => {
   test('Normal usage.', () => {
     // true
