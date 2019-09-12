@@ -50,45 +50,45 @@ describe('createResource', () => {
     });
     await expect(createResourcePromise).rejects.toThrow();
   });
-  // await test('Create resource with contents, meta and attributes.', async () => {
-  //   const resource = await createResource({
-  //     key: 'sample-resource-with-contents',
-  //     type: 'note',
-  //     contents: {
-  //       name: 'Sample Resource',
-  //       body: 'Sample Body',
-  //     },
-  //     meta: {
-  //       title: 'title',
-  //       description: 'description',
-  //       keywords: 'keyword1,keyword2',
-  //     },
-  //     attributes: {
-  //       sampleAttribute1: 'sample value 1',
-  //       sampleAttribute2: 'sample value 2',
-  //     },
-  //   });
-  //   expect(resource).toEqual({
-  //     id: resource.id,
-  //     key: 'sample-resource',
-  //     type: 'note',
-  //     contents: {
-  //       name: 'Sample Resource',
-  //       body: 'Sample Body',
-  //     },
-  //     meta: {
-  //       title: 'title',
-  //       description: 'description',
-  //       keywords: 'keyword1,keyword2',
-  //     },
-  //     attributes: {
-  //       sampleAttribute1: 'sample value 1',
-  //       sampleAttribute2: 'sample value 2',
-  //     },
-  //     createdAt: resource.createdAt,
-  //     updatedAt: resource.updatedAt,
-  //   });
-  // });
+  test('Create resource with contents, meta and attributes.', async () => {
+    const resource = await createResource({
+      key: 'sample-resource-with-contents',
+      type: 'note',
+      contents: {
+        name: 'Sample Resource',
+        body: 'Sample Body',
+      },
+      meta: {
+        title: 'title',
+        description: 'description',
+        keywords: 'keyword1,keyword2',
+      },
+      attributes: {
+        sampleAttribute1: 'sample value 1',
+        sampleAttribute2: 'sample value 2',
+      },
+    });
+    expect(resource).toEqual({
+      id: resource.id,
+      key: 'sample-resource-with-contents',
+      type: 'note',
+      contents: {
+        name: 'Sample Resource',
+        body: 'Sample Body',
+      },
+      meta: {
+        title: 'title',
+        description: 'description',
+        keywords: 'keyword1,keyword2',
+      },
+      attributes: {
+        sampleAttribute1: 'sample value 1',
+        sampleAttribute2: 'sample value 2',
+      },
+      createdAt: resource.createdAt,
+      updatedAt: resource.updatedAt,
+    });
+  });
   test('Create resource with locale.', async () => {});
   test('Create resource with unsupported resource type.', async () => {});
   test('Create resource with unsupported locale.', async () => {});

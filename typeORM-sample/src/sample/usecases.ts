@@ -30,7 +30,70 @@ export function isValidKey(key: string) {
   return /^[a-z0-9|-]+$/.test(key);
 }
 
-export async function createResource(params: ResourceCreateParams): Promise<Resource> {
+export function createResourcePresenter(resource: Resource): any {
+  const res: any = {
+    id: resource.id,
+    key: resource.key,
+    type: resource.type,
+    createdAt: resource.createdAt,
+    updatedAt: resource.updatedAt,
+  };
+
+  if (resource.contents && resource.contents.length) {
+    res.contents = {
+      // id: resource.contents[0].id,
+      name: resource.contents[0].name,
+      body: resource.contents[0].body,
+      // locale: resource.contents[0].locale,
+      // createdAt: resource.contents[0].createdAt,
+      // updatedAt: resource.contents[0].updatedAt,
+    };
+  }
+
+  if (resource.meta && resource.meta.length) {
+    res.meta = {
+      // id: resource.meta[0].id,
+      title: resource.meta[0].title,
+      description: resource.meta[0].description,
+      keywords: resource.meta[0].keywords,
+      // locale: resource.meta[0].locale,
+      // createdAt: resource.meta[0].createdAt,
+      // updatedAt: resource.meta[0].updatedAt,
+    };
+  }
+
+  const resourceType = resourceTypes.filter(resourceType => resourceType.name === resource.type)[0] || null;
+  if (resourceType.attributes) {
+    for (let attrKey of Object.keys(resourceType.attributes)) {
+      for (let attr of resource.attributes) {
+        if (attrKey === attr.key) {
+          switch (resourceType.attributes[attrKey].type) {
+            case 'number': {
+              resource.attributes[attrKey] = Number(attr.value);
+              break;
+            }
+            case 'boolean': {
+              resource.attributes[attrKey] = attr.value === 'true';
+              break;
+            }
+            case 'date': {
+              resource.attributes[attrKey] = new Date(attr.value);
+              break;
+            }
+            default: {
+              resource.attributes[attrKey] = attr.value;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return res;
+}
+
+export async function createResource(params: ResourceCreateParams): Promise<any> {
   const connection = await typeorm.getConnection();
   const resourceRepository = await connection.getRepository(Resource);
 
@@ -164,5 +227,5 @@ New resource will be created with this locale.`);
     await connection.manager.save(resource);
   }
 
-  return resource;
+  return createResourcePresenter(resource);
 }
