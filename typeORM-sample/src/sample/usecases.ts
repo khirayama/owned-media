@@ -12,7 +12,7 @@ export function isValidKey(key: string) {
   return /^[a-z0-9|-]+$/.test(key);
 }
 
-export async function createResource(params: ResourceCreateParams): Promise<any> {
+export async function createResource(params: ResourceCreateParams): Promise<Resource> {
   const connection = await typeorm.getConnection();
   const resourceRepository = await connection.getRepository(Resource);
 
