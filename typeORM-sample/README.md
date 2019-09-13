@@ -28,40 +28,40 @@ Steps to run this project:
 ### Endpoints
 
 Resources
-- `POST /api/resources?locale=value`
-- `GET /api/resources?locale=value&conditions=value`
-- `GET /api/resources/:id?locale=value`
-- `PUT /api/resources/:id?locale=value`
+- `POST /api/resources`
+- `GET /api/resources?conditions=value`
+- `GET /api/resources/:id`
+- `PUT /api/resources/:id`
 - `DELETE /api/resources/:id`
 - `POST /api/resources/:id/contents?locale=value`
 - `GET /api/resources/:id/contents`
-- `GET /api/resources/:id/contents/:locale`
-- `PUT /api/resources/:id/contents/:locale`
-- `DELETE /api/resources/:id/contents/:locale`
+- `GET /api/resources/:id/contents?locale=value`
+- `PUT /api/resources/:id/contents?locale=value`
+- `DELETE /api/resources/:id/contents?locale=value`
 - `POST /api/resources/:id/meta?locale=value`
 - `GET /api/resources/:id/meta`
-- `GET /api/resources/:id/meta/:locale`
-- `PUT /api/resources/:id/meta/:locale`
-- `DELETE /api/resources/:id/meta/:locale`
+- `GET /api/resources/:id/meta?locale=value`
+- `PUT /api/resources/:id/meta?locale=value`
+- `DELETE /api/resources/:id/meta?locale=value`
 - `PUT /api/resources/:id/media/:mediaId`
 - `DELETE /api/resources/:id/media/:mediaId`
 - `PUT /api/resources/:id/attributes`
 Labels
-- `POST /api/labels?locale=value`
-- `GET /api/labels?locale=value&conditions=value`
-- `GET /api/labels/:id?locale=value`
-- `PUT /api/labels/:id?locale=value`
+- `POST /api/labels`
+- `GET /api/labels?conditions=value`
+- `GET /api/labels/:id`
+- `PUT /api/labels/:id`
 - `DELETE /api/labels/:id`
 - `POST /api/labels/:id/contents?locale=value`
 - `GET /api/labels/:id/contents`
-- `GET /api/labels/:id/contents/:locale`
-- `PUT /api/labels/:id/contents/:locale`
-- `DELETE /api/labels/:id/contents/:locale`
+- `GET /api/labels/:id/contents?locale=value`
+- `PUT /api/labels/:id/contents?locale=value`
+- `DELETE /api/labels/:id/contents?locale=value`
 - `POST /api/labels/:id/meta?locale=value`
 - `GET /api/labels/:id/meta`
-- `GET /api/labels/:id/meta/:locale`
-- `PUT /api/labels/:id/meta/:locale`
-- `DELETE /api/labels/:id/meta/:locale`
+- `GET /api/labels/:id/meta?locale=value`
+- `PUT /api/labels/:id/meta?locale=value`
+- `DELETE /api/labels/:id/meta?locale=value`
 - `PUT /api/labels/:id/media/:mediaId`
 - `DELETE /api/labels/:id/media/:mediaId`
 Media
