@@ -1,6 +1,6 @@
 import * as typeorm from 'typeorm';
 
-import { resourceTypes, supportLocales } from '../../config';
+import { resourceTypes } from '../../config';
 import { Resource } from '../entity/Resource';
 
 export type ResourceCreateParams = {
@@ -27,8 +27,7 @@ export async function createResource(params: ResourceCreateParams): Promise<any>
   const resourceTypeNames = resourceTypes.map(resourceType => resourceType.name);
   const isNotSupportedResourceType = resourceTypeNames.indexOf(resourceType) === -1;
   if (isNotSupportedResourceType) {
-    console.log(`Not support ${resourceType} as resource type.`);
-    return;
+    throw new Error(`Not support ${resourceType} as resource type.`);
   }
 
   const isExistingResourceWithSameKey = !!(await resourceRepository
@@ -38,10 +37,7 @@ export async function createResource(params: ResourceCreateParams): Promise<any>
     .setParameters({ key })
     .getCount());
   if (isExistingResourceWithSameKey) {
-    console.log(`Existing resource with this key and locale.
-If new resource is wanted to create, please change key.
-If another locale resource is wanted to create, please change locale.`);
-    return;
+    throw new Error(`Existing resource with ${key} as key. If new resource is wanted to create, please change key.`);
   }
 
   const resource = new Resource();
