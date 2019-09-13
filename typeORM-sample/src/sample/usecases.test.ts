@@ -50,5 +50,18 @@ describe('createResource', () => {
     });
     await expect(createResourcePromise).rejects.toThrow();
   });
-  test('Create resource with unsupported resource type.', async () => {});
+  test('Create resource with unsupported resource type.', async () => {
+    const createResourcePromise = createResource({
+      key: 'sample-resource',
+      type: 'nota',
+    });
+    await expect(createResourcePromise).rejects.toThrow();
+  });
+  test('Create resource with existing key.', async () => {
+    const createResourcePromise = createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
+    await expect(createResourcePromise).rejects.toThrow();
+  });
 });
