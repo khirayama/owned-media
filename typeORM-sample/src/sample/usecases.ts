@@ -47,3 +47,18 @@ export async function createResource(params: ResourceCreateParams): Promise<Reso
 
   return resource;
 }
+
+export type ResourceUpdateParams = {
+  key?: string;
+  type?: string;
+};
+
+export async function updateResource(resourceId: string, params: ResourceUpdateParams): Promise<Resource> {
+  const connection = await typeorm.getConnection();
+  const resourceRepository = await connection.getRepository(Resource);
+
+  await resourceRepository.update({ id: resourceId }, params);
+  const resource = await resourceRepository.findOne(resourceId);
+
+  return resource;
+}
