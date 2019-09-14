@@ -2,18 +2,6 @@ import * as typeorm from 'typeorm';
 
 import { isValidKey, createResource } from './usecases';
 import { ormconfig } from '../../ormconfig.test';
-// import { Resource } from '../entity/Resource';
-
-beforeAll(async () => {
-  const connection = await typeorm.createConnection(ormconfig);
-  await connection.dropDatabase();
-  await connection.synchronize();
-});
-
-afterAll(async () => {
-  const connection = await typeorm.getConnection();
-  await connection.close();
-});
 
 describe('isValidKey', () => {
   test('Normal usage.', () => {
@@ -30,6 +18,17 @@ describe('isValidKey', () => {
 });
 
 describe('createResource', () => {
+  beforeAll(async () => {
+    const connection = await typeorm.createConnection(ormconfig);
+    await connection.dropDatabase();
+    await connection.synchronize();
+  });
+
+  afterAll(async () => {
+    const connection = await typeorm.getConnection();
+    await connection.close();
+  });
+
   test('Create resource.', async () => {
     const resource = await createResource({
       key: 'sample-resource',
