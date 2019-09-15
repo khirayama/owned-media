@@ -1,4 +1,5 @@
 import * as typeorm from 'typeorm';
+import * as classValidator from 'class-validator';
 
 import { resourceTypes } from '../../config';
 import { Resource } from '../entity/Resource';
@@ -8,10 +9,6 @@ export type ResourceCreateParams = {
   type?: string;
 };
 
-export function isValidKey(key: string) {
-  return /^[a-z0-9|-]+$/.test(key);
-}
-
 export async function createResource(params: ResourceCreateParams): Promise<Resource> {
   const connection = await typeorm.getConnection();
   const resourceRepository = await connection.getRepository(Resource);
@@ -20,10 +17,6 @@ export async function createResource(params: ResourceCreateParams): Promise<Reso
   const resourceType = params.type ? params.type : resourceTypes[0].name;
 
   // Validations
-  if (!isValidKey(key)) {
-    throw new Error(`${key} is invalid key.`);
-  }
-
   const resourceTypeNames = resourceTypes.map(resourceType => resourceType.name);
   const isNotSupportedResourceType = resourceTypeNames.indexOf(resourceType) === -1;
   if (isNotSupportedResourceType) {
@@ -43,7 +36,15 @@ export async function createResource(params: ResourceCreateParams): Promise<Reso
   const resource = new Resource();
   resource.key = key;
   resource.type = resourceType;
-  await connection.manager.save(resource);
+
+  const errors = await classValidator.validate(resource);
+  if (errors.length) {
+    for (const err of errors) {
+      throw new Error(err.constraints.matches);
+    }
+  } else {
+    await connection.manager.save(resource);
+  }
 
   return resource;
 }

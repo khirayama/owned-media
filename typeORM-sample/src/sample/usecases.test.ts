@@ -1,21 +1,7 @@
 import * as typeorm from 'typeorm';
 
-import { isValidKey, createResource } from './usecases';
+import { createResource, updateResource } from './usecases';
 import { ormconfig } from '../../ormconfig.test';
-
-describe('isValidKey', () => {
-  test('Normal usage.', () => {
-    // valid
-    expect(isValidKey('samplekey')).toBeTruthy();
-    expect(isValidKey('sample-key')).toBeTruthy();
-    expect(isValidKey('sample-key-1')).toBeTruthy();
-    expect(isValidKey('1-sample-key')).toBeTruthy();
-    // unvalid
-    expect(isValidKey('Samplekey')).toBeFalsy();
-    expect(isValidKey('sample_key')).toBeFalsy();
-    expect(isValidKey('sample!key')).toBeFalsy();
-  });
-});
 
 describe('createResource', () => {
   beforeAll(async () => {
@@ -62,5 +48,33 @@ describe('createResource', () => {
       type: 'note',
     });
     await expect(createResourcePromise).rejects.toThrow();
+  });
+});
+
+describe('updateResource', () => {
+  beforeAll(async () => {
+    const connection = await typeorm.createConnection(ormconfig);
+    await connection.dropDatabase();
+    await connection.synchronize();
+  });
+
+  afterAll(async () => {
+    const connection = await typeorm.getConnection();
+    await connection.close();
+  });
+
+  test('Update resource.', async () => {
+    let resource = await createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
+    resource = await updateResource(resource.id, { key: 'new-sample-resource' });
+    expect(resource).toEqual({
+      id: resource.id,
+      key: 'new-sample-resource',
+      type: 'note',
+      createdAt: resource.createdAt,
+      updatedAt: resource.updatedAt,
+    });
   });
 });
