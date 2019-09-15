@@ -1,20 +1,25 @@
 import * as typeorm from 'typeorm';
 
 import { createResource, updateResource } from './usecases';
-import { ormconfig } from '../../ormconfig.test';
+
+const ormconfig = require('../../ormconfig.test');
+
+beforeAll(async () => {
+  await typeorm.createConnection(ormconfig);
+});
+
+beforeEach(async () => {
+  const connection = await typeorm.getConnection();
+  await connection.dropDatabase();
+  await connection.synchronize();
+});
+
+afterAll(async () => {
+  const connection = await typeorm.getConnection();
+  await connection.close();
+});
 
 describe('createResource', () => {
-  beforeAll(async () => {
-    const connection = await typeorm.createConnection(ormconfig);
-    await connection.dropDatabase();
-    await connection.synchronize();
-  });
-
-  afterAll(async () => {
-    const connection = await typeorm.getConnection();
-    await connection.close();
-  });
-
   test('Create resource.', async () => {
     const resource = await createResource({
       key: 'sample-resource',
@@ -43,6 +48,10 @@ describe('createResource', () => {
     await expect(createResourcePromise).rejects.toThrow();
   });
   test('Create resource with existing key.', async () => {
+    await createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
     const createResourcePromise = createResource({
       key: 'sample-resource',
       type: 'note',
@@ -52,17 +61,6 @@ describe('createResource', () => {
 });
 
 describe('updateResource', () => {
-  beforeAll(async () => {
-    const connection = await typeorm.createConnection(ormconfig);
-    await connection.dropDatabase();
-    await connection.synchronize();
-  });
-
-  afterAll(async () => {
-    const connection = await typeorm.getConnection();
-    await connection.close();
-  });
-
   test('Update resource.', async () => {
     let resource = await createResource({
       key: 'sample-resource',
