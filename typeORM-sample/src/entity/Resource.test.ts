@@ -19,22 +19,28 @@ describe('Resource', () => {
     test('Validation key', async () => {
       const resource = await new Resource();
       const errors = await classValidator.validate(resource);
-      console.log(errors);
-      await expect(errors).toEqual({});
-      resource.key = '';
-    });
-    test('Validation key', async () => {
-      let savePromise: Promise<any>;
-      const connection = await typeorm.getConnection();
-      const resource = await new Resource();
-
-      resource.key = '';
-      savePromise = connection.manager.save(resource);
-      await expect(savePromise).rejects.toThrow();
-
-      resource.key = 'sample_resource';
-      savePromise = connection.manager.save(resource);
-      await expect(savePromise).rejects.toThrow();
+      await expect(errors).toEqual([
+        {
+          target: {},
+          value: undefined,
+          property: 'key',
+          children: [],
+          constraints: {
+            matches: 'This resource key($value) is invalid key',
+            isNotEmpty: 'key should not be empty',
+          },
+        },
+        {
+          target: {},
+          value: undefined,
+          property: 'type',
+          children: [],
+          constraints: {
+            matches: 'This resource type($value) does not be supportted.',
+            isNotEmpty: 'type should not be empty',
+          },
+        },
+      ]);
     });
   });
 });
