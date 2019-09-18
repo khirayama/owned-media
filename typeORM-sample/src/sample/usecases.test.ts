@@ -38,14 +38,14 @@ describe('createResource', () => {
       key: 'sample_resource',
       type: 'note',
     });
-    await expect(createResourcePromise).rejects.toThrow();
+    await expect(createResourcePromise).rejects.toThrowError();
   });
   test('Create resource with unsupported resource type.', async () => {
     const createResourcePromise = createResource({
       key: 'sample-resource',
       type: 'nota',
     });
-    await expect(createResourcePromise).rejects.toThrow();
+    await expect(createResourcePromise).rejects.toThrowError();
   });
   test('Create resource with existing key.', async () => {
     await createResource({
@@ -56,7 +56,7 @@ describe('createResource', () => {
       key: 'sample-resource',
       type: 'note',
     });
-    await expect(createResourcePromise).rejects.toThrow();
+    await expect(createResourcePromise).rejects.toThrowError();
   });
 });
 
