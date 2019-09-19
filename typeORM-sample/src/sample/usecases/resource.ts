@@ -1,8 +1,8 @@
 import * as typeorm from 'typeorm';
 import * as classValidator from 'class-validator';
 
-import { resourceTypes } from '../../config';
-import { Resource } from '../entity/Resource';
+import { resourceTypes } from '../../../config';
+import { Resource } from '../../entity/Resource';
 
 function partialAssign(obj, params) {
   for (const key of Object.keys(params)) {

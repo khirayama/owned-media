@@ -1,8 +1,8 @@
 import * as typeorm from 'typeorm';
 
-import { createResource, updateResource } from './usecases';
+import { createResource, updateResource } from './resource';
 
-const ormconfig = require('../../ormconfig.test');
+const ormconfig = require('../../../ormconfig.test');
 
 beforeAll(async () => {
   await typeorm.createConnection(ormconfig);
