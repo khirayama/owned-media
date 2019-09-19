@@ -4,29 +4,39 @@ import * as classValidator from 'class-validator';
 import { resourceTypes } from '../../config';
 import { Resource } from '../entity/Resource';
 
-export type ResourceCreateParams = {
-  key: string;
-  type?: string;
-};
+function partialAssign(obj, params) {
+  for (const key of Object.keys(params)) {
+    obj[key] = params[key] !== undefined ? params[key] : obj[key];
+  }
+}
 
-export async function createResource(params: ResourceCreateParams): Promise<Resource> {
-  const key = params.key;
-  const resourceType = params.type ? params.type : resourceTypes[0].name;
-
-  const resource = new Resource();
-  resource.key = key;
-  resource.type = resourceType;
-
-  const errors = await classValidator.validate(resource);
+async function save(obj) {
+  const errors = await classValidator.validate(obj);
   if (errors.length) {
     for (const err of errors) {
       throw new Error(err.constraints.matches);
     }
   } else {
     const connection = await typeorm.getConnection();
-    await connection.manager.save(resource);
-    return resource;
+    await connection.manager.save(obj);
+    return obj;
   }
+}
+
+export type ResourceCreateParams = {
+  key: string;
+  type?: string;
+};
+
+export async function createResource(params: ResourceCreateParams): Promise<Resource> {
+  const initialParams = {
+    type: resourceTypes[0].name,
+  };
+
+  const resource = new Resource();
+  partialAssign(resource, Object.assign(initialParams, params));
+
+  return await save(resource);
 }
 
 export type ResourceUpdateParams = {
@@ -36,10 +46,28 @@ export type ResourceUpdateParams = {
 
 export async function updateResource(resourceId: string, params: ResourceUpdateParams): Promise<Resource> {
   const connection = await typeorm.getConnection();
-  const resourceRepository = await connection.getRepository(Resource);
 
-  await resourceRepository.update({ id: resourceId }, params);
-  const resource = await resourceRepository.findOne(resourceId);
+  let resource = await connection.manager.findOne(Resource, resourceId);
 
-  return resource;
+  if (!resource) {
+    throw new Error('Not found.');
+  }
+
+  partialAssign(resource, params);
+
+  return await save(resource);
+}
+
+export async function deleteResource(resourceId: string): Promise<void> {
+  const connection = await typeorm.getConnection();
+
+  let resource = await connection.manager.findOne(Resource, resourceId);
+
+  if (!resource) {
+    throw new Error('Not found.');
+  }
+
+  // https://stackoverflow.com/questions/54246615/what-s-the-difference-between-remove-and-delete
+  await connection.manager.delete(Resource, resourceId);
+  // TODO: Remove relations
 }
