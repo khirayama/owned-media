@@ -75,4 +75,15 @@ describe('updateResource', () => {
       updatedAt: resource.updatedAt,
     });
   });
+  test('Update resource with invalid key.', async () => {
+    let resource = await createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
+    let updateResourcePromise = updateResource(resource.id, { key: 'sample_resource' });
+    await expect(updateResourcePromise).rejects.toThrowError();
+
+    updateResourcePromise = updateResource(resource.id, { key: null });
+    await expect(updateResourcePromise).rejects.toThrowError();
+  });
 });
