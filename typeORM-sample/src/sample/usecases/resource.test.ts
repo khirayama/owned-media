@@ -1,6 +1,6 @@
 import * as typeorm from 'typeorm';
 
-import { createResource, updateResource } from './resource';
+import { createResource, updateResource, deleteResource } from './resource';
 
 const ormconfig = require('../../../ormconfig.test');
 
@@ -85,5 +85,20 @@ describe('updateResource', () => {
 
     updateResourcePromise = updateResource(resource.id, { key: null });
     await expect(updateResourcePromise).rejects.toThrowError();
+  });
+});
+
+describe('updateResource', () => {
+  test('Delete resource.', async () => {
+    const resource = await createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
+    await deleteResource(resource.id);
+    const createResourcePromise = createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
+    await expect(createResourcePromise).resolves.not.toThrowError();
   });
 });
