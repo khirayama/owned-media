@@ -35,6 +35,7 @@ export async function updateResource(resourceId: string, params: ResourceUpdateP
   }
 
   partialAssign(resource, params);
+  // TODO: Update content, attributes, meta
 
   return await save(resource);
 }
@@ -50,5 +51,5 @@ export async function deleteResource(resourceId: string): Promise<void> {
 
   // https://stackoverflow.com/questions/54246615/what-s-the-difference-between-remove-and-delete
   await connection.manager.delete(Resource, resourceId);
-  // TODO: Remove relations
+  // TODO: Remove content, attributes, meta
 }
