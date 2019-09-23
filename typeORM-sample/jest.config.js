@@ -1,4 +1,5 @@
 module.exports = {
+  preset: 'ts-jest',
   verbose: true,
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   transform: {
@@ -11,8 +12,7 @@ module.exports = {
   },
   testMatch: ['**/*.test.+(ts|tsx|js|jsx)'],
   testPathIgnorePatterns: ['ormconfig.test.js'],
-  globalSetup: './jest.setup.ts',
-  // globalTeardown: './teardown.js',
-  preset: 'ts-jest',
+  // globalSetup: './jest.setup.js',
+  // globalTeardown: './jest.teardown.js',
   testEnvironment: 'node',
 };
