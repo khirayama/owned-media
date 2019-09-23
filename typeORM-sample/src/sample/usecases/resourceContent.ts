@@ -30,15 +30,17 @@ export async function createResourceContent(
   };
 
   const resourceContent = new ResourceContent();
-  const bodyFileName = `${resource.key}_${resourceContent.locale}.md`;
-
   partialAssign(resourceContent, Object.assign(initialParams, params));
-  resourceContent.resource = resource;
+
+  const bodyFileName = `${resource.key}_${resourceContent.locale}.md`;
   resourceContent.body = bodyFileName;
 
   const bodyPath = path.resolve(ROOT_PATH, bodyFileName);
   fsExtra.outputFileSync(bodyPath, params.body);
 
+  resource.contents = resource.contents ? [...resource.contents, resourceContent] : [resourceContent];
+
+  await save(resource);
   await save(resourceContent);
 
   resourceContent.body = params.body;
