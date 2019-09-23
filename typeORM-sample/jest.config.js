@@ -12,7 +12,5 @@ module.exports = {
   },
   testMatch: ['**/*.test.+(ts|tsx|js|jsx)'],
   testPathIgnorePatterns: ['ormconfig.test.js'],
-  // globalSetup: './jest.setup.js',
-  // globalTeardown: './jest.teardown.js',
   testEnvironment: 'node',
 };
