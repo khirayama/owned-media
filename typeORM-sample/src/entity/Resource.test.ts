@@ -3,9 +3,8 @@ import * as classValidator from 'class-validator';
 
 import { Resource } from './Resource';
 
-const ormconfig = require('../../ormconfig.test');
-
 beforeAll(async () => {
+  const ormconfig = require('../../ormconfig.test');
   await typeorm.createConnection(ormconfig);
 });
 
