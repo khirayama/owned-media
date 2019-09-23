@@ -3,16 +3,6 @@ import * as classValidator from 'class-validator';
 
 import { Resource } from './Resource';
 
-beforeAll(async () => {
-  const ormconfig = require('../../ormconfig.test');
-  await typeorm.createConnection(ormconfig);
-});
-
-afterAll(async () => {
-  const connection = await typeorm.getConnection();
-  await connection.close();
-});
-
 describe('Resource', () => {
   describe('Validation', () => {
     test('Validation key', async () => {
