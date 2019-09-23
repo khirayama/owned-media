@@ -1,22 +1,22 @@
 import * as typeorm from 'typeorm';
 
 import { createResource, updateResource, deleteResource } from './resource';
-
-const ormconfig = require('../../../ormconfig.test');
+import { createResourceContent } from './resourceContent';
 
 beforeAll(async () => {
+  const ormconfig = require('../../../ormconfig.test');
   await typeorm.createConnection(ormconfig);
+});
+
+afterAll(async () => {
+  const connection = await typeorm.getConnection();
+  await connection.close();
 });
 
 beforeEach(async () => {
   const connection = await typeorm.getConnection();
   await connection.dropDatabase();
   await connection.synchronize();
-});
-
-afterAll(async () => {
-  const connection = await typeorm.getConnection();
-  await connection.close();
 });
 
 describe('createResource', () => {
@@ -101,4 +101,28 @@ describe('updateResource', () => {
     });
     await expect(createResourcePromise).resolves.not.toThrowError();
   });
+});
+
+describe('createResourceContent', () => {
+  test('Create resource content.', async () => {
+    const resource = await createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
+    const resourceContent = await createResourceContent(resource.id, {
+      name: 'Sample Resource',
+      body: `# Sample Resource
+sample text`,
+    });
+    expect(resourceContent).toEqual({
+      id: resourceContent.id,
+      locale: 'ja_JP',
+      name: 'Sample Resource',
+      body: `# Sample Resource
+sample text`,
+      createdAt: resourceContent.createdAt,
+      updatedAt: resourceContent.updatedAt,
+    });
+  });
+  test('Create resource content with locale.', async () => {});
 });
