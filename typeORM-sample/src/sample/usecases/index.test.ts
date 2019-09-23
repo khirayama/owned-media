@@ -1,7 +1,7 @@
 import * as typeorm from 'typeorm';
 
 import { createResource, updateResource, deleteResource } from './resource';
-import { createResourceContent } from './resourceContent';
+import { addResourceContent } from './resourceContent';
 
 beforeAll(async () => {
   const ormconfig = require('../../../ormconfig.test');
@@ -103,13 +103,13 @@ describe('updateResource', () => {
   });
 });
 
-describe('createResourceContent', () => {
+describe('addResourceContent', () => {
   test('Create resource content.', async () => {
     const resource = await createResource({
       key: 'sample-resource',
       type: 'note',
     });
-    const resourceContent = await createResourceContent(resource.id, {
+    const resourceContent = await addResourceContent(resource.id, {
       name: 'Sample Resource',
       body: `# Sample Resource
 sample text`,

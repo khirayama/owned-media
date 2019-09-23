@@ -10,15 +10,15 @@ import { partialAssign, save } from './utils';
 
 const ROOT_PATH = path.resolve(process.cwd());
 
-export type ResourceContentCreateParams = {
+export type ResourceContentAddParams = {
   locale?: string;
   name?: string;
   body?: string;
 };
 
-export async function createResourceContent(
+export async function addResourceContent(
   resourceId: string,
-  params: ResourceContentCreateParams,
+  params: ResourceContentAddParams,
 ): Promise<ResourceContent> {
   const connection = await typeorm.getConnection();
   let resource = await connection.manager.findOne(Resource, resourceId);
