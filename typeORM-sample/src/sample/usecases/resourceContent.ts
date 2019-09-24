@@ -1,6 +1,5 @@
 import * as path from 'path';
 
-import * as typeorm from 'typeorm';
 import * as fsExtra from 'fs-extra';
 
 import { supportLocales } from '../../../config';
@@ -17,12 +16,9 @@ export type ResourceContentAddParams = {
 };
 
 export async function addResourceContent(
-  resourceId: string,
+  resource: Resource,
   params: ResourceContentAddParams,
 ): Promise<ResourceContent> {
-  const connection = await typeorm.getConnection();
-  let resource = await connection.manager.findOne(Resource, resourceId);
-
   const initialParams = {
     locale: supportLocales[0],
     name: '',

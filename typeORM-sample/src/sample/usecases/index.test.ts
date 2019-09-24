@@ -86,6 +86,25 @@ describe('updateResource', () => {
     updateResourcePromise = updateResource(resource.id, { key: null });
     await expect(updateResourcePromise).rejects.toThrowError();
   });
+  test('Update resource with contents.', async () => {
+    let resource = await createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
+    await addResourceContent(resource, {
+      name: 'Sample Resource',
+      body: '# Sample Resource',
+    });
+    console.log(resource);
+    resource = await updateResource(resource.id, { key: 'new-sample-resource' });
+    expect(resource).toEqual({
+      id: resource.id,
+      key: 'new-sample-resource',
+      type: 'note',
+      createdAt: resource.createdAt,
+      updatedAt: resource.updatedAt,
+    });
+  });
 });
 
 describe('updateResource', () => {
@@ -104,12 +123,12 @@ describe('updateResource', () => {
 });
 
 describe('addResourceContent', () => {
-  test('Create resource content.', async () => {
+  test('Add resource content.', async () => {
     const resource = await createResource({
       key: 'sample-resource',
       type: 'note',
     });
-    const resourceContent = await addResourceContent(resource.id, {
+    const resourceContent = await addResourceContent(resource, {
       name: 'Sample Resource',
       body: `# Sample Resource
 sample text`,
@@ -124,5 +143,25 @@ sample text`,
       updatedAt: resourceContent.updatedAt,
     });
   });
-  test('Create resource content with locale.', async () => {});
+  test('Add resource content with locale.', async () => {
+    const resource = await createResource({
+      key: 'sample-resource',
+      type: 'note',
+    });
+    const resourceContent = await addResourceContent(resource, {
+      locale: 'en_US',
+      name: 'Sample Resource',
+      body: `# Sample Resource
+sample text`,
+    });
+    expect(resourceContent).toEqual({
+      id: resourceContent.id,
+      locale: 'en_US',
+      name: 'Sample Resource',
+      body: `# Sample Resource
+sample text`,
+      createdAt: resourceContent.createdAt,
+      updatedAt: resourceContent.updatedAt,
+    });
+  });
 });
