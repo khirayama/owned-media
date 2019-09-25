@@ -61,5 +61,18 @@ export async function updateResourceHandler(req: express.Request, res: express.R
     await resourceRepository.save(resource);
   }
 
-  res.json(resource);
+  res.status(200).json(resource);
+}
+
+export async function deleteResourceHandler(req: express.Request, res: express.Response) {
+  const resourceId = req.params.id;
+
+  let resource = await resourceRepository.findOne(resourceId);
+
+  if (!resource) {
+    return res.status(404).json();
+  }
+
+  await resourceRepository.delete(resourceId);
+  res.status(204).json();
 }
