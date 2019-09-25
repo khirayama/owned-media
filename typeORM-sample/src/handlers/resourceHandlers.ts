@@ -74,5 +74,6 @@ export async function deleteResourceHandler(req: express.Request, res: express.R
   }
 
   await resourceRepository.delete(resourceId);
+  // TODO: Remove related resources
   res.status(204).json();
 }
