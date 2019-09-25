@@ -29,7 +29,7 @@ export async function createResourceHandler(req: express.Request, res: express.R
     await resourceRepository.save(resource);
   }
 
-  res.json(resource);
+  res.status(201).json(resource);
 }
 
 export async function updateResourceHandler(req: express.Request, res: express.Response) {
