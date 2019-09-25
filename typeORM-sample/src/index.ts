@@ -14,7 +14,7 @@ resourceRouter
   .patch('/:id', updateResourceHandler)
   .delete('/:id', deleteResourceHandler);
 
-app.get('/resources', resourceRouter);
+app.use('/resources', resourceRouter);
 
 (async () => {
   await createConnection();
