@@ -5,7 +5,9 @@ import { createResourceHandler } from './resourceHandlers';
 
 beforeAll(async () => {
   const ormconfig = require('../../ormconfig.test');
-  await typeorm.createConnection(ormconfig);
+  const connection = await typeorm.createConnection(ormconfig);
+  await connection.dropDatabase();
+  await connection.synchronize();
 });
 
 afterAll(async () => {
@@ -19,13 +21,21 @@ describe('createResourceHandler', () => {
       method: 'GET',
       url: '/',
       body: {
-        key: 'acdacd___---',
+        key: 'sample-resource',
+        type: 'note',
       },
     });
     const res = mocksHttp.createResponse();
 
     await createResourceHandler(req, res);
-    console.log(res.statusCode);
-    console.log(res._getData());
+    const resource = res._getJSONData();
+    expect(res.statusCode).toBe(201);
+    expect(resource).toEqual({
+      key: 'sample-resource',
+      type: 'note',
+      id: resource.id,
+      createdAt: resource.createdAt,
+      updatedAt: resource.updatedAt,
+    });
   });
 });
