@@ -62,4 +62,28 @@ describe('createResourceHandler', () => {
       ],
     });
   });
+  test('Create resource with unsupported resource type.', async () => {
+    const req = mocksHttp.createRequest({
+      method: 'GET',
+      url: '/',
+      body: {
+        key: 'sample-resource',
+        type: 'nota',
+      },
+    });
+    const res = mocksHttp.createResponse();
+
+    await createResourceHandler(req, res);
+    const response = res._getJSONData();
+    expect(res.statusCode).toBe(400);
+    expect(response).toEqual({
+      message: 'Validation Failed',
+      errors: [
+        {
+          field: 'type',
+          message: 'This resource type(nota) does not be supportted.',
+        },
+      ],
+    });
+  });
 });
