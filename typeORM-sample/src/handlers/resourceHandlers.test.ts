@@ -28,14 +28,38 @@ describe('createResourceHandler', () => {
     const res = mocksHttp.createResponse();
 
     await createResourceHandler(req, res);
-    const resource = res._getJSONData();
+    const response = res._getJSONData();
     expect(res.statusCode).toBe(201);
-    expect(resource).toEqual({
+    expect(response).toEqual({
       key: 'sample-resource',
       type: 'note',
-      id: resource.id,
-      createdAt: resource.createdAt,
-      updatedAt: resource.updatedAt,
+      id: response.id,
+      createdAt: response.createdAt,
+      updatedAt: response.updatedAt,
+    });
+  });
+  test('Try to create resource with unvalid key.', async () => {
+    const req = mocksHttp.createRequest({
+      method: 'GET',
+      url: '/',
+      body: {
+        key: 'sample_resource',
+        type: 'note',
+      },
+    });
+    const res = mocksHttp.createResponse();
+
+    await createResourceHandler(req, res);
+    const response = res._getJSONData();
+    expect(res.statusCode).toBe(400);
+    expect(response).toEqual({
+      message: 'Validation Failed',
+      errors: [
+        {
+          field: 'key',
+          message: 'This resource key(sample_resource) is invalid key',
+        },
+      ],
     });
   });
 });
