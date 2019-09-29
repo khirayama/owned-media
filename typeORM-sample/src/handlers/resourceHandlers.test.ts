@@ -11,7 +11,6 @@ describe('createResourceHandler', () => {
   test('Create resource.', async () => {
     const req = mocksHttp.createRequest({
       method: 'POST',
-      url: '/',
       body: {
         key: 'create-resource-handler',
         type: 'note',
@@ -33,7 +32,6 @@ describe('createResourceHandler', () => {
   test('Try to create resource with unvalid key.', async () => {
     const req = mocksHttp.createRequest({
       method: 'POST',
-      url: '/',
       body: {
         key: 'create_resource_handler',
         type: 'note',
@@ -57,7 +55,6 @@ describe('createResourceHandler', () => {
   test('Create resource with unsupported resource type.', async () => {
     const req = mocksHttp.createRequest({
       method: 'POST',
-      url: '/',
       body: {
         key: 'create-resource-handler',
         type: 'nota',
@@ -82,7 +79,6 @@ describe('createResourceHandler', () => {
     await createResourceHandler(
       mocksHttp.createRequest({
         method: 'POST',
-        url: '/',
         body: {
           key: 'create-resource-handler-with-existing-key',
           type: 'note',
@@ -93,7 +89,6 @@ describe('createResourceHandler', () => {
 
     const req = mocksHttp.createRequest({
       method: 'POST',
-      url: '/',
       body: {
         key: 'create-resource-handler-with-existing-key',
         type: 'note',
@@ -122,7 +117,6 @@ describe('updateResourceHandler', () => {
     await createResourceHandler(
       mocksHttp.createRequest({
         method: 'POST',
-        url: '/',
         body: {
           key: 'update-resource-handler',
           type: 'note',
