@@ -1,7 +1,7 @@
 import * as mocksHttp from 'node-mocks-http';
 
 import { connectDatabase } from '../testutils';
-import { createResourceHandler } from './resourceHandlers';
+import { createResourceHandler, updateResourceHandler } from './resourceHandlers';
 
 beforeAll(async () => {
   await connectDatabase();
@@ -10,7 +10,7 @@ beforeAll(async () => {
 describe('createResourceHandler', () => {
   test('Create resource.', async () => {
     const req = mocksHttp.createRequest({
-      method: 'GET',
+      method: 'POST',
       url: '/',
       body: {
         key: 'create-resource-handler',
@@ -32,7 +32,7 @@ describe('createResourceHandler', () => {
   });
   test('Try to create resource with unvalid key.', async () => {
     const req = mocksHttp.createRequest({
-      method: 'GET',
+      method: 'POST',
       url: '/',
       body: {
         key: 'create_resource_handler',
@@ -56,7 +56,7 @@ describe('createResourceHandler', () => {
   });
   test('Create resource with unsupported resource type.', async () => {
     const req = mocksHttp.createRequest({
-      method: 'GET',
+      method: 'POST',
       url: '/',
       body: {
         key: 'create-resource-handler',
@@ -81,7 +81,7 @@ describe('createResourceHandler', () => {
   test('Create resource with existing key.', async () => {
     await createResourceHandler(
       mocksHttp.createRequest({
-        method: 'GET',
+        method: 'POST',
         url: '/',
         body: {
           key: 'create-resource-handler-with-existing-key',
@@ -92,7 +92,7 @@ describe('createResourceHandler', () => {
     );
 
     const req = mocksHttp.createRequest({
-      method: 'GET',
+      method: 'POST',
       url: '/',
       body: {
         key: 'create-resource-handler-with-existing-key',
@@ -112,6 +112,45 @@ describe('createResourceHandler', () => {
           message: 'This resource key is already existing.',
         },
       ],
+    });
+  });
+});
+
+describe('updateResourceHandler', () => {
+  test('Update resource.', async () => {
+    const createdRes = mocksHttp.createResponse();
+    await createResourceHandler(
+      mocksHttp.createRequest({
+        method: 'POST',
+        url: '/',
+        body: {
+          key: 'update-resource-handler',
+          type: 'note',
+        },
+      }),
+      createdRes,
+    );
+    const resource = createdRes._getJSONData();
+
+    const req = mocksHttp.createRequest({
+      method: 'PATCH',
+      url: `/${resource.id}`,
+      body: {
+        key: 'update-resource-handler-updated',
+        type: 'note',
+      },
+    });
+    const res = mocksHttp.createResponse();
+
+    await updateResourceHandler(req, res);
+    const response = res._getJSONData();
+    expect(res.statusCode).toBe(200);
+    expect(response).toEqual({
+      key: 'update-resource-handler-updated',
+      type: 'note',
+      id: response.id,
+      createdAt: response.createdAt,
+      updatedAt: response.updatedAt,
     });
   });
 });
