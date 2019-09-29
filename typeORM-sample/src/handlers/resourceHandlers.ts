@@ -57,7 +57,7 @@ export async function createResourceHandler(req: express.Request, res: express.R
 export async function updateResourceHandler(req: express.Request, res: express.Response) {
   const resourceRepository = typeorm.getRepository(Resource);
 
-  const resourceId = req.params.id;
+  const resourceId = req.params.resourceId;
   const body = req.body;
 
   let resource = await resourceRepository.findOne(resourceId);
@@ -113,7 +113,7 @@ export async function updateResourceHandler(req: express.Request, res: express.R
 export async function deleteResourceHandler(req: express.Request, res: express.Response) {
   const resourceRepository = typeorm.getRepository(Resource);
 
-  const resourceId = req.params.id;
+  const resourceId = req.params.resourceId;
 
   let resource = await resourceRepository.findOne(resourceId);
 

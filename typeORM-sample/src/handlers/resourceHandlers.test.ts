@@ -129,7 +129,7 @@ describe('updateResourceHandler', () => {
     const req = mocksHttp.createRequest({
       method: 'PATCH',
       params: {
-        id: resource.id,
+        resourceId: resource.id,
       },
       body: {
         key: 'update-resource-handler-updated',
@@ -167,7 +167,7 @@ describe('updateResourceHandler', () => {
     const req = mocksHttp.createRequest({
       method: 'PATCH',
       params: {
-        id: resource.id,
+        resourceId: resource.id,
       },
       body: {
         key: 'update-resource-handler-updated-with-invalid-key_',
@@ -209,7 +209,7 @@ describe('deleteResourceHandler', () => {
     const req = mocksHttp.createRequest({
       method: 'DELETE',
       params: {
-        id: resource.id,
+        resourceId: resource.id,
       },
     });
     const res = mocksHttp.createResponse();
