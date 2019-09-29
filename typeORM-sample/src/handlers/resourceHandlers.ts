@@ -121,11 +121,7 @@ export async function deleteResourceHandler(req: express.Request, res: express.R
     return res.status(404).json({});
   }
 
-  const result = await resourceRepository.delete(resourceId).catch(err => {
-    console.log(err.message);
-  });
-  if (result) {
-    // TODO: Remove related resources
-    res.status(204).json({});
-  }
+  await resourceRepository.delete(resourceId);
+  // TODO: Remove related resources
+  res.status(204).json({});
 }
