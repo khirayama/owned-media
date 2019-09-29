@@ -128,7 +128,9 @@ describe('updateResourceHandler', () => {
 
     const req = mocksHttp.createRequest({
       method: 'PATCH',
-      url: `/${resource.id}`,
+      params: {
+        id: resource.id,
+      },
       body: {
         key: 'update-resource-handler-updated',
         type: 'note',
@@ -145,6 +147,46 @@ describe('updateResourceHandler', () => {
       id: response.id,
       createdAt: response.createdAt,
       updatedAt: response.updatedAt,
+    });
+  });
+
+  test('Update resource with invalid key.', async () => {
+    const createdRes = mocksHttp.createResponse();
+    await createResourceHandler(
+      mocksHttp.createRequest({
+        method: 'POST',
+        body: {
+          key: 'update-resource-handler-with-invalid-key',
+          type: 'note',
+        },
+      }),
+      createdRes,
+    );
+    const resource = createdRes._getJSONData();
+
+    const req = mocksHttp.createRequest({
+      method: 'PATCH',
+      params: {
+        id: resource.id,
+      },
+      body: {
+        key: 'update-resource-handler-updated-with-invalid-key_',
+        type: 'note',
+      },
+    });
+    const res = mocksHttp.createResponse();
+
+    await updateResourceHandler(req, res);
+    const response = res._getJSONData();
+    expect(res.statusCode).toBe(400);
+    expect(response).toEqual({
+      message: 'Validation Failed',
+      errors: [
+        {
+          field: 'key',
+          message: 'This resource key(update-resource-handler-updated-with-invalid-key_) is invalid key',
+        },
+      ],
     });
   });
 });
