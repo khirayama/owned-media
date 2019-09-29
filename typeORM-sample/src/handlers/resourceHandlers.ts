@@ -63,7 +63,7 @@ export async function updateResourceHandler(req: express.Request, res: express.R
   let resource = await resourceRepository.findOne(resourceId);
 
   if (!resource) {
-    return res.status(404).json();
+    return res.status(404).json({});
   }
 
   resource.key = body.key !== undefined ? body.key : resource.key;
@@ -86,7 +86,7 @@ export async function updateResourceHandler(req: express.Request, res: express.R
       }),
     });
   } else {
-    const result = await resourceRepository.save(resource).catch((err) => {
+    const result = await resourceRepository.save(resource).catch(err => {
       const errorMessages = {
         key: {
           notUnique: 'SQLITE_CONSTRAINT: UNIQUE constraint failed: resources.key',
@@ -118,10 +118,14 @@ export async function deleteResourceHandler(req: express.Request, res: express.R
   let resource = await resourceRepository.findOne(resourceId);
 
   if (!resource) {
-    return res.status(404).json();
+    return res.status(404).json({});
   }
 
-  await resourceRepository.delete(resourceId);
-  // TODO: Remove related resources
-  res.status(204).json();
+  const result = await resourceRepository.delete(resourceId).catch(err => {
+    console.log(err.message);
+  });
+  if (result) {
+    // TODO: Remove related resources
+    res.status(204).json({});
+  }
 }
