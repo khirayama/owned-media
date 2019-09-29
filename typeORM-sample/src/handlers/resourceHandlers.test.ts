@@ -86,4 +86,40 @@ describe('createResourceHandler', () => {
       ],
     });
   });
+  test('Create resource with existing key.', async () => {
+    await createResourceHandler(
+      mocksHttp.createRequest({
+        method: 'GET',
+        url: '/',
+        body: {
+          key: 'sample-resource',
+          type: 'note',
+        },
+      }),
+      mocksHttp.createResponse(),
+    );
+
+    const req = mocksHttp.createRequest({
+      method: 'GET',
+      url: '/',
+      body: {
+        key: 'sample-resource',
+        type: 'note',
+      },
+    });
+    const res = mocksHttp.createResponse();
+    await createResourceHandler(req, res);
+
+    const response = res._getJSONData();
+    expect(res.statusCode).toBe(400);
+    expect(response).toEqual({
+      message: 'Validation Failed',
+      errors: [
+        {
+          field: 'key',
+          message: 'This resource key is already existing.',
+        },
+      ],
+    });
+  });
 });
