@@ -86,10 +86,28 @@ export async function updateResourceHandler(req: express.Request, res: express.R
       }),
     });
   } else {
-    await resourceRepository.save(resource);
+    const result = await resourceRepository.save(resource).catch(err => {
+      const errorMessages = {
+        key: {
+          notUnique: 'SQLITE_CONSTRAINT: UNIQUE constraint failed: resources.key',
+        },
+      };
+      if (err.message === errorMessages.key.notUnique) {
+        res.status(400).json({
+          message: 'Validation Failed',
+          errors: [
+            {
+              field: 'key',
+              message: 'This resource key is already existing.',
+            },
+          ],
+        });
+      }
+    });
+    if (result) {
+      res.status(200).json(resource);
+    }
   }
-
-  res.status(200).json(resource);
 }
 
 export async function deleteResourceHandler(req: express.Request, res: express.Response) {
