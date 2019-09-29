@@ -1,7 +1,7 @@
 import * as mocksHttp from 'node-mocks-http';
 
 import { connectDatabase } from '../testutils';
-import { createResourceHandler, updateResourceHandler } from './resourceHandlers';
+import { createResourceHandler, updateResourceHandler, deleteResourceHandler } from './resourceHandlers';
 
 beforeAll(async () => {
   await connectDatabase();
@@ -188,5 +188,35 @@ describe('updateResourceHandler', () => {
         },
       ],
     });
+  });
+});
+
+describe('deleteResourceHandler', () => {
+  test('Delete resource.', async () => {
+    const createdRes = mocksHttp.createResponse();
+    await createResourceHandler(
+      mocksHttp.createRequest({
+        method: 'POST',
+        body: {
+          key: 'delete-resource-handler',
+          type: 'note',
+        },
+      }),
+      createdRes,
+    );
+    const resource = createdRes._getJSONData();
+
+    const req = mocksHttp.createRequest({
+      method: 'DELETE',
+      params: {
+        id: resource.id,
+      },
+    });
+    const res = mocksHttp.createResponse();
+
+    await deleteResourceHandler(req, res);
+    const response = res._getJSONData();
+    expect(res.statusCode).toBe(204);
+    expect(response).toEqual({});
   });
 });
