@@ -86,7 +86,7 @@ export async function updateResourceHandler(req: express.Request, res: express.R
       }),
     });
   } else {
-    const result = await resourceRepository.save(resource).catch(err => {
+    const result = await resourceRepository.save(resource).catch((err) => {
       const errorMessages = {
         key: {
           notUnique: 'SQLITE_CONSTRAINT: UNIQUE constraint failed: resources.key',
