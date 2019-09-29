@@ -30,8 +30,27 @@ export async function createResourceHandler(req: express.Request, res: express.R
       }),
     });
   } else {
-    await resourceRepository.save(resource);
-    return res.status(201).json(resource);
+    const result = await resourceRepository.save(resource).catch(err => {
+      const errorMessages = {
+        key: {
+          notUnique: 'SQLITE_CONSTRAINT: UNIQUE constraint failed: resources.key',
+        },
+      };
+      if (err.message === errorMessages.key.notUnique) {
+        res.status(400).json({
+          message: 'Validation Failed',
+          errors: [
+            {
+              field: 'key',
+              message: 'This resource key is already existing.',
+            },
+          ],
+        });
+      }
+    });
+    if (result) {
+      return res.status(201).json(resource);
+    }
   }
 }
 
