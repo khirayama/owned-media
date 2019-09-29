@@ -1,18 +1,10 @@
-import * as typeorm from 'typeorm';
 import * as mocksHttp from 'node-mocks-http';
 
+import { connectDatabase } from '../testutils';
 import { createResourceHandler } from './resourceHandlers';
 
 beforeAll(async () => {
-  const ormconfig = require('../../ormconfig.test');
-  const connection = await typeorm.createConnection(ormconfig);
-  await connection.dropDatabase();
-  await connection.synchronize();
-});
-
-afterAll(async () => {
-  const connection = await typeorm.getConnection();
-  await connection.close();
+  await connectDatabase();
 });
 
 describe('createResourceHandler', () => {
@@ -21,7 +13,7 @@ describe('createResourceHandler', () => {
       method: 'GET',
       url: '/',
       body: {
-        key: 'sample-resource',
+        key: 'create-resource-handler',
         type: 'note',
       },
     });
@@ -31,7 +23,7 @@ describe('createResourceHandler', () => {
     const response = res._getJSONData();
     expect(res.statusCode).toBe(201);
     expect(response).toEqual({
-      key: 'sample-resource',
+      key: 'create-resource-handler',
       type: 'note',
       id: response.id,
       createdAt: response.createdAt,
@@ -43,7 +35,7 @@ describe('createResourceHandler', () => {
       method: 'GET',
       url: '/',
       body: {
-        key: 'sample_resource',
+        key: 'create_resource_handler',
         type: 'note',
       },
     });
@@ -57,7 +49,7 @@ describe('createResourceHandler', () => {
       errors: [
         {
           field: 'key',
-          message: 'This resource key(sample_resource) is invalid key',
+          message: 'This resource key(create_resource_handler) is invalid key',
         },
       ],
     });
@@ -67,7 +59,7 @@ describe('createResourceHandler', () => {
       method: 'GET',
       url: '/',
       body: {
-        key: 'sample-resource',
+        key: 'create-resource-handler',
         type: 'nota',
       },
     });
@@ -92,7 +84,7 @@ describe('createResourceHandler', () => {
         method: 'GET',
         url: '/',
         body: {
-          key: 'sample-resource',
+          key: 'create-resource-handler-with-existing-key',
           type: 'note',
         },
       }),
@@ -103,7 +95,7 @@ describe('createResourceHandler', () => {
       method: 'GET',
       url: '/',
       body: {
-        key: 'sample-resource',
+        key: 'create-resource-handler-with-existing-key',
         type: 'note',
       },
     });
