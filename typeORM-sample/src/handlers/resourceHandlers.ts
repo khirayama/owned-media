@@ -46,6 +46,15 @@ export async function createResourceHandler(req: express.Request, res: express.R
             },
           ],
         });
+      } else {
+        res.status(500).json({
+          message: 'Internal Server Error',
+          errors: [
+            {
+              message: err.message,
+            },
+          ],
+        });
       }
     });
     if (result) {
