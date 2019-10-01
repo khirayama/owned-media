@@ -60,6 +60,7 @@ export async function addResourceContentHandler(req: express.Request, res: expre
     });
     const resourceResult = await resourceRepository.save(resource);
     if (resourceContentResult && resourceResult) {
+      resourceContent.body = body.body;
       return res.status(201).json(resourceContent);
     }
   }
