@@ -78,7 +78,7 @@
     "express": "4.17.1",
     "fs-extra": "8.1.0",
     "history": "4.9.0",
-    "marked": "0.6.2",
+    "marked": "4.0.10",
     "react": "16.9.0",
     "react-dom": "16.9.0",
     "react-helmet": "5.2.1",
