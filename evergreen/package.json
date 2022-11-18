@@ -62,7 +62,7 @@
     "ts-node": "8.3.0",
     "typescript": "3.5.3",
     "webpack": "4.35.3",
-    "webpack-cli": "3.3.5",
+    "webpack-cli": "3.3.12",
     "webpack-manifest-plugin": "2.0.4"
   },
   "dependencies": {
